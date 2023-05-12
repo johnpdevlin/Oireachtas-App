@@ -19,6 +19,7 @@ type SittingDaysReport = {
 	totalPossibleSittings: number;
 	sittingDaysAttendanceRecorded: (Date | undefined)[];
 	otherDaysAttendanceRecorded: (Date | undefined)[];
+	url: string;
 };
 
 function parseDateRange(dates: String): DateRange {
@@ -44,7 +45,7 @@ export default function parseSittingDaysReport(
 ): SittingDaysReport | void {
 	console.log(url);
 
-	const text = axios.get(url).then((response) => {
+	const text = axios.get(`api/pdf2text?url=${url}`).then((response) => {
 		const text = response.data.text;
 		const lines = text.split('\n').filter((line: string) => line.trim() !== '');
 
@@ -102,6 +103,7 @@ export default function parseSittingDaysReport(
 					totalPossibleSittings,
 					sittingDaysAttendanceRecorded,
 					otherDaysAttendanceRecorded,
+					url,
 				});
 
 				// reset variables for next member
@@ -126,7 +128,7 @@ export default function parseSittingDaysReport(
 				}
 			}
 		}
-		console.log(memberRecords);
-		// return memberRecords;
+
+		return memberRecords;
 	});
 }

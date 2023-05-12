@@ -43,7 +43,7 @@ export default function Home() {
 
 	console.log(
 		parseSittingDaysReport(
-			'api/pdf2text?url=https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2023/2023-03-13_deputies-verification-of-attendance-for-the-payment-of-taa-01-january-2022-to-31-december-2022_en.pdf'
+			'https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2023/2023-03-13_deputies-verification-of-attendance-for-the-payment-of-taa-01-january-2022-to-31-december-2022_en.pdf'
 		)
 	);
 
