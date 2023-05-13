@@ -68,6 +68,7 @@ export type PropertyType =
 	| 'Residence Held in Trust'
 	| 'Renovation'
 	| 'In Probate'
+	| 'Derelict'
 	| 'Property Sold'
 	| 'Farmland';
 

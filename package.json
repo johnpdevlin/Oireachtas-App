@@ -14,6 +14,7 @@
     "@types/react-dom": "18.2.1",
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
+    "cheerio": "^1.0.0-rc.12",
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.1",
     "fs": "^0.0.1-security",
@@ -21,7 +22,6 @@
     "npm": "^9.6.5",
     "pdf-parse": "^1.1.1",
     "react": "18.2.0",
-    "react-bootstrap": "^2.7.4",
     "react-dom": "18.2.0",
     "react-select": "^5.7.3",
     "typescript": "5.0.4"

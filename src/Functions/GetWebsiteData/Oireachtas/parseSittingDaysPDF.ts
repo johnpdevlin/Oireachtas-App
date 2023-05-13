@@ -1,7 +1,7 @@
 /** @format */
 
 import axios from 'axios';
-import { convertDMYdate2MDY } from './Util/dateConverter';
+import { convertDMYdate2MDY } from '../../Util/dateConverter';
 
 type DateRange = {
 	dateRange: {

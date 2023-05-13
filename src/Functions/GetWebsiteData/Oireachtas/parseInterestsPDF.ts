@@ -5,7 +5,7 @@ interface MemberInterests {
 	interests: string[];
 }
 
-export default function parseInterests(
+export default function parseInterestsReport(
 	text: string,
 	lastNames: string[]
 ): { [key: string]: string[][] } {
@@ -16,7 +16,6 @@ export default function parseInterests(
 	const endIndex = text.lastIndexOf(lastNames[lastNames.length - 1]);
 	text = text.slice(startIndex, endIndex);
 
-	return text;
 	// Split the text into blocks for each member
 	const blocks = text.split(/\n\n \d \n/);
 
