@@ -1,4 +1,5 @@
 /** @format */
+import { removeNumberPrefix } from '@/Functions/Util/strings';
 import axios from 'axios';
 
 interface Member {
@@ -14,180 +15,165 @@ interface Member {
 	contracts?: string;
 }
 
-export default async function parseInterestsReport(
-	url: string
-): Promise<Member[]> {
-	// Array to hold all members and be returned
-	let members: Member[] = [];
+function findMemberIndexes(lines: string[]) {
+	const memberIndexes: {
+		name: string;
+		startIndex: number;
+		endIndex: number;
+	}[] = [];
 
-	axios.get(`api/pdf2text?url=${url}`).then((response) => {
-		const text = response.data.text;
+	let startIndex = -1; // Initialize startIndex as -1 to indicate it's not set
+	let name: string | undefined = undefined;
 
-		// Split text into lines and remove empty lines
-		const lines = text.split('\n').filter((line: string) => line.trim() !== '');
+	for (let i = 0; i < lines.length; i++) {
+		const line = lines[i];
 
-		function checkNothingDeclared(str: string): boolean {
-			// check if string contains any of the following
-			str = str.toLowerCase().trim();
-			if (
-				str.includes(
-					'nil' ||
-						'neamh infheidhme' ||
-						'none' ||
-						'non-applicable' ||
-						'tada' ||
-						'i hold no directorships' ||
-						'i own no' ||
-						'i have no'
-				)
-			) {
-				return true;
-			}
-			return false;
+		if (
+			line.includes('Peter Finnegan') &&
+			name !== undefined &&
+			startIndex !== -1
+		) {
+			// If the line contains 'Peter Finnegan' (appears at bottom of PDF) and name and startIndex are set, add the member index
+			const endIndex = i - 1;
+			memberIndexes.push({ name, startIndex, endIndex });
+			break; // Exit the loop since the target member index is found
 		}
 
-		function parseLines(
-			i: number,
-			endClause?: string
-		): { parsedLines: string; i: number } {
-			let parsedLines = '';
-			let tempI: number = i;
-			let cutOff = 33; // this is indx in string where '2. Shares ... ' etc ends
-
-			if (endClause!) {
-				for (let tempI = i; tempI < lines.length; tempI++) {
-					if (!lines[tempI]?.includes(endClause)) {
-						parsedLines += lines[tempI];
-						tempI++;
-					}
-				}
-			} else {
-				console.log('no end clause');
-				while (checkForNextMember(lines[tempI]) === false) {
-					parsedLines += lines[i];
-					tempI++;
-				}
+		if (checkForNextMember(line)) {
+			// If the line indicates the start of a new member
+			if (startIndex !== -1 && name !== undefined) {
+				// If startIndex is set, add the previous member index
+				const endIndex = i - 1;
+				memberIndexes.push({ name, startIndex, endIndex });
 			}
 
-			parsedLines = parsedLines.slice(cutOff).replace('.. ', '').trim();
-			i = tempI;
-
-			return { parsedLines, i };
+			// Set the new member's name and startIndex
+			startIndex = i + 1;
+			name = line.split('(')[0].trim();
 		}
+	}
 
-		function checkForNextMember(possibleMember: string): boolean {
-			const regex =
-				/^([A-ZÀ-ÖØ-ſ\s\-\']+\,){1}\s*([a-zA-ZÀ-ÖØ-öø-ſ\s\'\-]+)\s*(\(([a-zA-ZÀ-ÖØ-öø-ſ\s\'\-\s]+)\)){0,1}$/;
-			return regex.test(possibleMember.trim());
-		}
+	return memberIndexes;
+}
 
-		let name: string = '';
-		let occupations: string | undefined;
-		let shares: string | undefined;
-		let directorships: string | undefined;
-		let property: string | undefined;
-		let gifts: string | undefined;
-		let travel: string | undefined;
-		let benefitsReceived: string | undefined;
-		let renumeratedPositions: string | undefined;
-		let contracts: string | undefined;
-		function resetVariables() {
-			name = '';
-			occupations = undefined;
-			shares = undefined;
-			directorships = undefined;
-			property = undefined;
-			gifts = undefined;
-			travel = undefined;
-			benefitsReceived = undefined;
-			renumeratedPositions = undefined;
-			contracts = undefined;
-		}
+function checkNothingDeclared(str: string): boolean {
+	const searchTerms = [
+		'nil',
+		'neamh infheidhme',
+		'none',
+		'non-applicable',
+		'tada',
+		'i hold no directorships',
+		'i own no',
+		'i have no',
+	];
 
-		for (let i = 0; i < lines.length; i++) {
-			// let boolean memberFound = false;
+	str = str.toLowerCase().trim();
 
-			if (checkForNextMember(lines[i].trim())) {
-				if (name === '') {
-					name = lines[i].split('(')[0].trim();
-				} else if (name !== '') {
-					const member: Member = {
-						name: name,
-					};
+	return searchTerms.some((term) => str.includes(term));
+}
 
-					occupations! && (member.occupations = occupations);
-					shares! && (member.shares = shares);
-					directorships! && (member.directorships = directorships);
-					property! && (member.property = property);
-					gifts! && (member.gifts = gifts);
-					travel! && (member.travel = travel);
-					benefitsReceived! && (member.benefitsReceived = benefitsReceived);
-					renumeratedPositions! &&
-						(member.renumeratedPositions = renumeratedPositions);
-					contracts! && (member.contracts = contracts);
+function parseLines(lines: string[]): { index: number; text: string }[] {
+	const rawInterests = lines.join().split(/(?=\d\. )/); // Split by number followed by a dot and a space. E.G. 1. Land etc.
 
-					members.push(member);
-					resetVariables();
-				} else if (lines[i].includes('1. Occupations') && occupations === '') {
-					if (!checkNothingDeclared(lines[i])) {
-						const temp = parseLines(i, '2. Shares');
-						occupations = temp.parsedLines;
-						i = temp.i;
-					}
-				} else if (lines[i].includes('2. Shares') && shares === '') {
-					if (!checkNothingDeclared(lines[i])) {
-						const temp = parseLines(i, '3. Directorships');
-						shares = temp.parsedLines;
-						i = temp.i;
-					}
-				} else if (lines[i].includes('3. Directorships')) {
-					if (!checkNothingDeclared(lines[i])) {
-						const temp = parseLines(i, '4. Land');
-						directorships = temp.parsedLines;
-						i = temp.i;
-					}
-				} else if (lines[i].includes('4. Land')) {
-					if (!checkNothingDeclared(lines[i])) {
-						const temp = parseLines(i, '5. Gifts');
-						property = temp.parsedLines;
-						i = temp.i;
-					}
-				} else if (lines[i].includes('5. Gifts')) {
-					if (!checkNothingDeclared(lines[i])) {
-						const temp = parseLines(i, '6. Property supplied');
-						gifts = temp.parsedLines;
-						i = temp.i;
-					}
-				} else if (lines[i].includes('6. Property supplied')) {
-					if (!checkNothingDeclared(lines[i])) {
-						const temp = parseLines(i, '7. Travel');
-						property = temp.parsedLines;
-						i = temp.i;
-					}
-				} else if (lines[i].includes('7. Travel')) {
-					if (!checkNothingDeclared(lines[i])) {
-						const temp = parseLines(i, '8. Renumerated Position');
-						travel = temp.parsedLines;
-						i = temp.i;
-					}
-				} else if (lines[i].includes('8. Renumerated Position')) {
-					if (!checkNothingDeclared(lines[i])) {
-						const temp = parseLines(i, '9. Contracts');
-						renumeratedPositions = temp.parsedLines;
-						i = temp.i;
-					}
-				} else if (lines[i].includes('9. Contracts')) {
-					if (!checkNothingDeclared(lines[i])) {
-						const temp = parseLines(i);
-						contracts = temp.parsedLines;
-						i = temp.i;
-					}
-				} else if (lines[i].includes('Cormac`')) {
-					name = lines[i].split('`')[0].trim();
+	const interests = rawInterests.filter((i) => {
+		return i !== (' ' && ' ,');
+	});
+
+	const parsed = interests
+		.map((intr) => {
+			const num: number = parseInt(intr.charAt(0)); // Gets number. IE. 1. Land etc.
+			let slicePoint: number = 0;
+
+			for (let i = 0; i < intr.length; i++) {
+				if (intr.charAt(i) == num.toString() && intr.charAt(i + 1) === '.') {
+					// to skip n. at start of line
+					i += 28;
+				} else if (intr.charAt(i) === '.' && intr.charAt(i + 1) === ' ') {
+					// search for end point of continuous string of ..... (dots)
+					slicePoint = i + 2;
+					break;
 				}
 			}
+			return { index: num, text: intr.slice(slicePoint!) };
+		})
+		.filter((i) => checkNothingDeclared(i.text) === false);
+
+	return parsed;
+}
+
+function formatInterests(interests: { index: number; text: string }[]) {
+	const searchKeys: { [key: string]: { value: string } } = {
+		'1': { value: 'occupations' },
+		'2': { value: 'shares' },
+		'3': { value: 'directorships' },
+		'4': { value: 'property' },
+		'5': { value: 'gifts' },
+		'6': { value: 'travel' },
+		'7': { value: 'benefitsReceived' },
+		'8': { value: 'renumeratedPositions' },
+		'9': { value: 'contracts' },
+	};
+
+	const formattedInterests: { [key: string]: string } = {};
+
+	interests.forEach((intr) => {
+		const key = searchKeys[intr.index]?.value;
+		if (key) {
+			formattedInterests[key] = intr.text;
 		}
 	});
-	console.log(members);
-	return members;
+
+	return formattedInterests;
+}
+
+function checkForNextMember(possibleMember: string): boolean {
+	// Check for Cormac Devlin (he is the only member with a ` typo in their name)
+	if (possibleMember.includes('Cormac`')) {
+		return true;
+	}
+	const regex =
+		/^([A-ZÀ-ÖØ-ſ\s\-\']+\,){1}\s*([a-zA-ZÀ-ÖØ-öø-ſ\s\'\-]+)\s*(\(([a-zA-ZÀ-ÖØ-öø-ſ\s\'\-\s]+)\)){0,1}$/;
+
+	return regex.test(possibleMember.trim());
+}
+
+export default async function parseInterestsReport(url: string) {
+	try {
+		const response = await axios.get(`api/pdf2text?url=${url}`);
+		const text = response.data.text;
+
+		// Remove lines with page numbers
+		const lines = text.split('\n');
+
+		const memberIndexes: {
+			name: string;
+			startIndex: number;
+			endIndex: number;
+		}[] = findMemberIndexes(lines);
+
+		const memberInterests = [];
+		for (let i = 0; i < memberIndexes.length; i++) {
+			const member = memberIndexes[i];
+			const memberLines = lines.slice(member.startIndex, member.endIndex);
+
+			const interests = parseLines(memberLines);
+			memberInterests.push({ name: member.name, interests });
+		}
+
+		const formattedInterests = memberInterests
+			.map((member) => {
+				const interests = formatInterests(member.interests);
+				if (Object.keys(member.interests).length > 0) {
+					// check for no interests declared
+					return { name: member.name, interests };
+				}
+			})
+			.filter((formattedInterest) => formattedInterest !== undefined);
+
+		return formattedInterests;
+	} catch (error) {
+		console.log(error);
+		throw new Error('Error parsing interests report');
+	}
 }
