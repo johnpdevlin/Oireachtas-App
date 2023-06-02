@@ -18,8 +18,8 @@ import getCommitteesBaseDetails from '@/Functions/GetWebsiteData/Oireachtas/scra
 import scrapeMemberOirProfile from '@/Functions/GetWebsiteData/Oireachtas/scrapeMemberProfile';
 import scrapeCommitteesBaseDetails from '@/Functions/GetWebsiteData/Oireachtas/scrapeAllCommittees';
 import parseInterestsReport from '@/Functions/GetWebsiteData/Oireachtas/parseInterestsPDF';
-import scrapeWikiDailSession from '@/Functions/GetWebsiteData/Wikipedia/scrapeWikiDailSession';
-import scrapeWikiProfile from '@/Functions/GetWebsiteData/Wikipedia/scrapeWikiProfile';
+import scrapeWikiDailSession from '@/Functions/GetWebsiteData/Wikipedia/scrapeDailSessionPage';
+import scrapeWikiProfile from '@/Functions/GetWebsiteData/Wikipedia/scrapeTDpage';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -45,7 +45,7 @@ export default function Home() {
 	// console.log(members);
 	// console.log();
 
-	console.log(scrapeWikiProfile());
+	console.log(scrapeWikiDailSession(33));
 
 	return (
 		<>
