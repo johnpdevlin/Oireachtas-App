@@ -32,7 +32,7 @@ export default async function scrapeCommitteeInfo(
 ): Promise<Committee> {
 	try {
 		const url = `https://www.oireachtas.ie/en/committees/${house_no}/${uri}/`;
-		console.log(url);
+
 		let response = (await axios.get(`api/webscrape?url=${url}`)).data.text;
 		let $ = cheerio.load(response);
 
@@ -114,3 +114,5 @@ export default async function scrapeCommitteeInfo(
 		throw error;
 	}
 }
+
+const response = await axios.get(`api/pdf2text?url=${url}`);

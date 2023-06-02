@@ -18,6 +18,7 @@ import getCommitteesBaseDetails from '@/Functions/GetWebsiteData/Oireachtas/scra
 import scrapeMemberOirProfile from '@/Functions/GetWebsiteData/Oireachtas/scrapeMemberProfile';
 import scrapeCommitteesBaseDetails from '@/Functions/GetWebsiteData/Oireachtas/scrapeAllCommittees';
 import parseInterestsReport from '@/Functions/GetWebsiteData/Oireachtas/parseInterestsPDF';
+import scrapeWikiDailSession from '@/Functions/GetWebsiteData/Oireachtas/scrapeWikiDailSession';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -43,11 +44,7 @@ export default function Home() {
 	// console.log(members);
 	// console.log();
 
-	console.log(
-		parseInterestsReport(
-			'https://data.oireachtas.ie/ie/oireachtas/members/registerOfMembersInterests/dail/2023/2023-02-22_register-of-member-s-interests-dail-eireann-2022_en.pdf'
-		)
-	);
+	console.log(scrapeWikiDailSession(33));
 
 	return (
 		<>
