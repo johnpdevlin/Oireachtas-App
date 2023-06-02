@@ -3,8 +3,9 @@
 import { addOrdinalSuffix } from '@/Functions/Util/strings';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import { getInfoBoxTitle } from './util';
 
-type WikiDetails = {
+type WikiDailDetails = {
 	ceannComhairle: string;
 	leasCeannComhairle: string;
 	taoiseach: string;
@@ -14,22 +15,12 @@ type WikiDetails = {
 	tdWikiUrls: { href?: string; title: string }[];
 };
 
-/**
- * Retrieves the details from the info box table using the target string
- */
-function getInfoBoxDetails(
-	$: cheerio.CheerioAPI,
-	target: string
-): string | undefined {
-	return $(`th:contains("${target}")`).next().find('a').attr('title');
-}
+// Retrieves the details from the info box table using the target string
 
-/**
- * Scrapes the Wikipedia page for Dáil session details
- */
+// Scrapes the Wikipedia page for Dáil session details
 export default async function scrapeWikiDailSession(
 	dail_no: number
-): Promise<WikiDetails> {
+): Promise<WikiDailDetails> {
 	const dail = addOrdinalSuffix(dail_no);
 	const url = `https://en.wikipedia.org/wiki/Members_of_the_${dail}_Dáil`;
 
@@ -39,12 +30,12 @@ export default async function scrapeWikiDailSession(
 		let $ = cheerio.load(response);
 
 		// Get names of Ceann Comhairle, Leas-Cheann Comhairle, Taoiseach, Tánaiste, Chief Whip, Leader of the Opposition
-		const ceannComhairle = getInfoBoxDetails($, 'Ceann Comhairle');
-		const leasCeannComhairle = getInfoBoxDetails($, 'Leas-Cheann Comhairle');
-		const taoiseach = getInfoBoxDetails($, 'Taoiseach');
-		const tánaiste = getInfoBoxDetails($, 'Tánaiste');
-		const chiefWhip = getInfoBoxDetails($, 'Chief Whip');
-		const leaderOfOpposition = getInfoBoxDetails($, 'Leader of the Opposition');
+		const ceannComhairle = getInfoBoxTitle($, 'Ceann Comhairle');
+		const leasCeannComhairle = getInfoBoxTitle($, 'Leas-Cheann Comhairle');
+		const taoiseach = getInfoBoxTitle($, 'Taoiseach');
+		const tánaiste = getInfoBoxTitle($, 'Tánaiste');
+		const chiefWhip = getInfoBoxTitle($, 'Chief Whip');
+		const leaderOfOpposition = getInfoBoxTitle($, 'Leader of the Opposition');
 
 		// Get URLs for TD wiki pages
 		const wikiUrlElements = $('td[data-sort-value]').toArray();

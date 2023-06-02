@@ -1,7 +1,10 @@
 /** @format */
 
-export function startsWithNumber(str: string): boolean {
+export function startsWithNumber(str: string | undefined): boolean {
 	// Check if a string starts with a number
+	if (str === undefined) {
+		return false;
+	}
 	return /^\d/.test(str);
 }
 
@@ -25,4 +28,14 @@ export function addOrdinalSuffix(num: number): string {
 	const suffix = suffixes[lastDigit] || 'th';
 
 	return num + suffix;
+}
+
+export function getTextAfterLastComma(str: string): string {
+	// Split the string into an array of substrings based on the comma delimiter
+	const parts: string[] = str.split(',');
+
+	// Remove and return the last element of the array
+	const lastText: string = parts.pop()?.trim() ?? '';
+
+	return lastText;
 }
