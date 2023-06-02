@@ -12,7 +12,7 @@ type WikiDailDetails = {
 	tánaiste: string;
 	chiefWhip: string;
 	leaderOfOpposition: string;
-	tdWikiUrls: { href?: string; title: string }[];
+	tdWikiUris: { uri?: string; name: string }[];
 };
 
 // Retrieves the details from the info box table using the target string
@@ -38,21 +38,19 @@ export default async function scrapeWikiDailSession(
 		const leaderOfOpposition = getInfoBoxTitle($, 'Leader of the Opposition');
 
 		// Get URLs for TD wiki pages
-		const wikiUrlElements = $('td[data-sort-value]').toArray();
-		const tdWikiUrls = wikiUrlElements
+		const wikiUriElements = $('td[data-sort-value]').toArray();
+		const tdWikiUris = wikiUriElements
 			.map((element) => {
 				const anchor = $(element).find('a');
-				const href = anchor.attr('href');
-				const title = anchor.attr('title');
-				return { href, title };
+				const uri = anchor.attr('href');
+				const name = anchor.attr('title');
+				return { uri, name };
 			})
-			.filter((element) => element.href && element.title) // Filter out undefined
+			.filter((element) => element.uri && element.name) // Filter out undefined
 			.filter((entry, index, self) => {
 				// Filter out duplicate entries based on href and title
-				const lookupKey = entry.href! + entry.title!;
-				return (
-					index === self.findIndex((e) => e.href! + e.title! === lookupKey)
-				);
+				const lookupKey = entry.uri! + entry.name!;
+				return index === self.findIndex((e) => e.uri! + e.name! === lookupKey);
 			});
 
 		// Throw an error if any of the required details are missing
@@ -63,7 +61,7 @@ export default async function scrapeWikiDailSession(
 			!tánaiste ||
 			!chiefWhip ||
 			!leaderOfOpposition ||
-			!tdWikiUrls
+			!tdWikiUris
 		) {
 			throw new Error('Error scraping wiki page: missing required details');
 		}
@@ -76,7 +74,7 @@ export default async function scrapeWikiDailSession(
 			tánaiste: tánaiste!,
 			chiefWhip: chiefWhip!,
 			leaderOfOpposition: leaderOfOpposition!,
-			tdWikiUrls: tdWikiUrls!,
+			wikiUris: tdWikiUris!,
 		};
 	} catch (error) {
 		console.log(error);

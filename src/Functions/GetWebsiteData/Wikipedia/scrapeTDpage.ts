@@ -58,8 +58,10 @@ function extractDateFromString(input: string): Date | undefined {
 }
 
 // Scrapes the Wikipedia profile of Niamh Smyth.
-export default async function scrapeWikiTDprofile(): Promise<WikiProfileDetails> {
-	const url = `https://en.wikipedia.org/wiki/Niamh_Smyth`;
+export default async function scrapeWikiTDprofile(
+	wiki_uri: string
+): Promise<WikiProfileDetails> {
+	const url = `https://en.wikipedia.org${wiki_uri}`;
 
 	try {
 		let response = (await axios.get(`api/webscrape?url=${url}`)).data.text;
