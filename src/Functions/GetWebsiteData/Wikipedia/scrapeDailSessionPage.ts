@@ -3,7 +3,7 @@
 import { addOrdinalSuffix } from '@/Functions/Util/strings';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { getInfoBoxTitle } from './util';
+import { getInfoBoxTitle, removeFootnote } from './util';
 
 type WikiDailDetails = {
 	ceannComhairle: string;
@@ -43,7 +43,7 @@ export default async function scrapeWikiDailSession(
 			.map((element) => {
 				const anchor = $(element).find('a');
 				const uri = anchor.attr('href');
-				const name = anchor.attr('title');
+				const name = removeFootnote(anchor.attr('title')!);
 				return { uri, name };
 			})
 			.filter((element) => element.uri && element.name) // Filter out undefined
