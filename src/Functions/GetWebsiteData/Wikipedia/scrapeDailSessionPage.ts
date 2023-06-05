@@ -3,9 +3,16 @@
 import { addOrdinalSuffix } from '@/Functions/Util/strings';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { getInfoBoxTitle, removeFootnote } from './util';
+import { getInfoBoxTitle, removeSquareFootnotes } from './util';
 
-type WikiDailDetails = {
+type PartyInfo = {
+	name: string;
+	uri: string;
+	isGovernment: boolean;
+};
+
+export type WikiDailDetails = {
+	[x: string]: any;
 	ceannComhairle: string;
 	leasCeannComhairle: string;
 	taoiseach: string;
@@ -13,9 +20,10 @@ type WikiDailDetails = {
 	chiefWhip: string;
 	leaderOfOpposition: string;
 	tdWikiUris: { uri?: string; name: string }[];
+	parties: PartyInfo[];
 };
 
-function parsePartyInfo($: cheerio.CheerioAPI) {
+function parsePartyInfo($: cheerio.CheerioAPI): PartyInfo[] {
 	// Find all tables on the page
 	const tables = $('table.wikitable');
 
@@ -25,26 +33,27 @@ function parsePartyInfo($: cheerio.CheerioAPI) {
 	// Find all rows in the table except the header row
 	const rows = table.find('tr:not(:first-child)');
 
-	const parties: { name: any; href: any; government: boolean }[] = [];
+	const parties: PartyInfo[] = [];
 
 	// Iterate over each row
 	rows.each((index, row) => {
 		const tds = $(row).find('td');
 
 		// Check if the first column contains a government indicator
-		const isGovernment = $(tds[0]).find('span').length > 0;
+		const isGovernment: boolean = $(tds[0]).find('span').length > 0;
 
 		// Extract party name and href from the second column
 		const partyCell = $(tds[1]);
 		const partyName = partyCell.find('a').text();
-		const partyHref = partyCell.find('a').attr('href');
+		const partyHref = partyCell.find('a').attr('href')!;
 
 		// Create party object and add it to the parties array
-		parties.push({
+		const party = {
 			name: partyName,
-			href: partyHref,
-			government: isGovernment,
-		});
+			uri: partyHref,
+			isGovernment: isGovernment,
+		};
+		parties.push(party);
 	});
 
 	return parties.filter((party) => party.name !== '');
@@ -76,7 +85,7 @@ export default async function scrapeWikiDailSession(
 			.map((element) => {
 				const anchor = $(element).find('a');
 				const uri = anchor.attr('href');
-				const name = removeFootnote(anchor.attr('title')!);
+				const name = removeSquareFootnotes(anchor.attr('title')!);
 				return { uri, name };
 			})
 			.filter((element) => element.uri && element.name) // Filter out undefined
@@ -86,8 +95,8 @@ export default async function scrapeWikiDailSession(
 				return index === self.findIndex((e) => e.uri! + e.name! === lookupKey);
 			});
 
-		const partyDetails = parsePartyInfo($);
-		console.log(partyDetails);
+		// Get party details
+		const partyDetails: PartyInfo[] = parsePartyInfo($);
 
 		// Throw an error if any of the required details are missing
 		if (
@@ -110,7 +119,8 @@ export default async function scrapeWikiDailSession(
 			tánaiste: tánaiste!,
 			chiefWhip: chiefWhip!,
 			leaderOfOpposition: leaderOfOpposition!,
-			tdWikiUris: tdWikiUris!, //
+			tdWikiUris: tdWikiUris!,
+			parties: partyDetails,
 		};
 	} catch (error) {
 		console.log(error);

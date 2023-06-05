@@ -5,12 +5,14 @@ import {
 	getInfoBoxHref,
 	getInfoBoxText,
 	getInfoBoxTitle,
-	removeFootnote,
+	removeSquareFootnotes,
 } from './util';
 import {
 	getTextAfterLastComma,
+	getTextAfterLastParentheses,
 	startsWithNumber,
 } from '@/Functions/Util/strings';
+import { extractDateFromYMDstring } from '@/Functions/Util/dates';
 
 type WikiProfileDetails = {
 	birthdate: Date | undefined;
@@ -25,38 +27,6 @@ type WikiProfileDetails = {
 	websiteUrl: string | undefined;
 };
 
-// Removes text between parentheses in a string.
-function removeTextBetweenParentheses(input: string): string | undefined {
-	// Find the index of the first "("
-	const firstOpenParenIndex = input.indexOf('(');
-
-	// Find the index of the last ")"
-	const lastCloseParenIndex = input.lastIndexOf(')');
-
-	// Check if both parentheses are found in the string
-	if (firstOpenParenIndex !== -1 && lastCloseParenIndex !== -1) {
-		// Extract the portion of the string after the last closing parenthesis
-		return input.slice(lastCloseParenIndex + 1).trim();
-	}
-
-	// Return undefined if parentheses are not found
-	return undefined;
-}
-
-// Extracts a date string in "YYYY-MM-DD" format from the input string and returns it as a Date object.
-function extractDateFromString(input: string): Date | undefined {
-	const regex = /\d{4}-\d{2}-\d{2}/; // Regex pattern for "YYYY-MM-DD" format
-	const match = input.match(regex); // Find the date string in the input
-
-	if (match) {
-		const date = new Date(match[0]); // Convert the matched string to a Date object
-		return date;
-	}
-
-	// Return undefined if no date string was found
-	return undefined;
-}
-
 // Scrapes the Wikipedia profile of Niamh Smyth.
 export default async function scrapeWikiTDprofile(
 	wiki_uri: string
@@ -69,9 +39,9 @@ export default async function scrapeWikiTDprofile(
 
 		// Extract the birth information
 		const bornThElement = $('th:contains("Born")').next().text();
-		const birthdate = extractDateFromString(bornThElement);
-		const birthplace = removeFootnote(
-			removeTextBetweenParentheses(bornThElement)!
+		const birthdate = extractDateFromYMDstring(bornThElement);
+		const birthplace = removeSquareFootnotes(
+			getTextAfterLastParentheses(bornThElement)! // extracts the birthplace from the string
 		);
 		const birthCountry = birthplace
 			? getTextAfterLastComma(birthplace)

@@ -20,32 +20,26 @@ import scrapeCommitteesBaseDetails from '@/Functions/GetWebsiteData/Oireachtas/s
 import parseInterestsReport from '@/Functions/GetWebsiteData/Oireachtas/parseInterestsPDF';
 import scrapeWikiDailSession from '@/Functions/GetWebsiteData/Wikipedia/scrapeDailSessionPage';
 import scrapeWikiProfile from '@/Functions/GetWebsiteData/Wikipedia/scrapeTDpage';
+import scrapePartyPage from '@/Functions/GetWebsiteData/Wikipedia/scrapePartyPage';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
-	// const props: ConstituencyRequest = {
-	// 	chamber_id: 'dail',
-	// 	house_no: 33,
-	// 	limit: 10,
-	// };
-	// const constituencies = fetchConstituencies(props);
-	// const mProps: MemberRequest = {
-	// 	uri: 'Leo-Varadkar.D.2007-06-14',
-	// };
-	// const pProps: PartyRequest = {
-	// 	chamber_id: 'dail',
-	// 	house_no: 33,
-	// };
-	// const parties = fetchParties(pProps);
-	// const members = fetchMembers(mProps);
-	// console.log(constituencies);
-	// console.log(parties);
-	// console.log();
-	// console.log(members);
-	// console.log();
+	const ff = 'Fianna_Fáil';
+	const sf = 'Sinn_Féin';
+	const sd = 'Social_Democrats_(Ireland)';
+	const fg = 'Fine_Gael';
+	const lp = 'Labour_Party_(Ireland)';
+	const pbp = 'People_Before_Profit–Solidarity';
+	const au = 'Aontú';
 
-	console.log(scrapeWikiDailSession(33));
+	console.log(scrapePartyPage(`/wiki/${ff}`));
+	console.log(scrapePartyPage(`/wiki/${sf}`));
+	console.log(scrapePartyPage(`/wiki/${sd}`));
+	console.log(scrapePartyPage(`/wiki/${fg}`));
+	console.log(scrapePartyPage(`/wiki/${lp}`));
+	console.log(scrapePartyPage(`/wiki/${pbp}`));
+	console.log(scrapePartyPage(`/wiki/${au}`));
 
 	return (
 		<>

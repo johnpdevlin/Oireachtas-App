@@ -74,3 +74,83 @@ export function convertYMDdate2DMY(dateStr: string): string {
 	// Format the date as "dd/mm/yyyy"
 	return `${day}/${month}/${year}`;
 }
+
+export function extractDateFromYMDstring(input: string): Date | undefined {
+	// Extracts a date string in "YYYY-MM-DD" format from the input string and
+	// Returns it as a Date object.
+
+	const regex = /\d{4}-\d{2}-\d{2}/; // Regex pattern for "YYYY-MM-DD" format
+	const match = input.match(regex); // Find the date string in the input
+
+	if (match) {
+		const date = new Date(match[0]); // Convert the matched string to a Date object
+		return date;
+	}
+
+	// Return undefined if no date string was found
+	return undefined;
+}
+
+export function extractDateFromDMYstring(input: string): Date | undefined {
+	// Extracts a date string in "DD/MM/YYYY" format from the input string and
+	// Returns it as a Date object.
+
+	const regex = /\d{2}\/\d{2}\/\d{4}/; // Regex pattern for "DD/MM/YYYY" format
+	const match = input.match(regex); // Find the date string in the input
+
+	if (match) {
+		const date = new Date(match[0]); // Convert the matched string to a Date object
+		return date;
+	}
+
+	// Return undefined if no date string was found
+	return undefined;
+}
+export function extractDateFromDmonthYstring(
+	dateString: string
+): Date | undefined {
+	const dateParts = dateString.split(/\s+/);
+
+	if (dateParts.length !== 3) {
+		// Invalid date string format
+		return undefined;
+	}
+
+	const day = parseInt(dateParts[0]);
+	const month = getMonthNumber(dateParts[1]);
+	const year = parseInt(dateParts[2]);
+
+	if (isNaN(day) || isNaN(month) || isNaN(year)) {
+		// Invalid date parts
+		return undefined;
+	}
+
+	// Note: Months in JavaScript's Date object are zero-based (0 - 11)
+	const date = new Date(year, month - 1, day);
+
+	if (isNaN(date.getTime())) {
+		// Invalid date
+		return undefined;
+	}
+
+	return date;
+}
+
+function getMonthNumber(month: string): number {
+	const monthNames: { [key: string]: number } = {
+		January: 0,
+		February: 1,
+		March: 2,
+		April: 3,
+		May: 4,
+		June: 5,
+		July: 6,
+		August: 7,
+		September: 8,
+		October: 9,
+		November: 10,
+		December: 11,
+	};
+
+	return monthNames[month];
+}
