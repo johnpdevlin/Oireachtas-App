@@ -63,9 +63,9 @@ export function validateStandardName(name: string): boolean {
 	for (let i = 0; i < words.length; i++) {
 		const word = words[i];
 		if (
-			i !== 0 &&
-			i !== words.length - 1 &&
-			(word.toLowerCase() === 'de' || word.toLowerCase() === 'di')
+			(i !== 0 && i !== words.length - 1) || // Updated condition here
+			word.toLowerCase() === 'de' ||
+			word.toLowerCase() === 'di'
 		) {
 			continue; // Allow "de" or "di" in the middle of the name
 		}
@@ -75,4 +75,52 @@ export function validateStandardName(name: string): boolean {
 	}
 
 	return true;
+}
+
+export function extractNumberFromString(input: string): number {
+	const regex = /[\d,]+/g;
+	const matches = input.match(regex);
+
+	if (!matches) {
+		return NaN; // Return NaN if no matches are found
+	}
+
+	let longestNumberString = '';
+
+	for (const match of matches) {
+		if (match.length > longestNumberString.length) {
+			longestNumberString = match;
+		}
+	}
+
+	// Remove commas and convert the longest number string to a number
+	const numberValue = parseFloat(longestNumberString.replace(/,/g, ''));
+
+	return isNaN(numberValue) ? NaN : numberValue; // Return NaN if the conversion fails
+}
+
+export function splitByLowerUpperCase(input: string): string[] {
+	const result: string[] = [];
+	let startIndex = 0;
+
+	for (let i = 1; i < input.length; i++) {
+		const currentChar = input[i];
+		const previousChar = input[i - 1];
+
+		// Check if a lowercase letter precedes an uppercase letter
+		if (/[a-z]/.test(previousChar) && /[A-Z]/.test(currentChar)) {
+			result.push(input.substring(startIndex, i).trim());
+			startIndex = i;
+		}
+	}
+
+	// Add the last substring
+	result.push(input.substring(startIndex).trim());
+
+	return result;
+}
+export function hasLowerUpperCasePattern(input: string): boolean {
+	const regex = /(?=[A-Z][a-z])/; // Lookahead assertion to match the pattern
+
+	return regex.test(input);
 }

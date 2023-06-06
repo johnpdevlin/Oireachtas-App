@@ -1,7 +1,10 @@
 /** @format */
 import * as cheerio from 'cheerio';
 import { DailElectionData, Seats } from './scrapePartyPage';
-import { validateStandardName } from '@/Functions/Util/strings';
+import {
+	splitByLowerUpperCase,
+	validateStandardName,
+} from '@/Functions/Util/strings';
 import { removeSquareFootnotes, sortElectionByEarliestYear } from './util';
 
 export function parseDailElectionTable(html: string): DailElectionData[] {
@@ -54,8 +57,18 @@ export function parseDailElectionTable(html: string): DailElectionData[] {
 			// On table reflected as one cell across multiple rows
 			// This logic is necessary to ensure the correct leader is assigned to the correct election cycle
 			const leader = $row.find('td:nth-child(2)').text().trim();
-			if (validateStandardName(leader)) {
-				currentLeader = leader;
+
+			currentLeader = leader;
+			if (Array.isArray(leader) === true) {
+				// Where multiple leaders
+				let temp = splitByLowerUpperCase(leader);
+				temp
+					.filter((t) => {
+						validateStandardName(t) === true;
+					})
+					.forEach((t) => {
+						currentLeader += '  ' + t + '  ';
+					});
 			}
 
 			// parse first preference votes

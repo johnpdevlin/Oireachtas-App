@@ -32,14 +32,16 @@ export default function Home() {
 	const lp = 'Labour_Party_(Ireland)';
 	const pbp = 'People_Before_Profit–Solidarity';
 	const au = 'Aontú';
+	const gp = 'Green_Party_(Ireland)';
 
-	console.log(scrapePartyPage(`/wiki/${ff}`));
-	console.log(scrapePartyPage(`/wiki/${sf}`));
+	// console.log(scrapePartyPage(`/wiki/${ff}`));
+	// console.log(scrapePartyPage(`/wiki/${sf}`));
 	console.log(scrapePartyPage(`/wiki/${sd}`));
 	console.log(scrapePartyPage(`/wiki/${fg}`));
-	console.log(scrapePartyPage(`/wiki/${lp}`));
-	console.log(scrapePartyPage(`/wiki/${pbp}`));
-	console.log(scrapePartyPage(`/wiki/${au}`));
+	// console.log(scrapePartyPage(`/wiki/${lp}`));
+	// console.log(scrapePartyPage(`/wiki/${pbp}`));
+	console.log(scrapePartyPage(`/wiki/${gp}`));
+	// console.log(scrapePartyPage(`/wiki/${au}`));
 
 	return (
 		<>

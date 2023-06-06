@@ -97,7 +97,7 @@ type TableRow = {
 
 export function parseTableToObjects(
 	tableHtml: string
-): TableRow[] | ElectionData[] {
+): TableRow[] | ElectionData[] | unknown[] {
 	let isElectionTable = false;
 	let tableRows: TableRow[] = [];
 
