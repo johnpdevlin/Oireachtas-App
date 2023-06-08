@@ -33,17 +33,19 @@ export default function Home() {
 	const pbp = 'People_Before_Profit–Solidarity';
 	const au = 'Aontú';
 	const gp = 'Green_Party_(Ireland)';
+	const r2c = 'Right_to_Change';
 
 	// sf elections, seanad leaders
 
 	// console.log(scrapePartyPage(`/wiki/${ff}`));
-	console.log(scrapePartyPage(`/wiki/${sf}`));
+	// console.log(scrapePartyPage(`/wiki/${sf}`));
 	// console.log(scrapePartyPage(`/wiki/${sd}`));
 	// console.log(scrapePartyPage(`/wiki/${fg}`));
 	// console.log(scrapePartyPage(`/wiki/${lp}`));
-	// console.log(scrapePartyPage(`/wiki/${gp}`));
+	console.log(scrapePartyPage(`/wiki/${gp}`));
 	// console.log(scrapePartyPage(`/wiki/${au}`));
 	// console.log(scrapePartyPage(`/wiki/${pbp}`));
+	console.log(scrapePartyPage(`/wiki/${r2c}`));
 
 	return (
 		<>

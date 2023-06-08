@@ -88,7 +88,10 @@ export function validateStandardFullName(name: string): boolean {
 	return true;
 }
 
-export function extractNumberFromString(input: string): number {
+export function extractNumberFromString(input: string | number): number {
+	if (typeof input === 'number') {
+		return input;
+	}
 	const regex = /[\d,]+/g;
 	const matches = input.match(regex);
 
@@ -136,6 +139,11 @@ export function hasLowerUpperCasePattern(input: string): boolean {
 	return regex.test(input);
 }
 
+export function hasCamelCasePattern(input: string): boolean {
+	const regex = /(?=[a-z][A-Z])/; // Lookahead assertion to match the pattern
+
+	return regex.test(input);
+}
 export function concatenateItems(items: String[]): string {
 	const numItems = items.length;
 
