@@ -1,6 +1,7 @@
 /** @format */
 import * as cheerio from 'cheerio';
 import { ElectionData, DailElectionData } from './scrapePartyPage';
+import { extractNumberFromString } from '@/Functions/Util/strings';
 
 export function getInfoBoxTitle(
 	$: cheerio.CheerioAPI,
@@ -95,95 +96,65 @@ type TableRow = {
 	[key: string]: string | number;
 };
 
-export function parseTableToObjects(
-	tableHtml: string
-): TableRow[] | ElectionData[] | unknown[] {
-	let isElectionTable = false;
-	let tableRows: TableRow[] = [];
+//
+///////////////
 
-	const $ = cheerio.load(tableHtml);
-	const table = $('table');
+export function parseHTMLtable(html: string) {
+	const $ = cheerio.load(html);
+	const table = $('table.wikitable');
+	const rows = table.find('tr');
 
-	// Find the header row (th elements)
-	const headerRow = table.find('tr').first();
-	const headerCells = headerRow.find('th');
-
-	// Get the number of columns in the table
-	const numColumns = headerCells.length;
-
-	// Get the keys from the header row and convert them to lowercase
+	// Parse header row to get keys
+	const headerRow = $(rows[0]);
 	const keys: string[] = [];
-	headerCells.each((index, cell) => {
-		let key = $(cell).text().toLowerCase().trim();
-		if (key === '%') {
-			key = 'percentage';
-			isElectionTable = true;
-		} else if (key === ('+/–' || '±')) {
-			key = 'change';
-			isElectionTable = true;
-		} else if (key.includes('pref') || key.includes('preference votes')) {
-			key = 'firstPrefs';
-			isElectionTable = true;
+	headerRow.find('th').each((index, element) => {
+		const key = $(element).text().trim();
+		keys.push(key);
+	});
+
+	const data: Record<string, string>[] = [];
+
+	let found = false; // Move the found variable outside the loop
+	let targets: { key: string; value: string }[] = [];
+	rows.slice(1).each((rowIndex, row) => {
+		const rowCells = $(row).find('td');
+		const rowData: Record<string, string> = {};
+
+		if (rowCells.length < keys.length) {
+			const previousRow = $(rows[rowIndex - 1]).find('td');
+
+			const filteredKeys = keys.filter((key) =>
+				targets.find((target) => target.key !== key)
+			);
+
+			rowCells.each((cellIndex, cell) => {
+				const key = filteredKeys[cellIndex];
+				const value = $(cell).text().trim();
+				rowData[key] = value;
+			});
+
+			targets.forEach((tk) => {
+				rowData[tk.key] = tk.value;
+			});
+		} else {
+			rowCells.each((cellIndex, cell) => {
+				const key = keys[cellIndex];
+				const rowSpan = $(cell).attr('rowspan');
+				const value = $(cell).text().trim();
+				rowData[key] = value;
+				if (rowSpan) {
+					let foundTarget = targets.find((target) => target.key === key);
+					if (!foundTarget) {
+						targets.push({ key: key, value: value });
+					}
+				}
+			});
 		}
-		if (key !== '+/–') keys.push(key);
+
+		data.push(rowData);
 	});
 
-	// Find the data rows (excluding the header row)
-	const dataRows = table.find('tr').slice(1);
-
-	// Iterate over each data row
-	dataRows.each((index, row) => {
-		const rowData: TableRow = {};
-
-		// Find all cells in the row (including td and th elements)
-		const cells = $(row).find('th, td');
-
-		let cellIndex = 0;
-		let colSpanOffset = 0;
-
-		// Iterate over each cell and assign the value to the corresponding key
-		cells.each((_, cell) => {
-			const colSpan = parseInt($(cell).attr('colspan') || '1', 10);
-			const rowSpan = parseInt($(cell).attr('rowspan') || '1', 10);
-
-			// Handle cells spanning multiple rows/columns
-			for (let i = 0; i < colSpan; i++) {
-				const key = keys[cellIndex + colSpanOffset];
-
-				let value: string | number = $(cell).text().trim();
-				if (key === 'firstPrefs') {
-					value = parseInt(value.replace(',', ''));
-				}
-
-				if (rowData[key]) {
-					rowData[key] += ' ' + value; // Concatenate values for cells spanning multiple rows/columns
-				} else {
-					rowData[key] = value;
-				}
-
-				// Increment the cell index based on the column span
-				if (i < colSpan - 1) {
-					colSpanOffset++;
-				}
-			}
-
-			// Increment the cell index based on the row span
-			if (rowSpan > 1) {
-				cellIndex += numColumns;
-			} else {
-				cellIndex++;
-				colSpanOffset = 0;
-			}
-		});
-
-		tableRows.push(rowData);
-	});
-
-	if (isElectionTable!) {
-		return formatTableArrayToElection(tableRows);
-	}
-
-	return tableRows;
+	return data;
 }
 
 export function formatTableArrayToElection(
@@ -200,27 +171,31 @@ export function formatTableArrayToElection(
 		const election: number = parseInt(rowData.election as string);
 
 		// Parse percentage and rank
-		let [p, r] = (rowData.percentage as string).split('(');
-		const percentage = parseFloat(p.trim());
-		const rank = parseInt(
-			r?.replace(')', '').replace('#', '').trim() as string
-		);
-
+		let p, r, rank, percentage;
+		if (rowData.percentage) {
+			if ((rowData.percentage as string)?.includes('#')) {
+				[p, r] = (rowData.percentage as string).split('(');
+				rank = parseInt(r?.replace(')', '').replace('#', '').trim() as string);
+			}
+			percentage = extractNumberFromString(rowData.percentage as string);
+		}
 		// Parse seats (total, outOf, change)
 		let total = 0;
 		let outOf = 0;
-
-		let [s, e] = (rowData.seats as string).split('/');
-		total = parseInt(s.trim());
-		outOf = parseInt(e.trim());
-
+		if (rowData.seats) {
+			let [s, e] = (rowData.seats as string).split('/');
+			total = parseInt(s.trim());
+			outOf = parseInt(e.trim());
+		}
 		// Parse Changes
 		const change = total - previousSeats;
 		previousSeats = total;
 
 		const electionDatum: ElectionData = {
 			election: election,
-			percentage: percentage,
+			...(rowData.country && { country: rowData.country as string }),
+			...(percentage && { percentage: percentage }),
+
 			firstPrefs: parseInt(rowData.firstPrefs as string),
 			seats: {
 				total: total,

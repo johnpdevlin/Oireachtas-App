@@ -2,7 +2,9 @@
 import * as cheerio from 'cheerio';
 import { DailElectionData, Seats } from './scrapePartyPage';
 import {
+	concatenateItems,
 	splitByLowerUpperCase,
+	validateStandardFullName,
 	validateStandardName,
 } from '@/Functions/Util/strings';
 import { removeSquareFootnotes, sortElectionByEarliestYear } from './util';
@@ -10,6 +12,7 @@ import { removeSquareFootnotes, sortElectionByEarliestYear } from './util';
 export function parseDailElectionTable(html: string): DailElectionData[] {
 	// HMTL Table structure is awkward to parse
 	// So awkward and specific ways of parsing are required
+	if (!html) return [];
 	const $ = cheerio.load(html);
 
 	let dailElectionData: DailElectionData[] = [];
@@ -58,17 +61,17 @@ export function parseDailElectionTable(html: string): DailElectionData[] {
 			// This logic is necessary to ensure the correct leader is assigned to the correct election cycle
 			const leader = $row.find('td:nth-child(2)').text().trim();
 
-			currentLeader = leader;
-			if (Array.isArray(leader) === true) {
-				// Where multiple leaders
-				let temp = splitByLowerUpperCase(leader);
-				temp
-					.filter((t) => {
-						validateStandardName(t) === true;
-					})
-					.forEach((t) => {
-						currentLeader += '  ' + t + '  ';
-					});
+			// where multiple leaders, splits string into array
+			if (validateStandardFullName(leader) === true) {
+				currentLeader = leader;
+			}
+			let temp: string[] | string = splitByLowerUpperCase(leader);
+			if (temp.length > 1) {
+				// formats array into single line
+
+				if (temp.every((t) => validateStandardFullName(t)) === true) {
+					currentLeader = concatenateItems(temp);
+				}
 			}
 
 			// parse first preference votes

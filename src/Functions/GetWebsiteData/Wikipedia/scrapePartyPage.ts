@@ -10,7 +10,7 @@ import {
 	removeSquareFootnotes,
 	getNextTableElAfterH2text,
 	getNextTableElAfterH3text,
-	parseTableToObjects,
+	parseHTMLtable,
 	getNextTableElAfterH4text,
 } from './util';
 
@@ -20,7 +20,7 @@ import {
 	extractNumberFromString,
 	hasLowerUpperCasePattern,
 	splitByLowerUpperCase,
-	validateStandardName,
+	validateStandardFullName,
 } from '@/Functions/Util/strings';
 import {
 	isArrayOnlyValues,
@@ -29,6 +29,7 @@ import {
 
 export type ElectionData = {
 	election: number | string;
+	country?: string;
 	firstPrefs: number;
 	percentage: number;
 	rank?: number;
@@ -66,7 +67,7 @@ export type PartyData = {
 	splitFrom?: string;
 	mergerOf?: string;
 	precededBy?: string | string[];
-	ideology: string | string[];
+	ideology: string[];
 	politicalPosition: string;
 	headquarters?: string;
 	youthWing?: string;
@@ -121,15 +122,6 @@ export default async function scrapeWikiPartyPage(
 	wikiURI: string
 ): Promise<PartyData> {
 	const url = `https://en.wikipedia.org${wikiURI}`;
-	// ff ideology
-	// sf election results
-	// sf founder
-	// filter partyLeaders array
-	//greens local election results, partyLeaders
-
-	// ff format party leaders // remove portrait and parse terms
-	// soc dem dail election results leaders // ideology
-	// fg dail election leaders (first few)
 
 	let response = (await axios.get(`api/webscrape?url=${url}`)).data.text;
 	const $ = cheerio.load(response);
@@ -164,7 +156,7 @@ export default async function scrapeWikiPartyPage(
 
 	// Parse foundation info
 	let founder: string | undefined | string[] = getInfoBoxText($, 'Founder');
-	if (!founder || validateStandardName(founder) === false) {
+	if (!founder || validateStandardFullName(founder) === false) {
 		founder = getListByTHtitle($, 'Founders');
 	}
 
@@ -218,13 +210,14 @@ export default async function scrapeWikiPartyPage(
 
 	// Parse political position info
 	const colours = $('th:contains("Colours")').next('td').find('a').text();
-	let ideology: string[] | string | undefined = removeSquareFootnotes(
-		$('th:contains("Ideology")').next('td').text().trim()!
-	);
-	if (hasLowerUpperCasePattern(ideology as string) === true) {
-		// Where multiple ideologies are listed, split them into an array
-		ideology = splitByLowerUpperCase(ideology as string);
+	let ideology: string[] | undefined = removeSquareFootnotes(
+		$('th:contains("Ideology")').next('td').find('a').text()!
+	)?.split('\n');
+
+	if (ideology?.length === 1) {
+		ideology = splitByLowerUpperCase(ideology[0]);
 	}
+
 	const politicalPosition = $('a[title="Political spectrum"]')
 		.parent()
 		.next()
@@ -236,51 +229,52 @@ export default async function scrapeWikiPartyPage(
 	);
 
 	// Parse leadership history tables
-	let leaderEl = getNextTableElAfterH2text($, 'Leadership');
-	if (leaderEl === undefined) {
-		leaderEl = getNextTableElAfterH3text($, 'Leadership');
-	}
-	if (leaderEl === undefined) {
-		leaderEl = getNextTableElAfterH4text($, 'Leadership');
-	} else if (name === 'Sinn Féin') {
-		leaderEl = getNextTableElAfterH2text($, 'Leadership history');
-	}
-	const partyLeaders = parseTableToObjects(leaderEl?.toString()!);
 
-	let deputyLeaderEl = getNextTableElAfterH3text($, 'Deputy');
-	if (deputyLeaderEl === undefined) {
-		deputyLeaderEl = getNextTableElAfterH4text($, 'Deputy leader');
+	let leaderEl: cheerio.Cheerio<cheerio.Element> | undefined = $(
+		'#Party_leader'
+	)
+		.parent()
+		.next('table');
+	if (leaderEl === undefined || leaderEl.length === 0) {
+		leaderEl = getNextTableElAfterH2text($, 'Leadership');
 	}
+	// #Party_leader || h3 text Leadership
+	const partyLeaders = parseHTMLtable(leaderEl!.toString());
+	const deputyLeaderEl = $('#Deputy_leader').parent().next('table');
+
 	const deputyLeaders = () => {
 		if (deputyLeaderEl) {
-			return parseTableToObjects(deputyLeaderEl!.toString());
+			return parseHTMLtable(deputyLeaderEl!.toString());
 		} else {
 			return undefined;
 		}
 	};
 
 	const seanadLeaderEl = getNextTableElAfterH3text($, 'Seanad leader');
-	const seanadLeaders = parseTableToObjects(seanadLeaderEl?.toString()!);
+	const seanadLeaders = parseHTMLtable(seanadLeaderEl?.toString()!);
 
 	// Parse election results tables
 	let dailResultsEl = getNextTableElAfterH3text($, 'Dáil Éireann');
-	if (dailResultsEl === undefined) {
+	if (dailResultsEl?.length === 0) {
 		dailResultsEl = getNextTableElAfterH4text($, 'Dáil Éireann');
 	}
-	const dailResults: DailElectionData[] = parseDailElectionTable(
+	let dailResults: DailElectionData[] = parseDailElectionTable(
 		dailResultsEl!.toString()!
 	) as DailElectionData[];
 
-	const europeanResultsEl = getNextTableElAfterH3text($, 'European Parliament');
-	const europeanResults: ElectionData[] = parseTableToObjects(
+	const europeanResultsEl = getNextTableElAfterH3text($, 'European');
+	if (europeanResultsEl?.length === 0) {
+		getNextTableElAfterH4text($, 'European Parliament');
+	}
+	const europeanResults: ElectionData[] | unknown[] = parseHTMLtable(
 		europeanResultsEl?.toString()!
-	) as ElectionData[];
+	);
 
 	let localResultsEl = getNextTableElAfterH3text($, 'Local elections');
 	if (localResultsEl === undefined) {
 		localResultsEl = getNextTableElAfterH4text($, 'Local elections');
 	}
-	const localResults: ElectionData[] = parseTableToObjects(
+	const localResults: ElectionData[] = parseHTMLtable(
 		localResultsEl?.toString()!
 	) as ElectionData[];
 
@@ -293,10 +287,12 @@ export default async function scrapeWikiPartyPage(
 	let partyObject: PartyData = {
 		name: name,
 		leader: leader!,
-		...(deputyLeader && { deputyLeader }),
-		...(chairperson && { chairperson }),
-		...(viceChairperson && { viceChairperson }),
-		...(parliamentaryChairperson && { parliamentaryChairperson }),
+		...(deputyLeader && { deputyLeader: deputyLeader }),
+		...(chairperson && { chairperson: chairperson }),
+		...(viceChairperson && { viceChairperson: viceChairperson }),
+		...(parliamentaryChairperson && {
+			parliamentaryChairperson: parliamentaryChairperson,
+		}),
 		...(generalSecretary && { generalSecretary }),
 		...(seanadLeader && { seanadLeader }),
 		...(founder && { founder }),

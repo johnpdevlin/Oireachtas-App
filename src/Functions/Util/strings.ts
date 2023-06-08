@@ -55,25 +55,36 @@ export function getTextAfterLastParentheses(input: string): string | undefined {
 	return undefined;
 }
 
-export function validateStandardName(name: string): boolean {
+export function validateStandardFullName(name: string): boolean {
+	// If the name consists of only one word, return false
+	if (name.split(' ').length === 1) {
+		return false;
+	}
 	// Split the name into individual words
 	const words = name.split(' ');
-
 	// Check if each word follows the rules
 	for (let i = 0; i < words.length; i++) {
 		const word = words[i];
+		// Allow "de" or "di" in the middle of the name
 		if (
-			(i !== 0 && i !== words.length - 1) || // Updated condition here
-			word.toLowerCase() === 'de' ||
-			word.toLowerCase() === 'di'
+			i !== 0 &&
+			i !== words.length - 1 &&
+			(word.toLowerCase() === 'de' || word.toLowerCase() === 'di')
 		) {
-			continue; // Allow "de" or "di" in the middle of the name
+			continue;
 		}
-		if (!/^[\p{Lu}\p{Lt}][\p{Ll}\p{Lt}]*$/u.test(word)) {
+		// Check if the word starts with an upper- or titlecase letter, followed by zero or more letters (including periods)
+		if (!/^[\p{Lu}\p{Lt}][\p{L}\.]*$/u.test(word)) {
+			return false;
+		}
+		// Check if the word ends with a dot followed by zero or more uppercase or titlecase letters
+		if (
+			/^\p{Lu}\.$/u.test(word) &&
+			(!/^[\p{L}\.]*$/u.test(words[i + 1]) || words[i + 1] === undefined)
+		) {
 			return false;
 		}
 	}
-
 	return true;
 }
 
@@ -123,4 +134,29 @@ export function hasLowerUpperCasePattern(input: string): boolean {
 	const regex = /(?=[A-Z][a-z])/; // Lookahead assertion to match the pattern
 
 	return regex.test(input);
+}
+
+export function concatenateItems(items: String[]): string {
+	const numItems = items.length;
+
+	// Case when there are only two items
+	if (numItems === 2) {
+		return `${items[0]} & ${items[1]}`;
+	}
+
+	// Case when there are more than two items
+	if (numItems > 2) {
+		const lastIndex = numItems - 1;
+		const lastItem = items[lastIndex];
+		const otherItems = items.slice(0, lastIndex);
+
+		// Join all items except the last one with ", "
+		const concatenatedOtherItems = otherItems.join(', ');
+
+		// Concatenate the last item with ", and "
+		return `${concatenatedOtherItems}, and ${lastItem}`;
+	}
+
+	// Case when there are no items
+	return '';
 }
