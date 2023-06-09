@@ -4,25 +4,8 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { Inter } from 'next/font/google';
 import styles from '@/styles/Home.module.css';
-import fetchConstituencies from '@/Functions/API-Calls/OireachtasAPI/constituencies';
-import fetchMembers from '@/Functions/API-Calls/OireachtasAPI/members';
-import { ConstituencyRequest } from '@/Models/OireachtasAPI/Request/constitRequest';
-import MemberRequest from '@/Models/OireachtasAPI/Request/memberRequest';
-import PartyRequest from '@/Models/OireachtasAPI/Request/partyRequest';
-import fetchParties from '@/Functions/API-Calls/OireachtasAPI/parties';
-import parseInterests from '@/Functions/GetWebsiteData/Oireachtas/parseInterestsPDF';
-import axios from 'axios';
-import parseSittingDaysReport from '@/Functions/GetWebsiteData/Oireachtas/parseSittingDaysPDF';
-
-import getCommitteesBaseDetails from '@/Functions/GetWebsiteData/Oireachtas/scrapeAllCommittees';
-import scrapeMemberOirProfile from '@/Functions/GetWebsiteData/Oireachtas/scrapeMemberProfile';
-import scrapeCommitteesBaseDetails from '@/Functions/GetWebsiteData/Oireachtas/scrapeAllCommittees';
-import parseInterestsReport from '@/Functions/GetWebsiteData/Oireachtas/parseInterestsPDF';
-import scrapeWikiDailSession from '@/Functions/GetWebsiteData/Wikipedia/scrapeDailSessionPage';
-import scrapeWikiProfile from '@/Functions/GetWebsiteData/Wikipedia/scrapeTDpage';
-import scrapePartyPage from '@/Functions/GetWebsiteData/Wikipedia/scrapePartyPage';
-import scrapeWikiConstituencies from '@/Functions/GetWebsiteData/Wikipedia/scapeAllConstitsInfo';
-import scrapeAllWikiConstituencies from '@/Functions/GetWebsiteData/Wikipedia/scapeAllConstitsInfo';
+import scrapeAllWikiConstituencies from '@/Functions/GetWebsiteData/Wikipedia/scapeAllConstituencies';
+import scrapeOneWikiConstituency from '@/Functions/GetWebsiteData/Wikipedia/scrapeOneConstituency';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -48,6 +31,10 @@ export default function Home() {
 	// console.log(scrapePartyPage(`/wiki/${au}`));
 	// console.log(scrapePartyPage(`/wiki/${pbp}`));
 	// console.log(scrapePartyPage(`/wiki/${r2c}`));
+
+	console.log(
+		scrapeOneWikiConstituency('/wiki/Carlow–Kilkenny_(Dáil_constituency)')
+	);
 
 	console.log(scrapeAllWikiConstituencies());
 	return (

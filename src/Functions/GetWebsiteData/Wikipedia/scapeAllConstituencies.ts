@@ -1,10 +1,9 @@
 /** @format */
 
-import { addOrdinalSuffix } from '@/Functions/Util/strings';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { ElectionData } from './scrapePartyPage';
 import { getNextTableElAfterH2text } from './util';
+import scrapeOneWikiConstituency from './scrapeOneConstituency';
 
 interface RawWikiConstituency {
 	name: string;
@@ -43,5 +42,10 @@ export default async function scrapeAllWikiConstituencies(): Promise<
 		})
 		.get();
 
-	return wikiDetails;
+	const wikiConstits = wikiDetails.map((co: RawWikiConstituency) => {
+		const details = scrapeOneWikiConstituency(co.wikiURI);
+		return { ...co, ...details };
+	});
+
+	return wikiConstits;
 }
