@@ -21,19 +21,21 @@ import parseInterestsReport from '@/Functions/GetWebsiteData/Oireachtas/parseInt
 import scrapeWikiDailSession from '@/Functions/GetWebsiteData/Wikipedia/scrapeDailSessionPage';
 import scrapeWikiProfile from '@/Functions/GetWebsiteData/Wikipedia/scrapeTDpage';
 import scrapePartyPage from '@/Functions/GetWebsiteData/Wikipedia/scrapePartyPage';
+import scrapeWikiConstituencies from '@/Functions/GetWebsiteData/Wikipedia/scapeAllConstitsInfo';
+import scrapeAllWikiConstituencies from '@/Functions/GetWebsiteData/Wikipedia/scapeAllConstitsInfo';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
-	const ff = 'Fianna_Fáil';
-	const sf = 'Sinn_Féin';
-	const sd = 'Social_Democrats_(Ireland)';
-	const fg = 'Fine_Gael';
-	const lp = 'Labour_Party_(Ireland)';
-	const pbp = 'People_Before_Profit–Solidarity';
-	const au = 'Aontú';
-	const gp = 'Green_Party_(Ireland)';
-	const r2c = 'Right_to_Change';
+	// const ff = 'Fianna_Fáil';
+	// const sf = 'Sinn_Féin';
+	// const sd = 'Social_Democrats_(Ireland)';
+	// const fg = 'Fine_Gael';
+	// const lp = 'Labour_Party_(Ireland)';
+	// const pbp = 'People_Before_Profit–Solidarity';
+	// const au = 'Aontú';
+	// const gp = 'Green_Party_(Ireland)';
+	// const r2c = 'Right_to_Change';
 
 	// sf elections, seanad leaders
 
@@ -42,11 +44,12 @@ export default function Home() {
 	// console.log(scrapePartyPage(`/wiki/${sd}`));
 	// console.log(scrapePartyPage(`/wiki/${fg}`));
 	// console.log(scrapePartyPage(`/wiki/${lp}`));
-	console.log(scrapePartyPage(`/wiki/${gp}`));
+	// console.log(scrapePartyPage(`/wiki/${gp}`));
 	// console.log(scrapePartyPage(`/wiki/${au}`));
 	// console.log(scrapePartyPage(`/wiki/${pbp}`));
-	console.log(scrapePartyPage(`/wiki/${r2c}`));
+	// console.log(scrapePartyPage(`/wiki/${r2c}`));
 
+	console.log(scrapeAllWikiConstituencies());
 	return (
 		<>
 			<Head>
