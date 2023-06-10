@@ -2,25 +2,34 @@
 
 import fetchDebates from '@/Functions/API-Calls/OireachtasAPI/debates';
 import parseCommitteeReport from '@/Functions/GetWebsiteData/Oireachtas/parseCommitteeReport';
-import scrapeCommitteeInfo from '@/Functions/GetWebsiteData/Oireachtas/scapeCommitteeInfo';
-import scrapeCommitteesBaseDetails, {
-	BaseCommittee,
-} from '@/Functions/GetWebsiteData/Oireachtas/scrapeAllCommittees';
 import { capitaliseFirstLetters } from '@/Functions/Util/strings';
-import ListItem from '@mui/material/ListItem';
-export default async function prcCommittee() {
-	// const committees: BaseCommittee[] = await scrapeCommitteesBaseDetails();
 
-	// const co1 = scrapeCommitteeInfo(33, committees[0].uri);
-	// console.log(co1);
+type CommitteeAttendance = {
+	date: Date;
+	name: string;
+	uri: string;
+	pdf: string;
+	xml: string;
+	attendees: string[];
+	alsoPresent: string[];
+};
+export default async function prcCommitteeReports(
+	date_start: string,
+	date_end?: string
+): Promise<CommitteeAttendance[]> {
+	if (!date_start) return [];
+	if (!date_end) date_end = '2099-01-01'; //
 
+	// YYYY-MM-DD format
 	const debates = fetchDebates({
-		date_start: '2020-11-01',
-		date_end: '2020-12-01',
+		// Call to API to retrieve debate records
+		date_start: date_start,
+		date_end: date_end,
 		chamber_type: 'committee',
 	});
 
 	const records = (await debates).map((deb) => {
+		// Map to get pdf URLs for committee meetings
 		const date = new Date(deb.contextDate);
 		const name = capitaliseFirstLetters(
 			deb.debateRecord.house.showAs.toLowerCase()
@@ -42,18 +51,15 @@ export default async function prcCommittee() {
 		};
 	});
 
-	// const parsedRecords = records.map((r) => {
-	// 	if (r.pdf !== undefined) {
-	// 		const att = parseCommitteeReport(r.pdf);
-	// 		return { ...r, att };
-	// 	}
-	// });
-
-	const parsedRecords = records.map((r) => {
-		const att = parseCommitteeReport(r.pdf);
-		return { ...r, att };
+	const parsedRecords: CommitteeAttendance[] = records.map(async (r) => {
+		// Parse pdf report to get attendee info for committee meeting
+		if (r.pdf !== undefined) {
+			const att = await parseCommitteeReport(r.pdf);
+			const present = att.present;
+			const alsoPresent = att.alsoPresent;
+			return { ...r, present, alsoPresent };
+		}
 	});
-	console.log(parsedRecords);
 
 	return parsedRecords;
 }

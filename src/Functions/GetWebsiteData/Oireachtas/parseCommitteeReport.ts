@@ -44,49 +44,49 @@ function format(pr: string): string {
 	return pr;
 }
 function formatPresentString(presence: string): string[] {
-	if (presence !== undefined) {
-		if (presence.includes('in attendance')) {
-			let present: string = presence.split(':')[1];
-			return [format(present)];
-		} else if (presence.includes(',')) {
-			let present: string[] = presence.split(/,(?![^\(]*\))/);
-
-			present = present.map((pr) => {
-				let name = format(pr);
-				if (name !== '' && name !== undefined) {
-					return name;
-				}
-			}) as string[];
-			return present;
-		} else if (presence.includes('and')) {
-			let present: string[] = presence.split(' and ');
-			present = present.map((pr) => {
-				let name = format(pr);
-				if (name !== '' && name !== undefined) {
-					return name;
-				}
-			}) as string[];
-		} else if (
-			presence.includes('.') &&
-			presence.charAt(presence.indexOf('.') - 2) !== ' '
-		) {
-			let present: string[] = presence.split('.');
-			present = present.map((pr) => {
-				let name = format(pr);
-				if (name !== '' && name !== undefined) {
-					return name;
-				}
-			}) as string[];
-			return present;
-		}
-	} else {
-		return [format(presence)];
+	// Check if presence indicates "in attendance"
+	if (presence.includes('in attendance')) {
+		const present: string = presence.split(':')[1].trim(); // Extract the name after the colon
+		return [format(present)]; // Format the name and return it as a single-element array
 	}
-	return [];
+
+	// Check if presence contains commas (multiple names separated by commas)
+	if (presence.includes(',')) {
+		const present: string[] = presence
+			.split(/,(?![^\(]*\))/)
+			.map((name) => format(name.trim())) // Format each name and remove leading/trailing whitespace
+			.filter(Boolean); // Filter out any empty or undefined names
+		return present; // Return the array of formatted names
+	}
+
+	// Check if presence contains "and" (multiple names separated by "and")
+	if (presence.includes('and')) {
+		const present: string[] = presence
+			.split(' and ')
+			.map((name) => format(name.trim())) // Format each name and remove leading/trailing whitespace
+			.filter(Boolean); // Filter out any empty or undefined names
+		return present; // Return the array of formatted names
+	}
+
+	// Check that name not in format of John J. Joe
+	if (
+		presence.includes('.') &&
+		presence.charAt(presence.indexOf('.') - 1) !== ' '
+	) {
+		const present: string[] = presence
+			.split('.')
+			.map((name) => format(name.trim())) // Format each name and remove leading/trailing whitespace
+			.filter(Boolean); // Filter out any empty or undefined names
+		return present; // Return the array of formatted names
+	}
+
+	// If none of the above conditions match, treat the presence as a single name
+	return [format(presence)]; // Format the name and return it as a single-element array
 }
+
 export default async function parseCommitteeReport(
 	url: string
-): Promise<{ present: string[]; additionalAttendees: string[] } | void> {
+): Promise<{ present: string[]; alsoPresent: string[] }> {
 	try {
 		if (url !== undefined) {
 			const response = await axios.get(`api/pdf2text?url=${url}`);
@@ -95,7 +95,7 @@ export default async function parseCommitteeReport(
 
 			let searching = false;
 			let present: string[] = [];
-			let additionalAttendees: string[] = [];
+			let alsoPresent: string[] = [];
 
 			for (let i = 0; i < lines.length; i++) {
 				const line = lines[i].toLowerCase();
@@ -114,6 +114,7 @@ export default async function parseCommitteeReport(
 				if (searching) {
 					// Skip lines that are not useful based on certain conditions
 					const shouldSkipLine =
+						line.includes('present') ||
 						line.includes('deputies') ||
 						line.includes('senators') ||
 						line.includes('1') ||
@@ -124,7 +125,7 @@ export default async function parseCommitteeReport(
 						if (line.includes('in attendance')) {
 							// If the line includes 'in attendance', extract additional attendees' names
 							const additionalNames = formatPresentString(line.split(':')[1]);
-							additionalAttendees.push(...additionalNames);
+							alsoPresent.push(...additionalNames);
 						} else {
 							// Format the names of the present attendees
 							const processedNames = formatPresentString(line);
@@ -138,15 +139,15 @@ export default async function parseCommitteeReport(
 
 			// Remove any undefined values from the arrays
 			present = present.filter(Boolean);
-			additionalAttendees = additionalAttendees.filter(Boolean);
+			alsoPresent = alsoPresent.filter(Boolean);
 
 			// Return the attendees' lists
-			return { present, additionalAttendees };
+			return { present, alsoPresent };
 		}
 	} catch (error) {
 		console.log(url, error);
 	}
 
-	// Return undefined if an error occurred or if the URL is undefined
-	return;
+	// Return [] if an error occurred or if the URL is undefined
+	return { present: [], alsoPresent: [] };
 }

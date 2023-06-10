@@ -46,7 +46,8 @@ export default function Home() {
 	// console.log(scrapeAllWikiConstituencies());
 	// let uri = ''.replaceAll
 	// 	console.log(parseCommitteeReport(uri: 'irish-language-gaeltacht-and-the-irish-speaking-community', date: '2023-06-01'));
-	prcCommittee();
+	// console.log(prcCommittee());
+	console.log(Date.now().toString());
 	// c
 	//
 
