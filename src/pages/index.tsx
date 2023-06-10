@@ -6,6 +6,9 @@ import { Inter } from 'next/font/google';
 import styles from '@/styles/Home.module.css';
 import scrapeAllWikiConstituencies from '@/Functions/GetWebsiteData/Wikipedia/scapeAllConstituencies';
 import scrapeOneWikiConstituency from '@/Functions/GetWebsiteData/Wikipedia/scrapeOneConstituency';
+import prcCommittee from '@/Functions/Participation/Committee/prcCommittee';
+import parseCommitteeReport from '@/Functions/GetWebsiteData/Oireachtas/parseCommitteeReport';
+import processConstituencies from '@/Functions/API-Calls/OireachtasAPI/Formatter/Memberships/constituencies';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -31,12 +34,17 @@ export default function Home() {
 	// console.log(scrapePartyPage(`/wiki/${au}`));
 	// console.log(scrapePartyPage(`/wiki/${pbp}`));
 	// console.log(scrapePartyPage(`/wiki/${r2c}`));
+	// console.log(parseCommitteeReport());
 
-	console.log(
-		scrapeOneWikiConstituency('/wiki/Carlow–Kilkenny_(Dáil_constituency)')
-	);
+	// console.log(
+	// 	scrapeOneWikiConstituency('/wiki/Carlow–Kilkenny_(Dáil_constituency)')
+	// );
 
-	console.log(scrapeAllWikiConstituencies());
+	// console.log(scrapeAllWikiConstituencies());
+
+	console.log(parseCommitteeReport());
+	// prcCommittee();
+
 	return (
 		<>
 			<Head>

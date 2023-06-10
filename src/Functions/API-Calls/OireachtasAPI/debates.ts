@@ -2,7 +2,7 @@
 
 import { format } from 'date-fns';
 import fetcher from '..';
-import { debateRequest } from '../../Models/apiRequests';
+import { debateRequest } from '@/Types/Oireachtas/Debates';
 
 export default async function fetchDebates(props: debateRequest) {
 	// converts date type to string

@@ -168,3 +168,14 @@ export function concatenateItems(items: String[]): string {
 	// Case when there are no items
 	return '';
 }
+
+export function capitaliseFirstLetters(input: string): string {
+	return input
+		.split(' ')
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(' ');
+}
+
+function removeTextBetweenParentheses(str) {
+	return str.replace(/\([^)]*\)/g, '');
+}

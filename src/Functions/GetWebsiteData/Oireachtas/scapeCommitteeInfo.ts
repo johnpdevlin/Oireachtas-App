@@ -23,15 +23,21 @@ type Committee = {
 type ExpiredDetails = {
 	historicText: string;
 	successorUrl?: string;
-	endDate: Date;
+	endDate?: Date | undefined;
 };
 
 export default async function scrapeCommitteeInfo(
-	house_no: string,
+	house_no: string | number,
 	uri: string
-): Promise<Committee> {
+): Promise<Committee | undefined> {
 	try {
+		if (typeof house_no !== 'string') {
+			house_no = house_no.toString();
+		}
+
 		const url = `https://www.oireachtas.ie/en/committees/${house_no}/${uri}/`;
+
+		if (!url) throw new Error('No url provided');
 
 		let response = (await axios.get(`api/webscrape?url=${url}`)).data.text;
 		let $ = cheerio.load(response);
@@ -51,7 +57,8 @@ export default async function scrapeCommitteeInfo(
 			endDate = new Date($('.c-historic-committee-ribbon__date').text().trim());
 		}
 
-		response = (await axios.get(`api/webscrape?url=${url}/members/`)).data.text;
+		response = (await axios.get(`api/webscrape?url=${url}membership/`)).data
+			.text;
 		$ = cheerio.load(response);
 
 		// Get the committee name
@@ -103,16 +110,15 @@ export default async function scrapeCommitteeInfo(
 			chair,
 			currentMembers,
 			pastMembers,
-			...(historicText ? { historicText } : {}),
-			...(successorUrl ? { successorUrl } : {}),
-			...(endDate ? { endDate } : {}),
+			...(historicText && { historicText }),
+			...(successorUrl && { successorUrl }),
+			...(endDate && { endDate }),
 		};
 
 		return committee;
 	} catch (error) {
 		console.error('Error occurred during scraping:', error);
-		throw error;
 	}
 }
 
-const response = await axios.get(`api/pdf2text?url=${url}`);
+('api/webscrape?url=https://www.oireachtas.ie/en/committees/33/agriculture-food-and-the-marine/members/');

@@ -11,7 +11,7 @@ type House = {
 	seanadName: string;
 };
 
-type Committee = {
+export type BaseCommittee = {
 	name: string;
 	uri: string;
 	url: string;
@@ -19,7 +19,7 @@ type Committee = {
 
 // Get and return the list of committees on Oireachtas Committees page
 export default async function scrapeCommitteesBaseDetails(): Promise<
-	Committee[]
+	BaseCommittee[]
 > {
 	try {
 		const url = 'https://www.oireachtas.ie/en/committees/';
@@ -30,7 +30,7 @@ export default async function scrapeCommitteesBaseDetails(): Promise<
 		const $ = cheerio.load(response);
 
 		const houses: House[] = [];
-		const committees: Committee[] = [];
+		const committees: BaseCommittee[] = [];
 
 		// Iterate over the option elements and extract committee details
 		$('option').each((index, element) => {
@@ -41,7 +41,7 @@ export default async function scrapeCommitteesBaseDetails(): Promise<
 
 			if (!startsWithNumber(name)) {
 				// Committee name does not start with a number
-				const com: Committee = {
+				const com: BaseCommittee = {
 					name,
 					uri: value!
 						.replace(/^\/en\/committees\/(\d{1,2})\//, '')
