@@ -9,6 +9,9 @@ import scrapeOneWikiConstituency from '@/Functions/GetWebsiteData/Wikipedia/scra
 import prcCommittee from '@/Functions/Participation/Committee/prcCommittee';
 import parseCommitteeReport from '@/Functions/GetWebsiteData/Oireachtas/parseCommitteeReport';
 import processConstituencies from '@/Functions/API-Calls/OireachtasAPI/Formatter/Memberships/constituencies';
+import scrapeCommitteesBaseDetails from '@/Functions/GetWebsiteData/Oireachtas/scrapeAllCommittees';
+import fetchDebates from '@/Functions/API-Calls/OireachtasAPI/debates';
+import { isUpperCase } from '@/Functions/Util/strings';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -41,10 +44,13 @@ export default function Home() {
 	// );
 
 	// console.log(scrapeAllWikiConstituencies());
+	// let uri = ''.replaceAll
+	// 	console.log(parseCommitteeReport(uri: 'irish-language-gaeltacht-and-the-irish-speaking-community', date: '2023-06-01'));
+	prcCommittee();
+	// c
+	//
 
-	console.log(parseCommitteeReport());
-	// prcCommittee();
-
+	// console.log(scrapeCommitteesBaseDetails());
 	return (
 		<>
 			<Head>

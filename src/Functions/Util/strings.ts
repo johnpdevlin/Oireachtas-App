@@ -168,14 +168,49 @@ export function concatenateItems(items: String[]): string {
 	// Case when there are no items
 	return '';
 }
-
 export function capitaliseFirstLetters(input: string): string {
-	return input
-		.split(' ')
-		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-		.join(' ');
+	const words = input.split(' ');
+	const capitalisedWords = words.map((word: string) => {
+		let capitalisedWord = '';
+
+		for (let i = 0; i < word.length; i++) {
+			if (
+				i !== 0 && // Check if it's not the first character of the word
+				word.charAt(i - 1) !== '’' && // Check if the previous character is not a non-standard apostrophe ('’')
+				word.charAt(i - 1) !== '-' && // Check if the previous character is not a hyphen
+				!(i >= 2 && word.substring(i - 2, i).toLowerCase() === 'mc') && // Check if the previous two characters are not 'mc'
+				!(i >= 3 && word.substring(i - 3, i).toLowerCase() === 'mac') // Check if the previous three characters are not 'mac'
+			) {
+				capitalisedWord += word.charAt(i).toLowerCase(); // Convert the character to lowercase
+			} else {
+				capitalisedWord += word.charAt(i).toUpperCase(); // Convert the character to uppercase
+			}
+		}
+
+		return capitalisedWord;
+	});
+
+	return capitalisedWords.join(' ');
 }
 
-function removeTextBetweenParentheses(str) {
+export function removeTextBetweenParentheses(str: string) {
 	return str.replace(/\([^)]*\)/g, '');
+}
+
+export function removeTextAfterParenthesis(str: string): string {
+	let temp = '';
+	for (let i = str.length - 1; i >= 0; i--) {
+		if (str[i] === '(') {
+			temp = str.substring(0, i);
+		}
+	}
+	return temp;
+}
+export function isAllUpperCase(input: string): boolean {
+	for (let i = 0; i < input.length; i++) {
+		if (input[i] !== input[i].toUpperCase()) {
+			return false; // Found a lowercase character, exit early
+		}
+	}
+	return true; // All characters are uppercase
 }
