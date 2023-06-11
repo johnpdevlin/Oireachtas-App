@@ -1,7 +1,7 @@
 /** @format */
 
 import axios from 'axios';
-import { convertDMYdate2MDY } from '../../Util/dateConverter';
+import { convertDMYdate2MDY } from '../../Util/dates';
 
 type DateRange = {
 	dateRange: {
@@ -36,6 +36,7 @@ function parseDateRange([startDateStr, endDateStr]: string[]): DateRange {
 	return dateRange;
 }
 
+// url in format https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2023/2023-06-01_deputies-verification-of-attendance-for-the-payment-of-taa-01-january-2023-to-30-april-2023_en.pdf
 export default function parseSittingDaysReport(
 	url: string
 ): SittingDaysReport[] | void {

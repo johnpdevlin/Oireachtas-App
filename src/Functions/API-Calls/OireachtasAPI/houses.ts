@@ -1,25 +1,29 @@
 /** @format */
 
+import HouseRequest from '@/Models/OireachtasAPI/Request/houseRequest';
+import {
+	House,
+	HouseResult,
+} from '@/Models/OireachtasAPI/Response/houseResponse';
 import fetcher from '..';
-import { houseRequest } from '../../Models/apiRequests';
-import house from '../../Models/house';
-import formatHouse from './Formatter/house';
 
 export default async function fetchHouses(
-	props: houseRequest
-): Promise<any[] | house> {
+	props: HouseRequest
+): Promise<House[]> {
 	const url: string = `https://api.oireachtas.ie/v1/houses?chamber_id=${
 		props.chamber
-			? `https%3A%2F%2Fdata.oireachtas.ie%2Fie%2Foireachtas%2Fhouse%2F${props.chamber}%2F${props.houseNo}`
+			? `https%3A%2F%2Fdata.oireachtas.ie%2Fie%2Foireachtas%2Fhouse%2F${props.chamber}%2F${props.house_no}`
 			: ''
 	}&limit=500`;
 
-	let houses = (await fetcher(url)).results;
-
-	if (props.formatted != false) {
-		const h: house = await formatHouse(houses[0]);
-		return h;
-	} else {
-		return houses;
+	try {
+		let houses: HouseResult[] = (await fetcher(url)).results;
+		// remove unnceccesary outer objects
+		return houses.map((obj) => obj.house) as House[];
+	} catch (err) {
+		console.log('Error. Props:', props, ` URL: ${url}`);
+		console.log(err);
 	}
+
+	return [];
 }

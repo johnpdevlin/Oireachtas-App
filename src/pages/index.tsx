@@ -4,14 +4,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { Inter } from 'next/font/google';
 import styles from '@/styles/Home.module.css';
-import scrapeAllWikiConstituencies from '@/Functions/GetWebsiteData/Wikipedia/scapeAllConstituencies';
-import scrapeOneWikiConstituency from '@/Functions/GetWebsiteData/Wikipedia/scrapeOneConstituency';
-import prcCommittee from '@/Functions/Participation/Committee/prcCommittee';
-import parseCommitteeReport from '@/Functions/GetWebsiteData/Oireachtas/parseCommitteeReport';
-import processConstituencies from '@/Functions/API-Calls/OireachtasAPI/Formatter/Memberships/constituencies';
-import scrapeCommitteesBaseDetails from '@/Functions/GetWebsiteData/Oireachtas/scrapeAllCommittees';
-import fetchDebates from '@/Functions/API-Calls/OireachtasAPI/debates';
-import { isUpperCase } from '@/Functions/Util/strings';
+import prcAttendanceReports from '@/Functions/Participation/Attendance/prcAttendanceReport';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -47,10 +40,10 @@ export default function Home() {
 	// let uri = ''.replaceAll
 	// 	console.log(parseCommitteeReport(uri: 'irish-language-gaeltacht-and-the-irish-speaking-community', date: '2023-06-01'));
 	// console.log(prcCommittee());
-	console.log(Date.now().toString());
 	// c
 	//
 
+	prcAttendanceReports({ chamber: 'dail', house_no: 33 });
 	// console.log(scrapeCommitteesBaseDetails());
 	return (
 		<>
