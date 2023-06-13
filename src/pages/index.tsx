@@ -43,7 +43,7 @@ export default function Home() {
 	// c
 	//
 
-	console.log(prcAttendanceReports({ chamber: 'dail', house_no: 33 }));
+	// console.log(prcAttendanceReports({ chamber: 'dail', house_no: 33 }));
 	// console.log(scrapeCommitteesBaseDetails());
 	return (
 		<>

@@ -27,6 +27,7 @@ export type SittingDaysReport = {
 } & SittingDays;
 
 function parseBlock(block: string): SittingDays | string {
+	// splits into lines and removes empty lines
 	const lines = block
 		.split('\n')
 		.filter((line) => line !== undefined && line.length > 0);
@@ -162,7 +163,7 @@ function parseBlock(block: string): SittingDays | string {
 	return report;
 }
 
-export default async function parseSittingDaysReport(
+export default async function parseSittingDaysPDF(
 	url: string
 ): Promise<SittingDaysReport[]> {
 	return axios

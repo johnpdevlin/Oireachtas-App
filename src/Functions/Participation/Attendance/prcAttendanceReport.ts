@@ -24,10 +24,10 @@ export default async function prcAttendanceReports(
 				);
 				return reports;
 			} catch (err) {
-				console.log(
+				console.warn(
 					'Function seems unable to handle this Dáil term. Modification may be neccessary.'
 				);
-				console.log(err);
+				console.error(err);
 			}
 		}
 	}

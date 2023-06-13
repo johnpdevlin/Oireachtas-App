@@ -2,9 +2,7 @@
 
 import { Chamber } from '@/Models/_utility';
 import similarity from 'string-similarity';
-import parseSittingDaysReport, {
-	SittingDaysReport,
-} from './parseSittingDaysPDF';
+import parseSittingDaysPDF, { SittingDaysReport } from './parseSittingDaysPDF';
 import fetchMembers, {
 	Member,
 } from '@/Functions/API-Calls/OireachtasAPI/members';
@@ -72,7 +70,7 @@ export default async function scrapeSittingReportsForChamber(
 	if (reportURLs.length === 0) return [];
 
 	const reports = reportURLs.map((report) => {
-		return parseSittingDaysReport(report); // Parse each report URL
+		return parseSittingDaysPDF(report); // Parse each report URL
 	});
 
 	const members = (
