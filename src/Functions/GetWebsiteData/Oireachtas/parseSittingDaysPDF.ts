@@ -8,7 +8,8 @@ type DateRange = {
 };
 
 type SittingDays = {
-	name: string;
+	name?: string;
+	uri?: string;
 	dateRange: DateRange;
 	limit: number;
 	totalPossibleSittings: number;
