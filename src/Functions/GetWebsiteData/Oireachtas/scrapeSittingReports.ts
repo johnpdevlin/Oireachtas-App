@@ -7,9 +7,9 @@ import parseSittingDaysReport, {
 } from './parseSittingDaysPDF';
 import fetchMembers, {
 	Member,
-	MemberResult,
 } from '@/Functions/API-Calls/OireachtasAPI/members';
 
+// Assign URIs to the reports
 async function assignUriToReports(
 	reports: Promise<SittingDaysReport[]>[],
 	members: { name: string; uri: string }[]
@@ -22,12 +22,14 @@ async function assignUriToReports(
 		let bestMatch: { name: string; uri: string } | undefined;
 		let maxSimilarity = 0;
 
+		// Find the best match for each report
 		for (const member of members) {
 			const similarityScore = similarity.compareTwoStrings(
-				report.name!.toLowerCase(),
-				member.name.toLowerCase()
+				report.name!.toLowerCase(), // Compare lowercase report name
+				member.name.toLowerCase() // Compare lowercase member name
 			);
 
+			// Keep track of the best match so far
 			if (similarityScore > maxSimilarity) {
 				maxSimilarity = similarityScore;
 				bestMatch = member;
@@ -35,10 +37,10 @@ async function assignUriToReports(
 		}
 
 		if (bestMatch) {
-			const { name, ...rest } = report; // Exclude the `name` property from the report object
+			const { name, ...rest } = report;
 			const processedReport = {
 				...rest,
-				uri: bestMatch.uri,
+				uri: bestMatch.uri, // Assign the best match URI to the report
 			};
 			processedReports.push(processedReport);
 		}
@@ -47,13 +49,16 @@ async function assignUriToReports(
 	return processedReports;
 }
 
+// Scrape sitting reports for a specific chamber and house number
 export default async function scrapeSittingReportsForChamber(
 	chamber: Chamber,
 	house_no: number
-) {
+): Promise<SittingDaysReport[]> {
 	let reportURLs: string[] = [];
+
 	if (chamber === 'dail') {
 		if (house_no === 33) {
+			// Define report URLs for house number 33
 			let report2020 =
 				'https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2021/2021-02-12_deputies-verification-of-attendance-for-the-payment-of-taa-8-feb-to-30-nov-2020_en.pdf';
 			let report2021 =
@@ -63,11 +68,13 @@ export default async function scrapeSittingReportsForChamber(
 			reportURLs = [report2020, report2021, report2022];
 		}
 	}
+
 	if (reportURLs.length === 0) return [];
 
 	const reports = reportURLs.map((report) => {
-		return parseSittingDaysReport(report);
+		return parseSittingDaysReport(report); // Parse each report URL
 	});
+
 	const members = (
 		await fetchMembers({
 			house_no: house_no,
@@ -75,10 +82,10 @@ export default async function scrapeSittingReportsForChamber(
 		})
 	).map((member: Member) => {
 		const name = `${member.lastName} ${member.firstName}`;
-		return { name: name, uri: member.memberCode };
+		return { name: name, uri: member.memberCode }; // Extract member name and URI
 	});
 
-	const parsedReports = assignUriToReports(reports, members);
+	const parsedReports = await assignUriToReports(reports, members); // Assign URIs to the reports
 
 	return parsedReports;
 }
