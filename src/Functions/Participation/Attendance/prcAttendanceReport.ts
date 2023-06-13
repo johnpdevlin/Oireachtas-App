@@ -17,8 +17,18 @@ export default async function prcAttendanceReports(
 			house_no: house.house_no,
 		} as unknown as HouseRequest);
 		if (houseDetails.length === 1) {
-			const a = scrapeSittingReportsForChamber(house.chamber, house.house_no);
-			console.log(a);
+			try {
+				const reports = scrapeSittingReportsForChamber(
+					house.chamber,
+					house.house_no
+				);
+				return reports;
+			} catch (err) {
+				console.log(
+					'Function seems unable to handle this Dáil term. Modification may be neccessary.'
+				);
+				console.log(err);
+			}
 		}
 	}
 }
