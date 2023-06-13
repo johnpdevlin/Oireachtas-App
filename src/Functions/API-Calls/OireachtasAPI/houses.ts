@@ -10,6 +10,8 @@ import fetcher from '..';
 export default async function fetchHouses(
 	props: HouseRequest
 ): Promise<House[]> {
+
+	// construct request
 	const url: string = `https://api.oireachtas.ie/v1/houses?chamber_id=${
 		props.chamber
 			? `https%3A%2F%2Fdata.oireachtas.ie%2Fie%2Foireachtas%2Fhouse%2F${props.chamber}%2F${props.house_no}`

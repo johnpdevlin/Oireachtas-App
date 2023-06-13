@@ -1,12 +1,5 @@
 /** @format */
 
-// import { Chamber } from '@/Models/_utility';
-// import puppeteer from 'puppeteer';
-
-// export default async function scrapeSittingReportsForChamber(
-// 	chamber: Chamber,
-// 	house_no: number
-// ) {
 // 	// f() to get sitting day reports for chamber i.e. Dáil 33 etc.
 
 // 	async function run() {
