@@ -2,103 +2,13 @@
 
 import { Chamber } from '@/Models/_utility';
 import fetcher from '..';
+import { MemberRequest, RawMember } from '@/Models/OireachtasAPI/member';
+import { removeOuterObjects } from '@/Functions/Util/objects';
+import validateOireachtasRequest from './_validateRequest';
 
-export type MemberRequest = {
-	uri?: string;
-	date_start?: string;
-	date_end?: string;
-	house_no?: number;
-	chamber?: Chamber;
-	const_code?: string;
-	party_code?: string;
-	limit?: number;
-};
+export default async function fetchMembers(props: MemberRequest) {
+	props = validateOireachtasRequest(props);
 
-export interface MemberHead {
-	counts: {
-		memberCount: number;
-		resultCount: number;
-	};
-	dateRange: {
-		start: string;
-		end: string | null;
-	};
-	lang: string;
-}
-
-export interface Party {
-	partyCode: string;
-	uri: string;
-	showAs: string;
-	dateRange: {
-		end: string | null;
-		start: string;
-	};
-}
-
-export interface Office {
-	officeName: {
-		showAs: string;
-		uri: string;
-	};
-	dateRange: {
-		end: string | null;
-		start: string;
-	};
-}
-
-export interface Represent {
-	representCode: string;
-	uri: string;
-	showAs: string;
-	representType: string;
-}
-
-export interface Membership {
-	parties: { party: Party }[];
-	house: {
-		houseCode: string;
-		uri: string;
-		houseNo: string;
-		showAs: string;
-		chamberType: string;
-	};
-	offices: { office: Office }[];
-	uri: string;
-	represents: { represent: Represent }[];
-	dateRange: {
-		end: string;
-		start: string;
-	};
-}
-
-export interface Member {
-	showAs: string;
-	lastName: string;
-	firstName: string;
-	gender: string;
-	memberships: { membership: Membership }[];
-	uri: string;
-	wikiTitle: string;
-	fullName: string;
-	dateOfDeath: null;
-	memberCode: string;
-	image: boolean;
-	pId: string;
-}
-
-export interface MemberResult {
-	member: Member;
-}
-
-export interface MemberApiResponse {
-	head: MemberHead;
-	results: MemberResult[];
-}
-
-export default async function fetchMembers(
-	props: MemberRequest
-): Promise<Member[]> {
 	let url: string;
 
 	if (props.uri!) {
@@ -115,9 +25,34 @@ export default async function fetchMembers(
 		}`;
 	}
 
-	let members: Member[] = (await fetcher(url)).results.map(
-		(member: { member: MemberResult }) => member.member
-	);
+	let members = (await fetcher(url)).results;
 
-	return members;
+	const formattedMembers = members.map((member: RawMember) => {
+		const m = removeOuterObjects(member);
+
+		const uri = m.memberCode;
+		const name = m.fullName;
+		const firstName = m.firstName;
+		const lastName = m.lastName;
+		const dateRange = m.memberships.dateRange;
+		const house = m.memberships.house;
+
+		const offices = m.memberships.offices;
+		const constituencies = m.memberships.represents;
+		const parties = m.memberships.parties;
+		return {
+			uri,
+			name,
+			firstName,
+			lastName,
+			dateRange,
+			house,
+			offices,
+			constituencies,
+			parties,
+		};
+	});
+
+	// Basic Formatting
+	return formattedMembers;
 }

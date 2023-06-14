@@ -8,10 +8,10 @@ import {
 	participationRecord,
 	groupParticipationRecord,
 } from '../../Models/UI/participation';
-import aggregateConstitRecords from '../Aggregate/constituencies';
-import aggregateHouseRecords from '../Aggregate/house';
-import { aggregateMemberRecords } from '../Aggregate/member';
-import aggregatePartyRecords from '../Aggregate/parties';
+import aggregateConstitRecords from '../Participation/Aggregate/constituencies';
+import aggregateHouseRecords from '../Participation/Aggregate/house';
+import { aggregateMemberRecords } from '../Participation/Aggregate/member';
+import aggregatePartyRecords from '../Participation/Aggregate/parties';
 import { writeAggregateRecordsBatch } from './writeToFirestore/writeBatch';
 
 export async function aggregateParticipationChecker(

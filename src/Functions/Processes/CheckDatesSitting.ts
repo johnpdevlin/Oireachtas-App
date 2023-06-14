@@ -12,9 +12,8 @@ async function checkOireachtasSitting(date: Date) {
 	// const committeesSitting: { uri: string; name: string }[] = [];
 
 	const debates = await fetchDebates({
-		date: date,
-		dateEnd: date,
-		formatted: false,
+		date_start: date,
+		date_end: date,
 		limit: 10000,
 	});
 

@@ -154,3 +154,15 @@ function getMonthNumber(month: string): number {
 
 	return monthNames[month];
 }
+
+export function dateToYMDstring(date: Date): string {
+	const year = date.getFullYear().toString().padStart(4, '0');
+	const month = (date.getMonth() + 1).toString().padStart(2, '0');
+	const day = date.getDate().toString().padStart(2, '0');
+	return `${year}-${month}-${day}`;
+}
+
+export function YMDstringToDate(dateString: string): Date {
+	const [year, month, day] = dateString.split('-').map(Number);
+	return new Date(year, month - 1, day);
+}

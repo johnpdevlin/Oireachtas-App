@@ -1,14 +1,37 @@
 /** @format */
 
-import { format } from 'date-fns';
 import fetcher from '..';
+import {
+	FormattedQuestion,
+	Question,
+	QuestionRequest,
+} from '@/Models/OireachtasAPI/question';
+import validateOireachtasRequest from './_validateRequest';
 
-import formatQuestions from './Formatter/questions';
-import { QuestionRequest } from '@/Models/OireachtasAPI/question';
+export async function formatQuestions(questions: any[]): Promise<Question[]> {
+	// Formats by removing unnecessary properties and passing into correct type
+	const qs: Question[] = [];
+	for (let q of questions) {
+		const question = {
+			member_uri: q.question.from.memberCode,
+			type: q.question.questionType,
+			addressedTo: q.question.to.showAs,
+			topic: q.question.debateSection.showAs,
+			content: q.question.showAs,
+			questionNumber: parseInt(q.question.questionNumber),
+			date: new Date(q.contextDate),
+			url: `https://www.oireachtas.ire/en/debates/question/${q.contextDate}/${q.question.questionNumber}`,
+		};
+		qs.push(question);
+	}
+	return qs;
+}
 
 export default async function fetchQuestions(
 	props: QuestionRequest
-): Promise<{}[]> {
+): Promise<Question[]> {
+	props = validateOireachtasRequest(props);
+
 	const url = `https://api.oireachtas.ie/v1/questions?date_start=${
 		props.date_start ? props.date_start : '1900-01-01'
 	}&date_end=${
@@ -25,9 +48,7 @@ export default async function fetchQuestions(
 			: ''
 	}`;
 
-	const questions = await fetcher(url); // requests json response
+	const questions = formatQuestions((await fetcher(url)).results); // requests json response
 
-	const formattedQuestions = await formatQuestions(questions.results);
-
-	return formattedQuestions;
+	return questions;
 }

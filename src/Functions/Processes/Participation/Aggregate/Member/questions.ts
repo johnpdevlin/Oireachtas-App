@@ -1,10 +1,9 @@
 /** @format */
 
-import fetchQuestions from '../../../Fetcher/OireachtasAPI/questions';
-import { member } from '../../../Models/UI/member';
+import fetchQuestions from '@/Functions/API-Calls/OireachtasAPI/questions';
 
 export default async function aggregateQuestions(
-	member: string,
+	member_id: string,
 	start: Date,
 	end: Date
 ): Promise<{
@@ -19,10 +18,9 @@ export default async function aggregateQuestions(
 
 	// Fetches raw Q data
 	const questions = await fetchQuestions({
-		member: member,
-		date: start,
-		dateEnd: end,
-		formatted: false,
+		member_id: member_id,
+		date_start: start,
+		date_end: end,
 	});
 
 	let writtenQuestions: number = 0; // counter variables
@@ -31,18 +29,18 @@ export default async function aggregateQuestions(
 	let lastODate: Date = new Date('1900-01-01');
 
 	for (let q of questions) {
-		const date: Date = new Date(q.contextDate);
+		const date: Date = new Date(q.date);
 
 		// sorts questions into written and oral and increments counts
 		// parses out individual dates
 
-		if (q.question.questionType == 'oral') {
+		if (q.type == 'oral') {
 			if (date.getTime() !== lastODate.getTime()) {
 				datesOQsAsked.push(date);
 				lastODate = date;
 			}
 			oralQuestions++;
-		} else if (q.question.questionType == 'written') {
+		} else if (q.type == 'written') {
 			if (date.getTime() !== lastWDate.getTime()) {
 				datesWQsAsked.push(date);
 				lastWDate = date;

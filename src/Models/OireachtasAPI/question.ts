@@ -3,8 +3,8 @@
 export type QuestionRequest = {
 	member_id?: string;
 	qType?: 'oral' | 'written';
-	date_start?: string;
-	date_end?: string;
+	date_start?: string | Date;
+	date_end?: string | Date;
 	limit?: number;
 	question_id?: string;
 	question_no?: number;

@@ -1,8 +1,8 @@
 /** @format */
 /** @format */
 
-import fetchDebates from '../../../Fetcher/OireachtasAPI/debates';
-import { member } from '../../../Models/UI/member';
+import fetchDebates from '@/Functions/API-Calls/OireachtasAPI/debates';
+import { Chamber } from '@/Models/_utility';
 
 export default async function aggregateSpeeches(
 	member: string,
@@ -19,9 +19,8 @@ export default async function aggregateSpeeches(
 
 	const debates = await fetchDebates({
 		member: member,
-		date: start,
-		dateEnd: end,
-		formatted: false,
+		date_start: start,
+		date_end: end,
 	});
 
 	let datesHouseSpoke: Date[] = []; // array of unique dates

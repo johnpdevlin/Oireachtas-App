@@ -1,12 +1,8 @@
 /** @format */
-import fetchDebates from '../Fetcher/OireachtasAPI/debates';
-import fetchQuestions from '../Fetcher/OireachtasAPI/questions';
-import fetchVotes from '../Fetcher/OireachtasAPI/votes';
-import { Question } from '../Models/UI/participation';
 
 export default async function checkParticipation(
 	member: string,
-	houseVotes: Promise<any[]>,
+	houseVotes: Promise<unknow[]>,
 	debates: Promise<any[]>,
 	oralQuestions?: Promise<any[]>,
 	writtenQuestions?: Promise<any[]>

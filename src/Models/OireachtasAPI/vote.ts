@@ -6,15 +6,15 @@ export type VoteRequest = {
 	member_id?: string;
 	chamber_type?: ChamberType;
 	chamber?: Chamber;
-	date_start?: string;
-	date_end?: string;
+	date_start?: string | Date;
+	date_end?: string | Date;
 	limit?: number;
 	outcome?: Outcome;
 	debate_id?: string;
 	vote_id?: string;
 };
 
-export type Member = {
+export type VoteMember = {
 	member: {
 		showAs: string;
 		uri: string;
@@ -22,44 +22,49 @@ export type Member = {
 	};
 };
 
-export type Vote = {
+export type RawVote = {
+	chamber: { showAs: string; uri: string };
+	category: string;
+	house: {
+		chamberType: ChamberType;
+		committeeCode: string;
+		houseCode: Chamber;
+		houseNo: number;
+		uri: string;
+		showAs: string;
+	};
 	isBill: boolean;
 	debate: { showAs: string; uri: string };
-	formats: {};
-	debateSection: string;
-	voteId: string;
+	format: {
+		pdf: { uri: string } | null;
+		xml: { uri: string } | null;
+	};
+	memberTally?: VoteMember;
+	outcome: string;
+	subject: { showAs: string; uri: string | null };
+	tellers: string;
 	tallies: {
 		nilVotes: {
 			tally: number;
 			showAs: string;
-			members: Member[];
-		};
-		taVotes: {
-			tally: number;
-			showAs: string;
-			members: Member[];
+			members: VoteMember[];
 		};
 		staonVotes: {
 			tally: number;
 			showAs: string;
-			members: Member[];
+			members: VoteMember[];
+		};
+		taVotes: {
+			tally: number;
+			showAs: string;
+			members: VoteMember[];
 		};
 	};
-	chamber: { showAs: string; uri: string };
-	category: string;
-	subject: { showAs: string };
-	uri: string;
-	outcome: string;
-	tellers: string;
-	house: {
-		uri: string;
-		houseNo: string;
-		houseCode: string;
-		chamberType: string;
-		showAs: string;
-		committeeCode: string;
-	};
 	date: string;
+	datetime: string;
+	voteId: string;
+	uri: string;
+	voteNote: string;
 };
 
 export type VoteApiResponse = {
@@ -71,5 +76,5 @@ export type VoteApiResponse = {
 		};
 		lang: string;
 	};
-	results: { division: Vote }[];
+	results: { division: { contextDate: string; division: RawVote }[] };
 };
