@@ -1,9 +1,9 @@
 /** @format */
 
 import fetcher from '..';
-import { debateRequest } from '@/Models/OireachtasAPI/Request/debateRequest';
+import { DebateRequest } from '@/Models/OireachtasAPI/debate';
 
-export default async function fetchDebates(props: debateRequest) {
+export default async function fetchDebates(props: DebateRequest) {
 	// converts date type to string
 	const url: string = `https://api.oireachtas.ie/v1/debates?${
 		props.chamber_type ? `chamber_type=${props.chamber_type}` : ''

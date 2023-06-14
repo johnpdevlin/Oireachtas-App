@@ -1,6 +1,6 @@
 /** @format */
 
-import { ChamberId, QuestionType } from '@/Models/_utility';
+import { Chamber, QuestionType } from '@/Models/_utility';
 
 export default interface OireachtasRequest {
 	uri?: string;
@@ -8,7 +8,7 @@ export default interface OireachtasRequest {
 	date_start?: string;
 	date_end?: string;
 	house_no?: number;
-	chamber_id?: ChamberId;
+	chamber_id?: Chamber;
 	const_code?: string;
 	party_code?: string;
 	debate_id?: string;

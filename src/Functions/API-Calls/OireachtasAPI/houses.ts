@@ -1,6 +1,6 @@
 /** @format */
 
-import HouseRequest from '@/Models/OireachtasAPI/Request/houseRequest';
+import HouseRequest from '@/Models/OireachtasAPI/Request/house';
 import {
 	House,
 	HouseResult,
@@ -10,7 +10,6 @@ import fetcher from '..';
 export default async function fetchHouses(
 	props: HouseRequest
 ): Promise<House[]> {
-
 	// construct request
 	const url: string = `https://api.oireachtas.ie/v1/houses?chamber_id=${
 		props.chamber

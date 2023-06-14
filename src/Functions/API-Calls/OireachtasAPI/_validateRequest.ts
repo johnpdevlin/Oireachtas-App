@@ -1,7 +1,7 @@
 /** @format */
 
 import isValidDate from '@/Functions/Validate/validateOireachtasDate';
-import OireachtasRequest from '@/Models/OireachtasAPI/Request/_request';
+import OireachtasRequest from '@/Models/OireachtasAPI/_request';
 
 export default function validateOireachtasRequest(
 	props: OireachtasRequest

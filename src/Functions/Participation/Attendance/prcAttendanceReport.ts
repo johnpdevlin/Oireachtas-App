@@ -2,8 +2,7 @@
 
 import fetchHouses from '@/Functions/API-Calls/OireachtasAPI/houses';
 import scrapeSittingReportsForChamber from '@/Functions/GetWebsiteData/Oireachtas/scrapeSittingReports';
-import HouseRequest from '@/Models/OireachtasAPI/Request/houseRequest';
-import { House } from '@/Models/OireachtasAPI/Response/houseResponse';
+import { House, HouseRequest } from '@/Models/OireachtasAPI/house';
 import { Chamber } from '@/Models/_utility';
 
 export default async function prcAttendanceReports(

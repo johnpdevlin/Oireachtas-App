@@ -1,6 +1,6 @@
 /** @format */
 
-import fetchNames from '../Fetcher/IrishNamesAPI';
+import fetchNames from '@/Functions/API-Calls/IrishNamesAPI';
 
 export default async function checkGender(firstName: string) {
 	// gets all names registered by gender
