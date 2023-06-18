@@ -1,11 +1,7 @@
 /** @format */
 
 import fetcher from '..';
-import {
-	FormattedQuestion,
-	Question,
-	QuestionRequest,
-} from '@/Models/OireachtasAPI/question';
+import { Question, QuestionRequest } from '@/Models/OireachtasAPI/question';
 import validateOireachtasRequest from './_validateRequest';
 
 export async function formatQuestions(questions: any[]): Promise<Question[]> {
@@ -13,7 +9,7 @@ export async function formatQuestions(questions: any[]): Promise<Question[]> {
 	const qs: Question[] = [];
 	for (let q of questions) {
 		const question = {
-			member_uri: q.question.from.memberCode,
+			member_uri: q.question.by.memberCode,
 			type: q.question.questionType,
 			addressedTo: q.question.to.showAs,
 			topic: q.question.debateSection.showAs,
@@ -41,8 +37,6 @@ export default async function fetchQuestions(
 			? props.date_start
 			: '2099-01-01'
 	}&limit=${props.limit ? props.limit : (props.limit = 3000)}${
-		props.qType ? `&qType=${props.qType}` : ''
-	}${
 		props.member_id
 			? `&member_id=https%3A%2F%2Fdata.oireachtas.ie%2Fie%2Foireachtas%2Fmember%2Fid%2F${props.member_id}`
 			: ''

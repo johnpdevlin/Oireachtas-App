@@ -3,6 +3,7 @@ import aggregateVotes from './Member/votes';
 import { RawFormattedMember } from '@/Models/OireachtasAPI/member';
 import { ParticipationRecord } from '@/Models/participation';
 import fetchVotes from '@/Functions/API-Calls/OireachtasAPI/votes';
+import aggregateQuestions from './Member/questions';
 
 export async function aggregateMemberRecords(
 	members: RawFormattedMember[],
@@ -28,21 +29,18 @@ export async function aggregateMemberRecords(
 	// for (let m of members) {
 	// Clause for members who didn't serve for full session
 
-	const dailVotes = await aggregateVotes({
-		member: members[90].uri,
-		rawVotes: dailRawVotes,
-	});
+	// const dailVotes = await aggregateVotes({
+	// 	member: members[90].uri,
+	// 	rawVotes: dailRawVotes,
+	// });
 
-	console.log(dailVotes);
 	// const committeeVotes = await aggregateVotes({
 	// 	member: members[22].uri,
 	// 	rawVotes: committeeRawVotes,
 	// });
-	// const dailVotes = await aggregateVotes({
-	// 	member: members[0].uri,
-	// 	rawVotes: dailRawVotes,
-	// });
-	// const questions = await aggregateQuestions(m.uri, start!, end!);
+
+	const questions = await aggregateQuestions(members[22].uri, start, end!);
+	console.log(questions);
 	// const speeches = await aggregateSpeeches(m.uri, start!, end!);
 
 	// const datesHouseAttended = [
