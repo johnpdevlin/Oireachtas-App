@@ -15,12 +15,24 @@ export async function prcParticipation(
 	);
 
 	const members = await fetchMembers({ chamber, house_no: house_no });
+
 	const house = await fetchHouses({
-		houseNo: house_no,
+		house_no: house_no,
 		chamber: chamber,
 	});
 
-	const memberRecords = await aggregateMemberRecords(members, house);
+	// Gets dates from house session if not provided
+	dates = { start: dates?.start, end: dates?.end };
+	if (dates?.start == undefined) dates.start = house[0].dateRange.start;
+	if (dates?.end == undefined)
+		if (house[0].dateRange.endDate != undefined)
+			dates.end = house[0].dateRange.end;
+
+	const memberRecords = await aggregateMemberRecords(
+		members,
+		dates.start!,
+		dates.end
+	);
 
 	// const parties = await fetchParties({ chamber: chamber, houseNo: house_no });
 	// const constituencies = await fetchConstituencies({

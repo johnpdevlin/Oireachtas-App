@@ -13,15 +13,12 @@ export default async function fetchVotes(
 	// url to execute API request
 	const url = `https://api.oireachtas.ie/v1/divisions?${
 		props.chamber_type ? `chamber_type=${props.chamber_type}` : ''
-	}&chamber_id=&date_start=${
+	}&chamber_id=
+	&chamber=${props.chamber ? props.chamber : ''}&date_start=${
 		props.date_start ? props.date_start : '1900-01-01'
-	}&date_end=${
-		props.date_end
-			? props.date_end
-			: props.date_start
-			? props.date_start
-			: '2099-01-01'
-	}&limit=${props.limit ? props.limit : 10000}
+	}&date_end=${props.date_end ? props.date_end : '2099-01-01'}&limit=${
+		props.limit ? props.limit : 10000
+	}
 	${props.debate_id ? `&debate_id=${props.debate_id}` : ''}
 	${props.vote_id ? `&vote_id=${props.vote_id}` : ''}${
 		props.member_id

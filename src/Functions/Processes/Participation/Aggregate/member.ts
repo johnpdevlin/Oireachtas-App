@@ -1,48 +1,47 @@
 /** @format */
-
-import { eachDayOfInterval } from 'date-fns';
-import house from '../../Models/house';
-import checkDatesSitting from '../../CheckDatesSitting';
 import aggregateVotes from './Member/votes';
 import { RawFormattedMember } from '@/Models/OireachtasAPI/member';
 import { ParticipationRecord } from '@/Models/participation';
+import fetchVotes from '@/Functions/API-Calls/OireachtasAPI/votes';
 
 export async function aggregateMemberRecords(
 	members: RawFormattedMember[],
-	house: house
+	start: string,
+	end: string | undefined
 ) {
-	let start: Date;
-	let end: Date | undefined;
-
-	// Gets dates from house session
-	start = house.startDate;
-	if (!house.endDate) {
-		house.endDate = new Date();
-	}
-	end = house.endDate;
-
-	let intervalDates: Date[] = [];
-	// check for incorrrect dates
-	if (start < end!) {
-		if (end) {
-			intervalDates = eachDayOfInterval({ start, end });
-		}
-	} else {
-		console.log('incorrect dates: start > end');
-	}
-
-	const datesSitting = await checkDatesSitting(intervalDates); // Gets Dates which house was sitting
-
 	const records: ParticipationRecord[] = [];
+
+	const dailRawVotes = await fetchVotes({
+		chamber_type: 'house',
+		chamber: 'dail',
+		houseNo: 33,
+		date_start: start,
+		date_end: end,
+	});
+
+	const committeeRawVotes = await fetchVotes({
+		chamber_type: 'committee',
+		date_start: start,
+		date_end: end,
+	});
 
 	// for (let m of members) {
 	// Clause for members who didn't serve for full session
 
-	const votes = await aggregateVotes({
-		member: members[0].uri,
-		start: '2020-01-01',
-		end: '2020-12-31',
+	const dailVotes = await aggregateVotes({
+		member: members[90].uri,
+		rawVotes: dailRawVotes,
 	});
+
+	console.log(dailVotes);
+	// const committeeVotes = await aggregateVotes({
+	// 	member: members[22].uri,
+	// 	rawVotes: committeeRawVotes,
+	// });
+	// const dailVotes = await aggregateVotes({
+	// 	member: members[0].uri,
+	// 	rawVotes: dailRawVotes,
+	// });
 	// const questions = await aggregateQuestions(m.uri, start!, end!);
 	// const speeches = await aggregateSpeeches(m.uri, start!, end!);
 

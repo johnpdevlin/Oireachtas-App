@@ -4,6 +4,7 @@ import { Chamber, ChamberType, Outcome } from '@/Models/_utility';
 
 export type VoteRequest = {
 	member_id?: string;
+	houseNo?: number;
 	chamber_type?: ChamberType;
 	chamber?: Chamber;
 	date_start?: string | Date;
@@ -29,7 +30,7 @@ export type RawVote = {
 		chamberType: ChamberType;
 		committeeCode: string;
 		houseCode: Chamber;
-		houseNo: number;
+		houseNo: string;
 		uri: string;
 		showAs: string;
 	};

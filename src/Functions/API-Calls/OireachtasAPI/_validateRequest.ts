@@ -31,6 +31,9 @@ export default function validateOireachtasRequest(
 			props.date_end = dateToYMDstring(props.date_end);
 		}
 		if (props.date_start! || props.date_end!) {
+			if (props.date_end == undefined) {
+				props.date_end = dateToYMDstring(new Date());
+			}
 			if (isValidDate([props.date_start!, props.date_end!]) === false) {
 				throw new Error(
 					`${props.date_start!} & ${props.date_end!} : Invalid date(s), should be in format YYYY-MM-DD`

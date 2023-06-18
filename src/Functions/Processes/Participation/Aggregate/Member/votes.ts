@@ -1,89 +1,96 @@
 /** @format */
 
-import fetchVotes from '@/Functions/API-Calls/OireachtasAPI/votes';
 import { RawVote } from '@/Models/OireachtasAPI/vote';
-import { Chamber } from '@/Models/_utility';
-import { DayVotes } from '@/Models/participation';
-import { ChamberType } from '../../../../../Models/_utility';
 
+type Tally = {
+	tally: number;
+	members: {
+		member: {
+			memberCode: string;
+			uri: string;
+			showAs: string;
+		};
+	}[];
+	showAs: string;
+};
+
+type MemberVoteAggregate = {
+	uri: string;
+	house: string;
+	houseNo: number;
+	date: string;
+	committeeCode?: string;
+	votes: number;
+	votesMissed: number;
+};
+
+// Returns array of objects containing amount of votes made and missed per day
+// If committee and multiple, multiple day objects
 export default async function aggregateVotes(props: {
 	member: string;
-	start?: string | Date;
-	end?: string | Date;
-	chamber?: string;
-	chamberType?: string;
+	rawVotes: RawVote[];
 }) {
-	const voteRecords = [];
+	const parsedVotes = aggregateVotesByCommittee(props.rawVotes, props.member);
 
-	const votes: RawVote[] = await fetchVotes({
-		member_id: props.member,
-		date_start: props.start,
-		date_end: props.end,
+	return parsedVotes;
+}
+
+function aggregateVotesByCommittee(
+	divisions: RawVote[],
+	memberUri: string
+): MemberVoteAggregate[] {
+	const memberVotes: MemberVoteAggregate[] = [];
+	const aggregatedVotes: { [key: string]: MemberVoteAggregate } = {};
+
+	divisions.forEach((division) => {
+		const { date, tallies, house } = division;
+		const { nilVotes, taVotes, staonVotes } = tallies;
+		const committeeCode = house.committeeCode || '';
+
+		// Generate a unique key for each division based on date and if applicable committeeCode
+		const divisionKey = `${date}-${committeeCode == '' ? '' : committeeCode}`;
+
+		if (!aggregatedVotes[divisionKey]) {
+			// If the aggregatedVotes object doesn't have a matching key, create a new MemberVoteAggregate object
+			const votes: MemberVoteAggregate = {
+				uri: memberUri,
+				house: house.houseCode,
+				houseNo: parseInt(house.houseNo),
+				date,
+				...(committeeCode == '' ? {} : { committeeCode }),
+				votes: 0,
+				votesMissed: 0,
+			};
+
+			// Store the memberVotes object in the aggregatedVotes object using the divisionKey as the key
+			aggregatedVotes[divisionKey] = votes;
+		}
+
+		const committeeVotes = aggregatedVotes[divisionKey];
+
+		// Check if the member has voted in any of the tallies and update the vote count accordingly
+		if (
+			hasMemberVoted(nilVotes, memberUri) === true ||
+			hasMemberVoted(taVotes, memberUri) === true ||
+			hasMemberVoted(staonVotes, memberUri) === true
+		) {
+			committeeVotes.votes++;
+		} else {
+			committeeVotes.votesMissed++;
+		}
 	});
 
-	let selectedDate: Date | undefined = undefined;
-	let committeeUri: string = '';
-	let chamber = '';
-	let chamberType = '';
-	let houseCode = '';
+	// Push all the aggregated votes into the memberVotes array and return it
+	memberVotes.push(...Object.values(aggregatedVotes));
 
-	let houseVotes = 0;
-	let committeeVotes = 0;
-	// need to do something to ensure no duplicates?
-	// vote ID?
-	for (let v of votes) {
-		let date = new Date(v.date);
-		chamber = v.house.houseCode;
-		chamberType = v.house.chamberType;
+	return memberVotes;
+}
 
-		if (v.house.chamberType === 'committee') {
-			committeeUri = v.house.uri;
-			committeeVotes++;
-		} else if (chamberType === 'house') {
-			committeeUri = '';
-			houseVotes++;
-		}
-
-		if (selectedDate !== date) {
-			if (selectedDate !== undefined) {
-				voteRecords.push({
-					date: selectedDate,
-					chamber: chamber,
-					chamberType: chamberType,
-					date: selectedDate,
-					houseVotes: houseVotes,
-					committeeVotes: committeeVotes,
-					committeeUri: committeeUri,
-				});
-			}
-			selectedDate = date;
-		}
+function hasMemberVoted(tally: Tally | null, memberUri: string): boolean {
+	if (!tally) {
+		return false;
 	}
 
-	console.log(voteRecords);
-	// let houseVotes: number = 0; // counter variables
-	// let committeeVotes: number = 0;
-	// let lastHDate: Date = new Date('1900-01-01');
-	// let lastCDate: Date = new Date('1900-01-01');
-
-	// // parses out individual dates
-	// for (let v of votes) {
-	// 	const date: Date = new Date(v.contextDate);
-	// 	if (v.division.house.chamberType == 'house') {
-	// 		if (date.getTime() !== lastHDate.getTime()) {
-	// 			datesHouseVoted.push(date);
-	// 			lastHDate = date;
-	// 		}
-	// 		houseVotes++;
-	// 	}
-	// 	if (v.division.house.chamberType == 'committee') {
-	// 		if (date.getTime() !== lastCDate.getTime()) {
-	// 			datesCommitteeVoted.push(date);
-	// 			lastCDate = date;
-	// 		}
-	// 		committeeVotes++;
-	// 	}
-	// }
-
-	// return { houseVotes, committeeVotes, datesCommitteeVoted, datesHouseVoted };
+	// Check if the member URI is present in the members array of the tally
+	return tally.members.some(({ member }) => member.memberCode === memberUri);
 }

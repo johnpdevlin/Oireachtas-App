@@ -33,6 +33,13 @@ export type DayVotes = {
 	houseVotesMissed?: number;
 };
 
+export type DayCommitteeVotes = {
+	committeeUri: string;
+	date: Date;
+	committeeVotes: number;
+	committeeVotesMissed: number;
+};
+
 export interface ParticipationRecord {
 	type?: groupType;
 	uri: string;

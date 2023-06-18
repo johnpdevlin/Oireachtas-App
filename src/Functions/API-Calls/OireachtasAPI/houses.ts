@@ -12,15 +12,15 @@ export default async function fetchHouses(
 ): Promise<House[]> {
 	// construct request
 	const url: string = `https://api.oireachtas.ie/v1/houses?chamber_id=${
-		props.chamber
-			? `https%3A%2F%2Fdata.oireachtas.ie%2Fie%2Foireachtas%2Fhouse%2F${props.chamber}%2F${props.house_no}`
+		props.house_no
+			? `https://data.oireachtas.ie/ie/oireachtas/house/${props.chamber}/${props.house_no}`
 			: ''
-	}&limit=500`;
+	}${props.chamber ? `&chamber=dail` : ''}&limit=500`;
 
 	try {
 		let houses: HouseResult[] = (await fetcher(url)).results;
-		// remove unnceccesary outer objects
-		return houses.map((obj) => obj.house) as House[];
+
+		return houses.map((obj) => obj.house) as House[]; // remove unnceccesary outer objects
 	} catch (err) {
 		console.log('Error. Props:', props, ` URL: ${url}`);
 		console.log(err);
