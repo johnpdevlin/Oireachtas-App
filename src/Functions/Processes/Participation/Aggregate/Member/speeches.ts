@@ -1,58 +1,54 @@
 /** @format */
-/** @format */
+import { DebateRecord } from '@/Models/OireachtasAPI/debate';
 
-import fetchDebates from '@/Functions/API-Calls/OireachtasAPI/debates';
-import { Chamber } from '@/Models/_utility';
+type MemberSpeechAggregate = {
+	uri: string;
+	chamberType: string;
+	house: string;
+	houseNo: number;
+	date: string;
+	committeeCode?: string;
+	speechCount: number;
+};
 
 export default async function aggregateSpeeches(
-	member: string,
-	start: Date,
-	end: Date
-): Promise<{
-	houseSpeeches: number;
-	committeeSpeeches: number;
-	datesHouseSpoke: Date[];
-	datesCommitteeSpoke: Date[];
-}> {
-	// :
-	// Promise<{ totalVotes: number; datesVoted: Date[] }>
+	debates: DebateRecord[]
+): Promise<MemberSpeechAggregate[]> {
+	const memberSpeeches: MemberSpeechAggregate[] = [];
+	const aggregatedSpeeches: { [key: string]: MemberSpeechAggregate } = {};
 
-	const debates = await fetchDebates({
-		member: member,
-		date_start: start,
-		date_end: end,
+	debates.forEach((deb: DebateRecord) => {
+		const { date, house } = deb;
+		const committeeCode = house.committeeCode || '';
+
+		// Create a unique key for each debate using relevant properties
+		const debKey = `${date}-${house.chamberType}-${house.houseNo}${
+			committeeCode ? '-' + committeeCode : ''
+		}`;
+
+		// Extract the member code of the speaker
+		const speaker = deb.debateSections.speakers.memberCode;
+
+		if (!aggregatedSpeeches[debKey]) {
+			// Initialize a new aggregate object for the debate if it doesn't exist
+			const speeches: MemberSpeechAggregate = {
+				uri: speaker,
+				house: house.houseCode,
+				chamberType: house.chamberType,
+				houseNo: parseInt(house.houseNo),
+				date,
+				...(committeeCode ? { committeeCode } : {}),
+				speechCount: 0,
+			};
+			aggregatedSpeeches[debKey] = speeches;
+		}
+
+		const speechCount = deb.counts.contributorCount;
+		aggregatedSpeeches[debKey].speechCount += speechCount;
 	});
 
-	let datesHouseSpoke: Date[] = []; // array of unique dates
-	let datesCommitteeSpoke: Date[] = []; // array of unique dates
-	let houseSpeeches: number = 0; // houseSpeeches counter
-	let committeeSpeeches: number = 0; // committeeSpeeches counter
-	let lastHDate: Date = new Date('1900-01-01');
-	let lastCDate: Date = new Date('1900-01-01');
+	// Extract the values from the aggregatedSpeeches object
+	memberSpeeches.push(...Object.values(aggregatedSpeeches));
 
-	// parses out individual dates
-	// parses out house and committee, increments counts
-	for (let d of debates) {
-		const date: Date = new Date(d.contextDate);
-		if (d.debateRecord.house.chamberType == 'house') {
-			if (date.getTime() !== lastHDate.getTime()) {
-				datesHouseSpoke.push(date);
-				lastHDate = date;
-			}
-			houseSpeeches++;
-		} else if (d.debateRecord.house.chamberType == 'committee') {
-			if (date.getTime() !== lastCDate.getTime()) {
-				datesCommitteeSpoke.push(date);
-				lastCDate = date;
-			}
-			committeeSpeeches++;
-		}
-	}
-
-	return {
-		houseSpeeches,
-		committeeSpeeches,
-		datesHouseSpoke,
-		datesCommitteeSpoke,
-	};
+	return memberSpeeches;
 }

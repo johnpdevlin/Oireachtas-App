@@ -4,6 +4,8 @@ import { RawFormattedMember } from '@/Models/OireachtasAPI/member';
 import { ParticipationRecord } from '@/Models/participation';
 import fetchVotes from '@/Functions/API-Calls/OireachtasAPI/votes';
 import aggregateQuestions from './Member/questions';
+import aggregateSpeeches from './Member/speeches';
+import fetchDebates from '@/Functions/API-Calls/OireachtasAPI/debates';
 
 export async function aggregateMemberRecords(
 	members: RawFormattedMember[],
@@ -12,7 +14,7 @@ export async function aggregateMemberRecords(
 ) {
 	const records: ParticipationRecord[] = [];
 
-	const dailRawVotes = await fetchVotes({
+	const rawHouseVotes = await fetchVotes({
 		chamber_type: 'house',
 		chamber: 'dail',
 		houseNo: 33,
@@ -20,7 +22,7 @@ export async function aggregateMemberRecords(
 		date_end: end,
 	});
 
-	const committeeRawVotes = await fetchVotes({
+	const rawCommitteeVotes = await fetchVotes({
 		chamber_type: 'committee',
 		date_start: start,
 		date_end: end,
@@ -31,18 +33,33 @@ export async function aggregateMemberRecords(
 
 	// const dailVotes = await aggregateVotes({
 	// 	member: members[90].uri,
-	// 	rawVotes: dailRawVotes,
+	// 	rawVotes: rawHouseVotes,
 	// });
 
 	// const committeeVotes = await aggregateVotes({
 	// 	member: members[22].uri,
-	// 	rawVotes: committeeRawVotes,
+	// 	rawVotes: RawCommitteeVotes,
 	// });
 
 	const questions = await aggregateQuestions(members[22].uri, start, end!);
-	console.log(questions);
-	// const speeches = await aggregateSpeeches(m.uri, start!, end!);
 
+	const rawCommitteeSpeeches = await fetchDebates({
+		member: members[22].uri,
+		date_start: start,
+		date_end: end,
+		chamber_type: 'committee',
+	});
+
+	const rawHouseSpeeches = fetchDebates({
+		member: members[22].uri,
+		date_start: start,
+		date_end: end,
+		chamber_type: 'house',
+		chamber_id: 'dail',
+	});
+
+	const speeches = await aggregateSpeeches(rawCommitteeSpeeches);
+	console.log(speeches);
 	// const datesHouseAttended = [
 	// 	...votes.datesHouseVoted,
 	// 	...speeches.datesHouseSpoke,

@@ -1,10 +1,13 @@
 /** @format */
 
 import fetcher from '..';
-import { DebateRequest } from '@/Models/OireachtasAPI/debate';
+import { DebateRecord, DebateRequest } from '@/Models/OireachtasAPI/debate';
 import validateOireachtasRequest from './_validateRequest';
+import { removeOuterObjects } from '../../Util/objects';
 
-export default async function fetchDebates(props: DebateRequest) {
+export default async function fetchDebates(
+	props: DebateRequest
+): Promise<DebateRecord[]> {
 	props = validateOireachtasRequest(props);
 	// converts date type to string
 	const url: string = `https://api.oireachtas.ie/v1/debates?${
@@ -20,7 +23,10 @@ export default async function fetchDebates(props: DebateRequest) {
 			: ''
 	}${props.debate_id ? `&debate_id=${props.debate_id}` : ''}
 	`;
-	const debates = await fetcher(url);
+	const debates = (await fetcher(url)).results;
+	const output = debates.map((debate: { [x: string]: any }) => {
+		return removeOuterObjects(debate.debateRecord);
+	});
 
-	return debates.results;
+	return output;
 }

@@ -20,8 +20,8 @@ type MemberVoteAggregate = {
 	houseNo: number;
 	date: string;
 	committeeCode?: string;
-	votes: number;
-	votesMissed: number;
+	votesCount: number;
+	votesMissedCount: number;
 };
 
 // Returns array of objects containing amount of votes made and missed per day
@@ -58,15 +58,15 @@ function aggregateVotesByCommittee(
 				houseNo: parseInt(house.houseNo),
 				date,
 				...(committeeCode == '' ? {} : { committeeCode }),
-				votes: 0,
-				votesMissed: 0,
+				votesCount: 0,
+				votesMissedCount: 0,
 			};
 
 			// Store the memberVotes object in the aggregatedVotes object using the divisionKey as the key
 			aggregatedVotes[divisionKey] = votes;
 		}
 
-		const committeeVotes = aggregatedVotes[divisionKey];
+		const votes = aggregatedVotes[divisionKey];
 
 		// Check if the member has voted in any of the tallies and update the vote count accordingly
 		if (
@@ -74,9 +74,9 @@ function aggregateVotesByCommittee(
 			hasMemberVoted(taVotes, memberUri) === true ||
 			hasMemberVoted(staonVotes, memberUri) === true
 		) {
-			committeeVotes.votes++;
+			votes.votesCount++;
 		} else {
-			committeeVotes.votesMissed++;
+			votes.votesMissedCount++;
 		}
 	});
 
