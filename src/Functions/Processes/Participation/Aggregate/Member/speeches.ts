@@ -57,10 +57,8 @@ export default async function aggregateSpeeches(
 	start: string,
 	end: string
 ): Promise<{
-	speeches: {
-		committee: MemberSpeechAggregate[];
-		house: MemberSpeechAggregate[];
-	};
+	committee: MemberSpeechAggregate[];
+	house: MemberSpeechAggregate[];
 }> {
 	const rawCommitteeSpeeches = fetchDebates({
 		member: member,
@@ -77,14 +75,7 @@ export default async function aggregateSpeeches(
 		chamber_id: 'dail',
 	});
 
-	console.log(rawCommitteeSpeeches, rawHouseSpeeches);
-
 	const committeeSpeeches = parseSpeeches(await rawCommitteeSpeeches);
 	const houseSpeeches = parseSpeeches(await rawHouseSpeeches);
-	return {
-		speeches: {
-			committee: committeeSpeeches,
-			house: houseSpeeches,
-		},
-	};
+	return { committee: committeeSpeeches, house: houseSpeeches };
 }

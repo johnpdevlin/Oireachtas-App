@@ -15,7 +15,7 @@ export default async function fetchHouses(
 		props.house_no
 			? `https://data.oireachtas.ie/ie/oireachtas/house/${props.chamber}/${props.house_no}`
 			: ''
-	}${props.chamber ? `&chamber=dail` : ''}&limit=500`;
+	}${props.chamber ? `&chamber=${props.chamber}` : ''}&limit=500`;
 
 	try {
 		let houses: HouseResult[] = (await fetcher(url)).results;
