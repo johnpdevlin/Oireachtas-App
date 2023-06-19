@@ -6,6 +6,7 @@ import fetchVotes from '@/Functions/API-Calls/OireachtasAPI/votes';
 import aggregateQuestions from './Member/questions';
 import aggregateSpeeches from './Member/speeches';
 import fetchDebates from '@/Functions/API-Calls/OireachtasAPI/debates';
+import getSittingDates from '../../getSittingDates';
 
 export async function aggregateMemberRecords(
 	members: RawFormattedMember[],
@@ -31,20 +32,21 @@ export async function aggregateMemberRecords(
 	// for (let m of members) {
 	// Clause for members who didn't serve for full session
 
-	// const dailVotes = await aggregateVotes({
-	// 	member: members[90].uri,
-	// 	rawVotes: rawHouseVotes,
-	// });
+	const dailVotes = await aggregateVotes({
+		member: members[90].uri,
+		rawVotes: rawHouseVotes,
+	});
 
-	// const committeeVotes = await aggregateVotes({
-	// 	member: members[22].uri,
-	// 	rawVotes: RawCommitteeVotes,
-	// });
+	const committeeVotes = await aggregateVotes({
+		member: members[22].uri,
+		rawVotes: rawCommitteeVotes,
+	});
 
 	const questions = await aggregateQuestions(members[22].uri, start, end!);
 
 	const speeches = await aggregateSpeeches(members[22].uri, start, end!);
-	console.log(speeches);
+
+	const sitting = getSittingDates(start, end!);
 	// const datesHouseAttended = [
 	// 	...votes.datesHouseVoted,
 	// 	...speeches.datesHouseSpoke,

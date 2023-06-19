@@ -166,3 +166,13 @@ export function YMDstringToDate(dateString: string): Date {
 	const [year, month, day] = dateString.split('-').map(Number);
 	return new Date(year, month - 1, day);
 }
+
+export function getUniqueDatesFromObjects(data: { date: string }[]): string[] {
+	const uniqueDatesSet = new Set<string>();
+
+	for (const item of data) {
+		uniqueDatesSet.add(item.date);
+	}
+
+	return Array.from(uniqueDatesSet);
+}
