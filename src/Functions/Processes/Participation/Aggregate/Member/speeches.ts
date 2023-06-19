@@ -1,4 +1,5 @@
 /** @format */
+import fetchDebates from '@/Functions/API-Calls/OireachtasAPI/debates';
 import { DebateRecord } from '@/Models/OireachtasAPI/debate';
 
 type MemberSpeechAggregate = {
@@ -11,9 +12,7 @@ type MemberSpeechAggregate = {
 	speechCount: number;
 };
 
-export default async function aggregateSpeeches(
-	debates: DebateRecord[]
-): Promise<MemberSpeechAggregate[]> {
+function parseSpeeches(debates: DebateRecord[]): MemberSpeechAggregate[] {
 	const memberSpeeches: MemberSpeechAggregate[] = [];
 	const aggregatedSpeeches: { [key: string]: MemberSpeechAggregate } = {};
 
@@ -51,4 +50,41 @@ export default async function aggregateSpeeches(
 	memberSpeeches.push(...Object.values(aggregatedSpeeches));
 
 	return memberSpeeches;
+}
+
+export default async function aggregateSpeeches(
+	member: string,
+	start: string,
+	end: string
+): Promise<{
+	speeches: {
+		committee: MemberSpeechAggregate[];
+		house: MemberSpeechAggregate[];
+	};
+}> {
+	const rawCommitteeSpeeches = fetchDebates({
+		member: member,
+		date_start: start,
+		date_end: end,
+		chamber_type: 'committee',
+	});
+
+	const rawHouseSpeeches = fetchDebates({
+		member: member,
+		date_start: start,
+		date_end: end,
+		chamber_type: 'house',
+		chamber_id: 'dail',
+	});
+
+	console.log(rawCommitteeSpeeches, rawHouseSpeeches);
+
+	const committeeSpeeches = parseSpeeches(await rawCommitteeSpeeches);
+	const houseSpeeches = parseSpeeches(await rawHouseSpeeches);
+	return {
+		speeches: {
+			committee: committeeSpeeches,
+			house: houseSpeeches,
+		},
+	};
 }

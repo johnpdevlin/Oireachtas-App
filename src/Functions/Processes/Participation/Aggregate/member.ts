@@ -43,22 +43,7 @@ export async function aggregateMemberRecords(
 
 	const questions = await aggregateQuestions(members[22].uri, start, end!);
 
-	const rawCommitteeSpeeches = await fetchDebates({
-		member: members[22].uri,
-		date_start: start,
-		date_end: end,
-		chamber_type: 'committee',
-	});
-
-	const rawHouseSpeeches = fetchDebates({
-		member: members[22].uri,
-		date_start: start,
-		date_end: end,
-		chamber_type: 'house',
-		chamber_id: 'dail',
-	});
-
-	const speeches = await aggregateSpeeches(rawCommitteeSpeeches);
+	const speeches = await aggregateSpeeches(members[22].uri, start, end!);
 	console.log(speeches);
 	// const datesHouseAttended = [
 	// 	...votes.datesHouseVoted,
