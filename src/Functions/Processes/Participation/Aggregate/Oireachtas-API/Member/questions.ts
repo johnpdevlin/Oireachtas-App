@@ -3,23 +3,24 @@
 import fetchQuestions from '@/Functions/API-Calls/OireachtasAPI/questions';
 import { Question } from '@/Models/OireachtasAPI/question';
 
-type MemberQuestionAggregate = {
+export type MemberQuestionAggregate = {
 	uri: string;
 	date: Date;
 	type: string;
 	count: number;
 };
 
-export default async function aggregateQuestions(
+export default async function aggregateOirQuestions(
 	memberId: string,
 	start: string,
 	end: string
-): Promise<{
-	questions: {
-		oral: MemberQuestionAggregate[];
-		written: MemberQuestionAggregate[];
-	};
-}> {
+): Promise<
+	| {
+			oral: MemberQuestionAggregate[];
+			written: MemberQuestionAggregate[];
+	  }
+	| undefined
+> {
 	// Fetch raw question data
 	const questions = await fetchQuestions({
 		member_id: memberId,
@@ -36,10 +37,8 @@ export default async function aggregateQuestions(
 	const aggregatedWrittenQuestions = parseQuestions(writtenQuestions, memberId);
 
 	return {
-		questions: {
-			oral: aggregatedOralQuestions,
-			written: aggregatedWrittenQuestions,
-		},
+		oral: aggregatedOralQuestions,
+		written: aggregatedWrittenQuestions,
 	};
 }
 

@@ -2,7 +2,7 @@
 import fetchDebates from '@/Functions/API-Calls/OireachtasAPI/debates';
 import { DebateRecord } from '@/Models/OireachtasAPI/debate';
 
-type MemberSpeechAggregate = {
+export type MemberSpeechAggregate = {
 	uri: string;
 	chamberType: string;
 	house: string;
@@ -52,7 +52,7 @@ function parseSpeeches(debates: DebateRecord[]): MemberSpeechAggregate[] {
 	return memberSpeeches;
 }
 
-export default async function aggregateSpeeches(
+export default async function aggregateOirSpeeches(
 	member: string,
 	start: string,
 	end: string

@@ -1,17 +1,29 @@
 /** @format */
-import aggregateVotes from './Member/votes';
 import { RawFormattedMember } from '@/Models/OireachtasAPI/member';
 import fetchVotes from '@/Functions/API-Calls/OireachtasAPI/votes';
-import aggregateQuestions from './Member/questions';
-import aggregateSpeeches from './Member/speeches';
 import { Chamber } from '@/Models/_utility';
+import aggregateOirQuestions, { MemberQuestionAggregate } from './questions';
+import aggregateOirSpeeches, { MemberSpeechAggregate } from './speeches';
+import aggregateOirVotes, { MemberVoteAggregate } from './votes';
+
+export type OirRecord = {
+	member: string;
+	houseVotes: MemberVoteAggregate[];
+	committeeVotes: MemberVoteAggregate[];
+	questions: {
+		oralQuestions: MemberQuestionAggregate[] | undefined;
+		writtenQuestions: MemberQuestionAggregate[] | undefined;
+	};
+	houseSpeeches: MemberSpeechAggregate[];
+	committeeSpeeches: MemberSpeechAggregate[];
+};
 
 // aggregate records for members by day (ie count votes on a given day)
-export async function aggregateMemberRecords(
+export async function aggregateMemberOirRecords(
 	members: RawFormattedMember[],
 	start: string,
 	end: string | undefined
-) {
+): Promise<OirRecord[]> {
 	const house: Chamber = members[0].house.houseCode as Chamber;
 	const houseNo = members[0].house.houseNo;
 
@@ -20,7 +32,7 @@ export async function aggregateMemberRecords(
 	);
 
 	// Array for all records
-	const records: {}[] = [];
+	const records: OirRecord[] = [];
 
 	const rawHouseVotes = await fetchVotes({
 		chamber_type: 'house',
@@ -61,20 +73,21 @@ export async function aggregateMemberRecords(
 		}
 
 		// returns aggregated votes for member
-		const houseVotes = await aggregateVotes({
+		const houseVotes = await aggregateOirVotes({
 			member: m.uri,
 			rawVotes: tempRawHouseVotes,
 		});
 
-		const committeeVotes = await aggregateVotes({
+		const committeeVotes = await aggregateOirVotes({
 			member: m.uri,
 			rawVotes: tempRawCommitteeVotes,
 		});
 
-		const questions = await aggregateQuestions(m.uri, tempStart, tempEnd!);
-		const speeches = await aggregateSpeeches(m.uri, tempStart, tempEnd!);
+		const questions = await aggregateOirQuestions(m.uri, tempStart, tempEnd!);
 
-		const record = {
+		const speeches = await aggregateOirSpeeches(m.uri, tempStart, tempEnd!);
+
+		const record: OirRecord = {
 			member: m.uri,
 			houseVotes: houseVotes,
 			committeeVotes: committeeVotes,

@@ -10,7 +10,7 @@ import {
 } from '../../Models/UI/participation';
 import aggregateConstitRecords from '../Participation/Aggregate/constituencies';
 import aggregateHouseRecords from '../Participation/Aggregate/house';
-import { aggregateMemberRecords } from '../Participation/Aggregate/member';
+import { aggregateMemberRecords } from '../Participation/Aggregate/Oireachtas-API/Member/member';
 import aggregatePartyRecords from '../Participation/Aggregate/parties';
 import { writeAggregateRecordsBatch } from './writeToFirestore/writeBatch';
 

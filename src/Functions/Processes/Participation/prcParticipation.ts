@@ -3,7 +3,16 @@
 import fetchHouses from '@/Functions/API-Calls/OireachtasAPI/houses';
 import fetchMembers from '@/Functions/API-Calls/OireachtasAPI/members';
 import { Chamber } from '@/Models/_utility';
-import { aggregateMemberRecords } from './Aggregate/member';
+import {
+	OirRecord,
+	aggregateMemberOirRecords,
+} from './Aggregate/Oireachtas-API/Member/member';
+import prcAttendanceReports from '../Attendance/prcAttendanceReport';
+import getSittingDates from '../getSittingDates';
+import { mergeMemberAttendanceRecords } from '@/Functions/GetWebsiteData/Oireachtas/mergeMemberAttRecords';
+import { SittingDaysReport } from '@/Functions/GetWebsiteData/Oireachtas/parseSittingDaysPDF';
+import { convertDMYdate2YMDstring } from '@/Functions/Util/dates';
+import { RawFormattedMember } from '@/Models/OireachtasAPI/member';
 
 export async function prcParticipation(
 	chamber: Chamber,
@@ -28,45 +37,88 @@ export async function prcParticipation(
 		if (house[0].dateRange.endDate != undefined)
 			dates.end = house[0].dateRange.end;
 
-	const memberRecords = await aggregateMemberRecords(
-		members,
+	const aggregatedMemberOirRecords = await aggregateMemberOirRecords(
+		[members[0], members[1]],
 		dates.start!,
 		dates.end!
 	);
 
-	console.log(memberRecords);
-	// const parties = await fetchParties({ chamber: chamber, houseNo: house_no });
-	// const constituencies = await fetchConstituencies({
-	// 	chamber: chamber,
-	// 	houseNo: house_no,
-	// });
+	const attendance = await prcAttendanceReports({
+		house_no: house_no,
+		chamber: chamber,
+	});
 
-	// // reuses and aggregates data
-	// const partiesRecords: groupParticipationRecord[] = aggregatePartyRecords({
-	// 	members: members,
-	// 	memberRecords: memberRecords,
-	// 	parties: parties,
-	// 	house: house,
-	// });
-	// const constitRecords: groupParticipationRecord[] = aggregateConstitRecords({
-	// 	members: members,
-	// 	memberRecords: memberRecords,
-	// 	constits: constituencies,
-	// 	house: house,
-	// });
+	const sittingDates = getSittingDates(dates.start!, dates.end!);
 
-	// const houseRecords: groupParticipationRecord = aggregateHouseRecords(
-	// 	memberRecords,
-	// 	house
-	// );
+	const exceptions = members // find where members didn't serve full terms
+		.map((m: RawFormattedMember) => {
+			if (m.dateRange.start != dates!.start || m.dateRange.end != dates!.end) {
+				return {
+					member: m.uri,
+					start: m.dateRange.start,
+					end: m.dateRange.end,
+				};
+			}
+		})
+		.filter((m: unknown) => m != undefined);
 
-	// const batchArray: participationRecord | groupParticipationRecord[] = [
-	// 	houseRecords,
-	// 	...memberRecords,
-	// 	...partiesRecords,
-	// 	...constitRecords,
-	// ];
+	const merge = prcDailAttendance(
+		(await sittingDates).dailSitting,
+		aggregatedMemberOirRecords,
+		attendance!,
+		exceptions
+	);
+}
 
-	// writeAggregateRecordsBatch(batchArray);
-	// console.log(`It's done then`);
+export default async function prcDailAttendance(
+	sittingDates: string[],
+	memberRecords: OirRecord[],
+	memberAttendance: SittingDaysReport[],
+	exceptions: { member: string; start: string; end: string }[]
+) {
+	const mergedMemberAttendance = mergeMemberAttendanceRecords(memberAttendance);
+	const mergedRecords: OirRecord[] = [];
+
+	for (let m of memberRecords) {
+		let tempSittingDates = sittingDates;
+		if (exceptions.find((e) => e.member === m.member)) {
+			// If member has exceptions, get sitting dates for exception period
+			// IE where member was not in house for full term
+			const e = exceptions.find((e) => e.member === m.member);
+			const temp = await getSittingDates(e!.start, e!.end);
+			tempSittingDates = temp.dailSitting;
+		}
+		const memberAttendance = mergedMemberAttendance.filter(
+			(a) => a.uri == m.member
+		);
+
+		const houseVotes = m.houseVotes
+			.map((v) => {
+				if (v.votesCount > 0) return { date: v.date };
+			})
+			.filter((v) => v != undefined);
+
+		const datesContributed = new Set();
+		[
+			...houseVotes,
+			...m.houseSpeeches,
+			...m.houseVotes,
+			...(m.questions.oralQuestions?.map((q) => q) ?? []),
+		].forEach((d: unknown) => {
+			datesContributed.add(d.date);
+		});
+
+		const datesNotContributed = tempSittingDates
+			.map((d) => {
+				if (!datesContributed.has(d)) return d;
+			})
+			.filter((d) => d != undefined);
+
+		console.log(datesNotContributed);
+		// if (memberAttendance != undefined) {
+		// 	console.log(datesContributed);
+		// }
+	}
+
+	return mergedRecords;
 }

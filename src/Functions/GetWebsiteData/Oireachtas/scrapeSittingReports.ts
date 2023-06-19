@@ -3,9 +3,8 @@
 import { Chamber } from '@/Models/_utility';
 import similarity from 'string-similarity';
 import parseSittingDaysPDF, { SittingDaysReport } from './parseSittingDaysPDF';
-import fetchMembers, {
-	Member,
-} from '@/Functions/API-Calls/OireachtasAPI/members';
+import fetchMembers from '@/Functions/API-Calls/OireachtasAPI/members';
+import { RawMember } from '@/Models/OireachtasAPI/member';
 
 // Assign URIs to the reports
 async function assignUriToReports(
@@ -78,9 +77,9 @@ export default async function scrapeSittingReportsForChamber(
 			house_no: house_no,
 			chamber: chamber,
 		})
-	).map((member: Member) => {
+	).map((member: RawMember) => {
 		const name = `${member.lastName} ${member.firstName}`;
-		return { name: name, uri: member.memberCode }; // Extract member name and URI
+		return { name: name, uri: member.uri }; // Extract member name and URI
 	});
 
 	const parsedReports = await assignUriToReports(reports, members); // Assign URIs to the reports

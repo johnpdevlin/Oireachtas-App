@@ -14,7 +14,7 @@ type Tally = {
 	showAs: string;
 };
 
-type MemberVoteAggregate = {
+export type MemberVoteAggregate = {
 	uri: string;
 	house: string;
 	houseNo: number;
@@ -26,7 +26,7 @@ type MemberVoteAggregate = {
 
 // Returns array of objects containing amount of votes made and missed per day
 // If committee and multiple, multiple day objects
-export default async function aggregateVotes(props: {
+export default async function aggregateOirVotes(props: {
 	member: string;
 	rawVotes: RawVote[];
 }) {
