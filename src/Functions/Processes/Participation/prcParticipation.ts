@@ -115,9 +115,6 @@ export default async function prcDailAttendance(
 			.filter((d) => d != undefined);
 
 		console.log(datesNotContributed);
-		// if (memberAttendance != undefined) {
-		// 	console.log(datesContributed);
-		// }
 	}
 
 	return mergedRecords;
