@@ -4,25 +4,23 @@ import { RawFormattedMember } from '@/Models/OireachtasAPI/member';
 import fetchVotes from '@/Functions/API-Calls/OireachtasAPI/votes';
 import aggregateQuestions from './Member/questions';
 import aggregateSpeeches from './Member/speeches';
-import fetchHouses from '@/Functions/API-Calls/OireachtasAPI/houses';
+import { Chamber } from '@/Models/_utility';
 
+// aggregate records for members by day (ie count votes on a given day)
 export async function aggregateMemberRecords(
 	members: RawFormattedMember[],
 	start: string,
 	end: string | undefined
 ) {
-	const house = members[0].house.houseCode;
+	const house: Chamber = members[0].house.houseCode as Chamber;
 	const houseNo = members[0].house.houseNo;
 
-	console.log(`Aggregating ${house} ${houseNo} records`);
+	console.log(
+		`Aggregating ${house} ${houseNo} records for ${members.length} members`
+	);
 
+	// Array for all records
 	const records: {}[] = [];
-
-	const houseDetails = fetchHouses({
-		chamber_id: house,
-		house_no: houseNo,
-		limit: 5000,
-	});
 
 	const rawHouseVotes = await fetchVotes({
 		chamber_type: 'house',
@@ -39,12 +37,13 @@ export async function aggregateMemberRecords(
 	});
 
 	for (let m of members) {
-		// Clause for members who didn't serve for full session
+		// required variables to allow for incomplete sessions by members
 		let tempStart = start;
 		let tempEnd = end;
 		let tempRawHouseVotes = rawHouseVotes;
 		let tempRawCommitteeVotes = rawCommitteeVotes;
 		if (m.dateRange.start != start || m.dateRange.end != end) {
+			// Clause for members who didn't serve for full session
 			tempStart = m.dateRange.start;
 			tempEnd = m.dateRange.end!;
 			tempRawHouseVotes = await fetchVotes({
@@ -60,6 +59,8 @@ export async function aggregateMemberRecords(
 				date_end: tempEnd,
 			});
 		}
+
+		// returns aggregated votes for member
 		const houseVotes = await aggregateVotes({
 			member: m.uri,
 			rawVotes: tempRawHouseVotes,
@@ -82,10 +83,10 @@ export async function aggregateMemberRecords(
 			committeeSpeeches: speeches.committee,
 		};
 
-		console.log(record);
 		records.push(record);
 	}
 	console.log(`Completed ${house} ${houseNo} Aggregation \n at ${new Date()}`);
 
+	console.log(records.length + ' records aggregated');
 	return records;
 }

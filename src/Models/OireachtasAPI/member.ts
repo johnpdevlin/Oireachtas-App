@@ -13,16 +13,36 @@ export type MemberRequest = {
 	limit?: number;
 };
 
-export type RawMembership = {
-	parties: {
-		partyCode: string;
-		uri: string;
+export type RawMemberOffice = {
+	officeName: {
 		showAs: string;
-		dateRange: {
-			start: string;
-			end: string | null | undefined;
-		};
-	}[];
+		uri: string;
+	};
+	dateRange: {
+		start: string;
+		end: string | null | undefined;
+	};
+};
+
+export type RawMemberRepresent = {
+	representCode: string;
+	uri: string;
+	showAs: string;
+	representType: string;
+};
+
+export type RawMemberParty = {
+	partyCode: string;
+	uri: string;
+	showAs: string;
+	dateRange: {
+		start: string;
+		end: string | null | undefined;
+	};
+};
+
+export type RawMembership = {
+	parties: RawMemberParty[];
 	house: {
 		houseCode: string;
 		uri: string;
@@ -31,26 +51,10 @@ export type RawMembership = {
 		chamberType: string;
 	};
 	offices: {
-		office: {
-			officeName: {
-				showAs: string;
-				uri: string;
-			};
-			dateRange: {
-				start: string;
-				end: string | null | undefined;
-			};
-		};
+		office: RawMemberOffice;
 	}[];
 	uri: string;
-	represents: {
-		represent: {
-			representCode: string;
-			uri: string;
-			showAs: string;
-			representType: string;
-		};
-	}[];
+	represents: RawMemberRepresent[];
 	dateRange: {
 		start: string;
 		end: string | null;
@@ -93,8 +97,14 @@ export type RawFormattedMember = {
 	firstName: string;
 	lastName: string;
 	dateRange: { start: string; end: string | null | undefined };
-	house: {};
-	offices: {};
-	constituencies: {};
-	parties: {};
+	house: {
+		houseCode: string;
+		uri: string;
+		houseNo: string;
+		showAs: string;
+		chamberType: string;
+	};
+	offices: RawMemberOffice[] | RawMemberOffice;
+	constituencies: RawMemberRepresent[] | RawMemberRepresent;
+	parties: RawMemberParty[] | RawMemberParty;
 };

@@ -31,9 +31,10 @@ export async function prcParticipation(
 	const memberRecords = await aggregateMemberRecords(
 		members,
 		dates.start!,
-		dates.end
+		dates.end!
 	);
 
+	console.log(memberRecords);
 	// const parties = await fetchParties({ chamber: chamber, houseNo: house_no });
 	// const constituencies = await fetchConstituencies({
 	// 	chamber: chamber,
