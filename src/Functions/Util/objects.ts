@@ -20,3 +20,28 @@ export function removeOuterObjects(obj: AnyObject): AnyObject {
 		return obj;
 	}
 }
+
+export function mergeObjectsByDateProp(data: any[]): any[] {
+	const mergedObjects: any[] = [];
+
+	data.forEach((obj) => {
+		if (obj.date!) {
+			const existingObj = mergedObjects.find(
+				(mergedObj) => mergedObj.date === obj.date
+			);
+
+			if (existingObj) {
+				Object.keys(obj).forEach((key) => {
+					if (!existingObj.hasOwnProperty(key)) {
+						existingObj[key] = obj[key];
+					}
+				});
+			} else {
+				mergedObjects.push({ ...obj });
+			}
+		}
+		console.log(mergedObjects);
+	});
+
+	return mergedObjects;
+}

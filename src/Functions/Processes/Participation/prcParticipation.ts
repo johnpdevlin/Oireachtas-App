@@ -13,6 +13,9 @@ import { mergeMemberAttendanceRecords } from '@/Functions/GetWebsiteData/Oireach
 import { SittingDaysReport } from '@/Functions/GetWebsiteData/Oireachtas/parseSittingDaysPDF';
 import { convertDMYdate2YMDstring } from '@/Functions/Util/dates';
 import { RawFormattedMember } from '@/Models/OireachtasAPI/member';
+import { MemberVoteAggregate } from './Aggregate/Oireachtas-API/Member/votes';
+import { MemberSpeechAggregate } from './Aggregate/Oireachtas-API/Member/speeches';
+import { mergeObjectsByDateProp } from '@/Functions/Util/objects';
 
 export async function prcParticipation(
 	chamber: Chamber,
@@ -80,6 +83,7 @@ export default async function prcDailAttendance(
 	const mergedRecords: OirRecord[] = [];
 
 	for (let m of memberRecords) {
+		// iterate over members' records
 		let tempSittingDates = sittingDates;
 		if (exceptions.find((e) => e.member === m.member)) {
 			// If member has exceptions, get sitting dates for exception period
@@ -88,33 +92,29 @@ export default async function prcDailAttendance(
 			const temp = await getSittingDates(e!.start, e!.end);
 			tempSittingDates = temp.dailSitting;
 		}
-		const memberAttendance = mergedMemberAttendance.filter(
-			(a) => a.uri == m.member
-		);
 
 		const houseVotes = m.houseVotes
 			.map((v) => {
-				if (v.votesCount > 0) return { date: v.date };
+				if (v.votesCount > 0) return { ...v };
 			})
 			.filter((v) => v != undefined);
 
 		const datesContributed = new Set();
-		[
+		const houseParticipation = mergeObjectsByDateProp([
 			...houseVotes,
 			...m.houseSpeeches,
-			...m.houseVotes,
-			...(m.questions.oralQuestions?.map((q) => q) ?? []),
-		].forEach((d: unknown) => {
+			...(m.questions.oralQuestions ? m.questions.oralQuestions : []),
+		]).forEach((d: unknown) => {
 			datesContributed.add(d.date);
 		});
+
+		console.log(houseParticipation);
 
 		const datesNotContributed = tempSittingDates
 			.map((d) => {
 				if (!datesContributed.has(d)) return d;
 			})
 			.filter((d) => d != undefined);
-
-		console.log(datesNotContributed);
 	}
 
 	return mergedRecords;
