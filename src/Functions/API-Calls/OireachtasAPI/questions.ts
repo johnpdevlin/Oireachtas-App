@@ -15,7 +15,7 @@ export async function formatQuestions(questions: any[]): Promise<Question[]> {
 			topic: q.question.debateSection.showAs,
 			content: q.question.showAs,
 			questionNumber: parseInt(q.question.questionNumber),
-			date: new Date(q.contextDate),
+			date: q.contextDate,
 			url: `https://www.oireachtas.ire/en/debates/question/${q.contextDate}/${q.question.questionNumber}`,
 		};
 		qs.push(question);

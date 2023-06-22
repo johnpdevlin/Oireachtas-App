@@ -9,6 +9,7 @@ export default async function fetchDebates(
 	props: DebateRequest
 ): Promise<DebateRecord[]> {
 	props = validateOireachtasRequest(props);
+
 	// converts date type to string
 	const url: string = `https://api.oireachtas.ie/v1/debates?${
 		props.chamber_type ? `chamber_type=${props.chamber_type}` : ''

@@ -40,7 +40,6 @@ export function mergeObjectsByDateProp(data: any[]): any[] {
 				mergedObjects.push({ ...obj });
 			}
 		}
-		console.log(mergedObjects);
 	});
 
 	return mergedObjects;

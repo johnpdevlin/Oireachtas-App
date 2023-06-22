@@ -99,22 +99,29 @@ export default async function prcDailAttendance(
 			})
 			.filter((v) => v != undefined);
 
+		const oralQuestions = m.questions?.filter((q) => q.oralQuestionCount > 0);
+
 		const datesContributed = new Set();
-		const houseParticipation = mergeObjectsByDateProp([
+
+		[
 			...houseVotes,
 			...m.houseSpeeches,
-			...(m.questions.oralQuestions ? m.questions.oralQuestions : []),
-		]).forEach((d: unknown) => {
+			...(oralQuestions ? oralQuestions : []),
+		].forEach((d: unknown) => {
 			datesContributed.add(d.date);
 		});
-
-		console.log(houseParticipation);
 
 		const datesNotContributed = tempSittingDates
 			.map((d) => {
 				if (!datesContributed.has(d)) return d;
 			})
 			.filter((d) => d != undefined);
+
+		const houseParticipation = mergeObjectsByDateProp([
+			...houseVotes,
+			...m.houseSpeeches,
+			...m.questions!,
+		]);
 	}
 
 	return mergedRecords;

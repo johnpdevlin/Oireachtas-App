@@ -17,6 +17,6 @@ export type Question = {
 	topic: string;
 	content: string;
 	questionNumber: number;
-	date: Date;
+	date: string;
 	url: string;
 };

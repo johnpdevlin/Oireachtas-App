@@ -5,22 +5,16 @@ import { Question } from '@/Models/OireachtasAPI/question';
 
 export type MemberQuestionAggregate = {
 	uri: string;
-	date: Date;
-	type: string;
-	count: number;
+	date: string;
+	oralQuestionCount: number;
+	writtenQuestionCount: number;
 };
 
 export default async function aggregateOirQuestions(
 	memberId: string,
 	start: string,
 	end: string
-): Promise<
-	| {
-			oral: MemberQuestionAggregate[];
-			written: MemberQuestionAggregate[];
-	  }
-	| undefined
-> {
+): Promise<MemberQuestionAggregate[] | undefined> {
 	// Fetch raw question data
 	const questions = await fetchQuestions({
 		member_id: memberId,
@@ -28,18 +22,10 @@ export default async function aggregateOirQuestions(
 		date_end: end,
 	});
 
-	// Separate oral and written questions
-	const oralQuestions = questions.filter((q) => q.type === 'oral');
-	const writtenQuestions = questions.filter((q) => q.type === 'written');
-
 	// Aggregate questions by member
-	const aggregatedOralQuestions = parseQuestions(oralQuestions, memberId);
-	const aggregatedWrittenQuestions = parseQuestions(writtenQuestions, memberId);
+	const aggregatedQuestions = parseQuestions(questions, memberId);
 
-	return {
-		oral: aggregatedOralQuestions,
-		written: aggregatedWrittenQuestions,
-	};
+	return aggregatedQuestions;
 }
 
 function parseQuestions(
@@ -51,21 +37,25 @@ function parseQuestions(
 
 	// Iterate through each question
 	questions.forEach((question) => {
-		const questionKey = question.date.toISOString();
+		const questionKey = question.date;
 
 		// If the question key doesn't exist in aggregatedQuestions, create a new entry
 		if (!aggregatedQuestions[questionKey]) {
 			const aggregatedQuestion: MemberQuestionAggregate = {
 				uri: memberUri,
 				date: question.date,
-				type: question.type,
-				count: 0,
+				writtenQuestionCount: 0,
+				oralQuestionCount: 0,
 			};
 			aggregatedQuestions[questionKey] = aggregatedQuestion;
 		}
 
 		// Increment the count of the corresponding question
-		aggregatedQuestions[questionKey].count++;
+		if (question.type === 'written') {
+			aggregatedQuestions[questionKey].writtenQuestionCount++;
+		} else if (question.type === 'oral') {
+			aggregatedQuestions[questionKey].oralQuestionCount++;
+		}
 	});
 
 	// Return the aggregated questions as an array

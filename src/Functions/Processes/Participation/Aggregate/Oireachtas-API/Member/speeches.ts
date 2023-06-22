@@ -9,7 +9,7 @@ export type MemberSpeechAggregate = {
 	houseNo: number;
 	date: string;
 	committeeCode?: string;
-	speechCount: number;
+	debatesContributedTo: number;
 };
 
 function parseSpeeches(debates: DebateRecord[]): MemberSpeechAggregate[] {
@@ -37,13 +37,12 @@ function parseSpeeches(debates: DebateRecord[]): MemberSpeechAggregate[] {
 				houseNo: parseInt(house.houseNo),
 				date,
 				...(committeeCode ? { committeeCode } : {}),
-				speechCount: 0,
+				debatesContributedTo: 0,
 			};
 			aggregatedSpeeches[debKey] = speeches;
 		}
 
-		const speechCount = deb.counts.contributorCount;
-		aggregatedSpeeches[debKey].speechCount += speechCount;
+		aggregatedSpeeches[debKey].debatesContributedTo++;
 	});
 
 	// Extract the values from the aggregatedSpeeches object

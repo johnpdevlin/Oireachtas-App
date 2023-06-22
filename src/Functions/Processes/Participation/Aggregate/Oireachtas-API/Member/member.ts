@@ -10,10 +10,7 @@ export type OirRecord = {
 	member: string;
 	houseVotes: MemberVoteAggregate[];
 	committeeVotes: MemberVoteAggregate[];
-	questions: {
-		oralQuestions: MemberQuestionAggregate[] | undefined;
-		writtenQuestions: MemberQuestionAggregate[] | undefined;
-	};
+	questions: MemberQuestionAggregate[] | undefined;
 	houseSpeeches: MemberSpeechAggregate[];
 	committeeSpeeches: MemberSpeechAggregate[];
 };
@@ -84,7 +81,6 @@ export async function aggregateMemberOirRecords(
 		});
 
 		const questions = await aggregateOirQuestions(m.uri, tempStart, tempEnd!);
-
 		const speeches = await aggregateOirSpeeches(m.uri, tempStart, tempEnd!);
 
 		const record: OirRecord = {
