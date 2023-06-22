@@ -79,8 +79,7 @@ export default async function prcDailAttendance(
 	memberAttendance: SittingDaysReport[],
 	exceptions: { member: string; start: string; end: string }[]
 ) {
-	const mergedMemberAttendance = mergeMemberAttendanceRecords(memberAttendance);
-	const mergedRecords: OirRecord[] = [];
+	const mergedRecords = [];
 
 	for (let m of memberRecords) {
 		// iterate over members' records
@@ -117,11 +116,35 @@ export default async function prcDailAttendance(
 			})
 			.filter((d) => d != undefined);
 
+		const datesAttendanceRecorded: (string | undefined)[] = [];
+		const temp = memberAttendance.filter((a) => a.uri === m.member);
+		temp.forEach((d) => {
+			datesAttendanceRecorded.push(...d.sittingDates);
+		});
+		console.log(datesAttendanceRecorded);
 		const houseParticipation = mergeObjectsByDateProp([
 			...houseVotes,
 			...m.houseSpeeches,
 			...m.questions!,
-		]);
+		]).map((hp) => {
+			// need to change dar from dd/mm/yyyy to yyyy-mm-dd or something etc.
+			if (datesAttendanceRecorded.includes(hp.date) === true) {
+				console.log(hp.date);
+				return {
+					attendanceRecorded: true,
+					...hp,
+				};
+			}
+			return hp;
+		});
+
+		console.log(houseParticipation);
+
+		// also need to get all member attendance for full range
+		mergedRecords.push({
+			datesParticipated: houseParticipation,
+			datesNotContributed: datesNotContributed,
+		});
 	}
 
 	return mergedRecords;
