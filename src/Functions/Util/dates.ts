@@ -221,3 +221,13 @@ export function getUniqueDatesFromObjects(data: { date: string }[]): string[] {
 
 	return Array.from(uniqueDatesSet);
 }
+
+export function checkWithinDateRange(
+	date: Date,
+	range: { start_date: Date; end_date: Date }
+): boolean {
+	return (
+		date.getTime() >= range.start_date.getTime() &&
+		date.getTime() <= range.end_date.getTime()
+	);
+}

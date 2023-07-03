@@ -1,8 +1,8 @@
 /** @format */
 
 type DateRange = {
-	start_date: string;
-	end_date: string;
+	start_date: Date;
+	end_date: Date;
 };
 
 export type SittingDays = {

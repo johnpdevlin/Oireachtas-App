@@ -17,8 +17,8 @@ function parseBlock(block: string): SittingDays | string {
 	let report: SittingDays = {
 		name: '',
 		dateRange: {
-			start_date: '',
-			end_date: '',
+			start_date: new Date(),
+			end_date: new Date(),
 		},
 		limit: 0,
 		totalPossibleSittings: 0,
@@ -67,14 +67,10 @@ function parseBlock(block: string): SittingDays | string {
 						// Extracts the date range
 						const dr = lines[i].replace('Date Range', '').trim();
 						const [start_date, end_date] = dr?.split(' to ');
-						const formattedDates = {
-							// Format the dates
-							start: convertDMYdate2YMD(start_date),
-							end: convertDMYdate2YMD(end_date),
-						};
+
 						report.dateRange = {
-							start_date: formattedDates.start,
-							end_date: formattedDates.end,
+							start_date: new Date(convertDMYdate2YMD(start_date)),
+							end_date: new Date(convertDMYdate2YMD(end_date)),
 						};
 
 						// calculate percentage of sittings attended

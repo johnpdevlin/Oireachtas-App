@@ -9,9 +9,11 @@ import {
 } from './Aggregate/Oireachtas-API/Member/member';
 import prcAttendanceReports from '../Attendance/prcAttendanceReport';
 import getSittingDates from '../getSittingDates';
-import { SittingDaysReport } from '@/Functions/GetWebsiteData/Oireachtas/parseSittingDaysPDF';
+
 import { RawFormattedMember } from '@/Models/OireachtasAPI/member';
 import { mergeObjectsByDateProp } from '@/Functions/Util/objects';
+import { checkWithinDateRange } from '@/Functions/Util/dates';
+import { SittingDaysReport } from '@/Models/Scraped/attendanceReport';
 
 export async function prcParticipation(
 	chamber: Chamber,
@@ -64,7 +66,7 @@ export async function prcParticipation(
 		})
 		.filter((m: unknown) => m != undefined);
 
-	const merge = prcDailAttendance(
+	const dailRecord = prcDailAttendance(
 		(await sittingDates).dailSitting,
 		aggregatedMemberOirRecords,
 		attendance!,
@@ -112,6 +114,11 @@ export default async function prcDailAttendance(
 			datesContributed.add(d.date);
 		});
 
+		// Gets members attendance report
+		const tempReport = memberAttendanceReports.filter(
+			(a) => a.uri === m.member
+		);
+
 		// Gets all dates where member did not contribute
 		const datesNotContributed = tempSittingDates
 			.map((d) => {
@@ -119,39 +126,72 @@ export default async function prcDailAttendance(
 			})
 			.filter((d) => d != undefined);
 
-		// Gets members attendance report
-		const temp = memberAttendanceReports.filter((a) => a.uri === m.member);
-
 		// Gets all dates where member attendance was reported
 		const datesAttendanceReported: (string | undefined)[] = [];
-		temp.forEach((d) => {
+		const dateRanges: { start: Date; end: Date }[] = [];
+		tempReport.forEach((d) => {
 			datesAttendanceReported.push(...d.sittingDates);
+			dateRanges.push(d.dateRange);
 		});
-		console.log(datesAttendanceReported);
+
 		const houseParticipation = mergeObjectsByDateProp([
 			...houseVotes,
 			...m.houseSpeeches,
 			...m.questions!,
 		]).map((hp) => {
-			// need to change dar from dd/mm/yyyy to yyyy-mm-dd or something etc.
 			if (datesAttendanceReported.includes(hp.date) === true) {
-				console.log(hp.date);
 				return {
 					attendanceRecorded: true,
+					...hp,
+				};
+			} else if (
+				hp.date! &&
+				dateRanges.find(
+					(dr) => checkWithinDateRange(new Date(hp.date), dr) === true
+				)
+			) {
+				// Where member has contributed but not attendance not reported
+				return {
+					attendanceRecorded: false,
 					...hp,
 				};
 			}
 			return hp;
 		});
 
-		console.log(houseParticipation);
+		const datesAttendedButNotContributed = houseParticipation
+			.map((d) => {
+				if (datesNotContributed.includes(d.date) === true) {
+					return d.date;
+				}
+			})
+			.filter((d) => d != undefined);
+
+		const datesConfirmedAbsent = datesNotContributed
+			.map((d) => {
+				if (
+					d! &&
+					dateRanges.find(
+						(dr) => checkWithinDateRange(new Date(d!), dr) === true
+					)
+				) {
+					return d;
+				}
+			})
+			.filter((d) => d != undefined);
 
 		// also need to get all member attendance for full range
 		mergedRecords.push({
-			datesParticipated: houseParticipation,
-			datesNotContributed: datesNotContributed,
+			member_uri: m.member,
+			participated: houseParticipation,
+			noContribution: datesNotContributed,
+			attendedButNoContribution: datesAttendedButNotContributed,
+			confirmedAbsent: datesConfirmedAbsent,
 		});
 	}
 
+	console.log(mergedRecords);
 	return mergedRecords;
 }
+
+export function prcCommitteeAttendance(memberRecords: OirRecord[]) {}
