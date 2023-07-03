@@ -2,9 +2,10 @@
 
 import { Chamber } from '@/Models/_utility';
 import similarity from 'string-similarity';
-import parseSittingDaysPDF, { SittingDaysReport } from './parseSittingDaysPDF';
+import parseSittingDaysPDF from './parseSittingDaysPDF';
 import fetchMembers from '@/Functions/API-Calls/OireachtasAPI/members';
 import { RawMember } from '@/Models/OireachtasAPI/member';
+import { SittingDaysReport } from '@/Models/Scraped/attendanceReport';
 
 // Assign URIs to the reports
 async function assignUriToReports(

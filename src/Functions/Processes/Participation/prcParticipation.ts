@@ -9,12 +9,8 @@ import {
 } from './Aggregate/Oireachtas-API/Member/member';
 import prcAttendanceReports from '../Attendance/prcAttendanceReport';
 import getSittingDates from '../getSittingDates';
-import { mergeMemberAttendanceRecords } from '@/Functions/GetWebsiteData/Oireachtas/mergeMemberAttRecords';
 import { SittingDaysReport } from '@/Functions/GetWebsiteData/Oireachtas/parseSittingDaysPDF';
-import { convertDMYdate2YMDstring } from '@/Functions/Util/dates';
 import { RawFormattedMember } from '@/Models/OireachtasAPI/member';
-import { MemberVoteAggregate } from './Aggregate/Oireachtas-API/Member/votes';
-import { MemberSpeechAggregate } from './Aggregate/Oireachtas-API/Member/speeches';
 import { mergeObjectsByDateProp } from '@/Functions/Util/objects';
 
 export async function prcParticipation(
@@ -40,17 +36,20 @@ export async function prcParticipation(
 		if (house[0].dateRange.endDate != undefined)
 			dates.end = house[0].dateRange.end;
 
+	// Gets aggregated Oireachtas API records
 	const aggregatedMemberOirRecords = await aggregateMemberOirRecords(
 		[members[0], members[1]],
 		dates.start!,
 		dates.end!
 	);
 
+	// Gets processed attendance from attendance PDF records
 	const attendance = await prcAttendanceReports({
 		house_no: house_no,
 		chamber: chamber,
 	});
 
+	// Gets sitting dates from API
 	const sittingDates = getSittingDates(dates.start!, dates.end!);
 
 	const exceptions = members // find where members didn't serve full terms
@@ -76,32 +75,35 @@ export async function prcParticipation(
 export default async function prcDailAttendance(
 	sittingDates: string[],
 	memberRecords: OirRecord[],
-	memberAttendance: SittingDaysReport[],
+	memberAttendanceReports: SittingDaysReport[],
 	exceptions: { member: string; start: string; end: string }[]
 ) {
 	const mergedRecords = [];
 
 	for (let m of memberRecords) {
-		// iterate over members' records
 		let tempSittingDates = sittingDates;
+
 		if (exceptions.find((e) => e.member === m.member)) {
 			// If member has exceptions, get sitting dates for exception period
 			// IE where member was not in house for full term
+			// Reassigns tempSittingDates to be these dates
 			const e = exceptions.find((e) => e.member === m.member);
 			const temp = await getSittingDates(e!.start, e!.end);
 			tempSittingDates = temp.dailSitting;
 		}
 
 		const houseVotes = m.houseVotes
+			// Filter out votes where member did not vote
 			.map((v) => {
 				if (v.votesCount > 0) return { ...v };
 			})
 			.filter((v) => v != undefined);
 
+		// Filter out questions record where no questions
 		const oralQuestions = m.questions?.filter((q) => q.oralQuestionCount > 0);
 
+		// Gets all dates where member contributed
 		const datesContributed = new Set();
-
 		[
 			...houseVotes,
 			...m.houseSpeeches,
@@ -110,25 +112,29 @@ export default async function prcDailAttendance(
 			datesContributed.add(d.date);
 		});
 
+		// Gets all dates where member did not contribute
 		const datesNotContributed = tempSittingDates
 			.map((d) => {
 				if (!datesContributed.has(d)) return d;
 			})
 			.filter((d) => d != undefined);
 
-		const datesAttendanceRecorded: (string | undefined)[] = [];
-		const temp = memberAttendance.filter((a) => a.uri === m.member);
+		// Gets members attendance report
+		const temp = memberAttendanceReports.filter((a) => a.uri === m.member);
+
+		// Gets all dates where member attendance was reported
+		const datesAttendanceReported: (string | undefined)[] = [];
 		temp.forEach((d) => {
-			datesAttendanceRecorded.push(...d.sittingDates);
+			datesAttendanceReported.push(...d.sittingDates);
 		});
-		console.log(datesAttendanceRecorded);
+		console.log(datesAttendanceReported);
 		const houseParticipation = mergeObjectsByDateProp([
 			...houseVotes,
 			...m.houseSpeeches,
 			...m.questions!,
 		]).map((hp) => {
 			// need to change dar from dd/mm/yyyy to yyyy-mm-dd or something etc.
-			if (datesAttendanceRecorded.includes(hp.date) === true) {
+			if (datesAttendanceReported.includes(hp.date) === true) {
 				console.log(hp.date);
 				return {
 					attendanceRecorded: true,

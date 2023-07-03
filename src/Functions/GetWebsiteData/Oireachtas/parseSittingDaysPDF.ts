@@ -1,30 +1,11 @@
 /** @format */
 
+import {
+	SittingDays,
+	SittingDaysReport,
+} from '@/Models/Scraped/attendanceReport';
 import axios from 'axios';
-
-type DateRange = {
-	start_date: string;
-	end_date: string;
-};
-
-type SittingDays = {
-	name?: string;
-	uri?: string;
-	dateRange: DateRange;
-	limit: number;
-	totalPossibleSittings: number;
-	sittingDates: (string | undefined)[];
-	otherDates: (string | undefined)[];
-	sittingTotal: number;
-	otherTotal: number;
-	total: number;
-	percentage: number;
-};
-
-export type SittingDaysReport = {
-	url: string;
-	year: number;
-} & SittingDays;
+import { convertDMYdate2YMD } from '../../Util/dates';
 
 function parseBlock(block: string): SittingDays | string {
 	// splits into lines and removes empty lines
@@ -86,7 +67,15 @@ function parseBlock(block: string): SittingDays | string {
 						// Extracts the date range
 						const dr = lines[i].replace('Date Range', '').trim();
 						const [start_date, end_date] = dr?.split(' to ');
-						report.dateRange = { start_date, end_date };
+						const formattedDates = {
+							// Format the dates
+							start: convertDMYdate2YMD(start_date),
+							end: convertDMYdate2YMD(end_date),
+						};
+						report.dateRange = {
+							start_date: formattedDates.start,
+							end_date: formattedDates.end,
+						};
 
 						// calculate percentage of sittings attended
 						report.percentage =
@@ -144,15 +133,17 @@ function parseBlock(block: string): SittingDays | string {
 				} else if (lines[i].length === 10) {
 					// where one date on same line
 					// which array to push to must be inferred
+
+					const date = convertDMYdate2YMD(lines[i]); // format date
 					if (report.sittingTotal > report.otherTotal) {
-						report.sittingDates.push(lines[i]);
+						report.sittingDates.push(date);
 					} else if (report.otherTotal > report.sittingTotal) {
-						report.otherDates.push(lines[i]);
+						report.otherDates.push(date);
 					}
 				} else if (lines[i].length === 20) {
 					// where two dates on the same line
-					const sittingDate = lines[i].slice(0, 10);
-					const otherDate = lines[i].slice(10);
+					const sittingDate = convertDMYdate2YMD(lines[i].slice(0, 10));
+					const otherDate = convertDMYdate2YMD(lines[i].slice(10));
 					report.sittingDates.push(sittingDate);
 					report.otherDates.push(otherDate);
 				}
