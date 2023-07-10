@@ -105,12 +105,6 @@ export default async function parseCommitteeReport(
 					searching = true;
 				}
 
-				// Check if the line indicates the end of attendee information
-				if (line.includes('in the chair')) {
-					searching = false;
-					break;
-				}
-
 				if (searching) {
 					// Skip lines that are not useful based on certain conditions
 					const shouldSkipLine =
@@ -134,7 +128,13 @@ export default async function parseCommitteeReport(
 							}
 						}
 					}
+					// Check if the line indicates the end of attendee information
+					if (line.includes('in the chair')) {
+						searching = false;
+						break;
+					}
 				}
+				
 			}
 
 			// Remove any undefined values from the arrays

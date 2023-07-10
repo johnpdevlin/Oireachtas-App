@@ -13,6 +13,7 @@ export type DebateRequest = {
 };
 
 export type DebateRecord = {
+	[x: string]: any;
 	lastUpdated: string;
 	chamber: {
 		showAs: string;

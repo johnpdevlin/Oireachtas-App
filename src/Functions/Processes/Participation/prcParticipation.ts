@@ -14,6 +14,7 @@ import { RawFormattedMember } from '@/Models/OireachtasAPI/member';
 import { mergeObjectsByDateProp } from '@/Functions/Util/objects';
 import { checkWithinDateRange } from '@/Functions/Util/dates';
 import { SittingDaysReport } from '@/Models/Scraped/attendanceReport';
+import prcCommitteeReports from '../Committee/prcCommitteeReports';
 
 export async function prcParticipation(
 	chamber: Chamber,
@@ -72,6 +73,8 @@ export async function prcParticipation(
 		attendance!,
 		exceptions
 	);
+
+	const committeeReports = prcCommitteeReports(dates.start!, dates.end);
 }
 
 export default async function prcDailAttendance(
@@ -190,8 +193,11 @@ export default async function prcDailAttendance(
 		});
 	}
 
-	console.log(mergedRecords);
 	return mergedRecords;
 }
 
-export function prcCommitteeAttendance(memberRecords: OirRecord[]) {}
+export function prcCommitteeAttendance(memberRecords: OirRecord[]) {
+	for (const m of memberRecords) {
+		const member = m.member;
+	}
+}

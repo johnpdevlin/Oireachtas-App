@@ -1,5 +1,6 @@
 /** @format */
 
+import fetchMembers from '@/Functions/API-Calls/OireachtasAPI/members';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
@@ -14,6 +15,7 @@ type PastMember = {
 type Committee = {
 	name: string;
 	uri: string;
+	url: string;
 	house_no: number;
 	chair: string;
 	currentMembers: string[];
@@ -36,8 +38,11 @@ export default async function scrapeCommitteeInfo(
 		}
 
 		const url = `https://www.oireachtas.ie/en/committees/${house_no}/${uri}/`;
-
 		if (!url) throw new Error('No url provided');
+
+		/// NEED TO FIX THIS
+		/// match uri to names below
+		const dailMembers = fetchMembers({ chamber: 'dail', house_no: 33 });
 
 		let response = (await axios.get(`api/webscrape?url=${url}`)).data.text;
 		let $ = cheerio.load(response);
@@ -57,12 +62,20 @@ export default async function scrapeCommitteeInfo(
 			endDate = new Date($('.c-historic-committee-ribbon__date').text().trim());
 		}
 
-		response = (await axios.get(`api/webscrape?url=${url}membership/`)).data
-			.text;
+		try {
+			response = (await axios.get(`api/webscrape?url=${url}membership/`)).data
+				.text;
+		} catch (err) {
+			console.warn(
+				'Error occurred, must be inconsisten formatting with page. /n Alternative url pattern now attemped.'
+			);
+			response = (await axios.get(`api/webscrape?url=${url}members/`)).data
+				.text;
+		}
 		$ = cheerio.load(response);
 
 		// Get the committee name
-		const committeeName = $('.c-hero__subtitle').text().trim();
+		let committeeName = $('.c-hero__subtitle').text().trim();
 		let currentMembers: string[] = [];
 		let chair: string = '';
 
@@ -106,6 +119,7 @@ export default async function scrapeCommitteeInfo(
 		const committee: Committee = {
 			name: committeeName,
 			uri,
+			url,
 			house_no: parseInt(house_no),
 			chair,
 			currentMembers,
@@ -120,5 +134,3 @@ export default async function scrapeCommitteeInfo(
 		console.error('Error occurred during scraping:', error);
 	}
 }
-
-('api/webscrape?url=https://www.oireachtas.ie/en/committees/33/agriculture-food-and-the-marine/members/');
