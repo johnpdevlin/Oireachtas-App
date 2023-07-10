@@ -8,7 +8,10 @@ import {
 import axios from 'axios';
 function format(pr: string): string {
 	// remove unneccessary characters
-	pr = pr.toLowerCase();
+	if (pr == undefined || pr.length === 0) {
+		return '';
+	}
+	pr = pr.toLowerCase().trim();
 
 	if (pr.includes('/')) pr = pr.replaceAll('/', '');
 	if (pr.includes('+')) pr = pr.replaceAll('+', '');
@@ -16,7 +19,7 @@ function format(pr: string): string {
 	if (pr.includes(':')) pr = pr.replaceAll(':', '');
 	if (pr.includes('(')) pr = removeTextAfterParenthesis(pr);
 	if (pr.endsWith('.')) pr = pr.slice(0, -1);
-	if (pr.endsWith('.')) pr = pr.slice(0, -1);
+	if (pr.endsWith('.')) pr = pr.slice(0, -1).trim();
 
 	if (pr.includes('deputies')) pr = pr.replace('deputies', '');
 	if (pr.includes('deputy')) pr = pr.replaceAll('deputy', '');
@@ -38,15 +41,21 @@ function format(pr: string): string {
 	if (pr.includes('i láthair')) pr = pr.replace('i láthair', '');
 	if (pr.includes('in the chair')) pr = pr.replace('in the chair', '');
 	if (pr.includes('sa chathaoir')) pr = pr.replace('sa chathaoir', '');
-	if (pr.includes('comhaltaí a bhí')) pr = pr.replace('comhaltaí a bhí', '');
+	if (pr.includes('comhaltaí a bhí'))
+		pr = pr.replace('comhaltaí a bhí', '').trim();
 
-	pr = capitaliseFirstLetters(pr).trim();
+	if (pr.length === 0) {
+		return '';
+	}
+
+	pr = capitaliseFirstLetters(pr);
 	return pr;
 }
 function formatPresentString(presence: string): string[] {
 	// Check if presence indicates "in attendance"
 	if (presence.includes('in attendance')) {
-		const present: string = presence.split(':')[1].trim(); // Extract the name after the colon
+		let present: string = presence;
+		if (presence.includes(':')) present = presence.split(':')[1].trim(); // Extract the name after the colon
 		return [format(present)]; // Format the name and return it as a single-element array
 	}
 
@@ -116,15 +125,18 @@ export default async function parseCommitteeReport(
 						line === '' ||
 						line.includes(')');
 					if (!shouldSkipLine) {
-						if (line.includes('in attendance')) {
-							// If the line includes 'in attendance', extract additional attendees' names
-							const additionalNames = formatPresentString(line.split(':')[1]);
-							alsoPresent.push(...additionalNames);
-						} else {
-							// Format the names of the present attendees
-							const processedNames = formatPresentString(line);
-							if (processedNames !== undefined) {
-								present.push(...processedNames);
+						if (line) {
+							if (line.includes('in attendance')) {
+								// If the line includes 'in attendance', extract additional attendees' names
+								const additionalNames = formatPresentString(line);
+								if (additionalNames.length === 0) console.error(lines);
+								alsoPresent.push(...additionalNames);
+							} else {
+								// Format the names of the present attendees
+								const processedNames = formatPresentString(line);
+								if (processedNames !== undefined) {
+									present.push(...processedNames);
+								}
 							}
 						}
 					}
@@ -134,7 +146,6 @@ export default async function parseCommitteeReport(
 						break;
 					}
 				}
-				
 			}
 
 			// Remove any undefined values from the arrays

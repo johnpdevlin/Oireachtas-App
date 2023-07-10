@@ -25,30 +25,17 @@ export default async function prcCommitteeReports(
 	if (!date_start) return [];
 	if (!date_end) date_end = '2099-01-01';
 
-	// YYYY-MM-DD format
+	// Call to API to retrieve debate records
 	const debates: Promise<DebateRecord[]> = fetchDebates({
-		// Call to API to retrieve debate records
+		// YYYY-MM-DD format
 		date_start: date_start,
 		date_end: date_end,
 		chamber_type: 'committee',
 	});
 
-	// get uris / urls etc
-	const committeeInfo = await scrapeCommitteesBaseDetails();
-	console.log(committeeInfo);
-	const committees = committeeInfo.map(async (c) => {
-		const info = await scrapeCommitteeInfo(c.dailNo, c.uri);
-		if (!info) return c.uri;
-		return info;
-	});
-
-	console.log(committees);
-	// then use scrape individual committees
-	// cross reference members below
-
 	const records = (await debates).map((deb: DebateRecord) => {
 		// Map to get pdf URLs for committee meetings
-		const date = new Date(deb.contextDate);
+		const date = deb.date;
 
 		const committee_name = capitaliseFirstLetters(
 			deb.house.showAs.toLowerCase()
@@ -72,23 +59,39 @@ export default async function prcCommitteeReports(
 
 	const parsedReports: CommitteeAttendance[] = [];
 
+	let count = 0;
 	for (const r of records) {
-		if (r.pdf !== undefined) {
+		count++;
+		if (r.pdf) {
 			const att = await parseCommitteeReport(r.pdf);
-			const attendees = att.present;
-			const alsoPresent = att.alsoPresent;
+			setTimeout(prcCommitteeReports, 50);
 			parsedReports.push({
 				date: new Date(r.date),
 				committee_name: r.committee_name,
 				committee_uri: r.uri!,
 				pdf: r.pdf,
 				xml: r.xml,
-				attendees: attendees,
-				alsoPresent: alsoPresent,
+				attendees: att.present,
+				alsoPresent: att.alsoPresent,
 			});
+		}
+		if (count % 100 == 0) {
+			console.log(count);
 		}
 	}
 
 	console.log(parsedReports);
+
+	// // Get all committee base details
+	// const committeeInfo = await scrapeCommitteesBaseDetails();
+
+	// // Get details for members of committee and other details
+	// const committees = committeeInfo.map(async (c) => {
+	// 	const info = await scrapeCommitteeInfo(c.dailNo, c.uri);
+	// 	if (!info)
+	// 		return console.error('issue with following committee scraping:', c.uri); // where
+	// 	return info;
+	// });
+
 	return parsedReports;
 }

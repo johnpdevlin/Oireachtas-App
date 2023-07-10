@@ -67,7 +67,7 @@ export default async function scrapeCommitteeInfo(
 				.text;
 		} catch (err) {
 			console.warn(
-				'Error occurred, must be inconsisten formatting with page. /n Alternative url pattern now attemped.'
+				'Error occurred, must be inconsistent formatting on page. \n Alternative url pattern now attemped.'
 			);
 			response = (await axios.get(`api/webscrape?url=${url}members/`)).data
 				.text;
