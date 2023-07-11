@@ -1,6 +1,6 @@
 /** @format */
 
-import { Chamber } from '../_utility';
+import { Chamber, DateRange } from '../_utility';
 
 export type MemberRequest = {
 	uri?: string;
@@ -96,7 +96,7 @@ export type RawFormattedMember = {
 	name: string;
 	firstName: string;
 	lastName: string;
-	dateRange: { start: string; end: string | null | undefined };
+	dateRange: DateRange;
 	house: {
 		houseCode: string;
 		uri: string;

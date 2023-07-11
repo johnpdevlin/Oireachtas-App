@@ -2,6 +2,7 @@
 
 export type ChamberType = 'house' | 'committee';
 export type Chamber = 'dail' | 'seanad' | 'dail & seanad';
+export type CommitteeType = 'select' | 'joint' | 'standing';
 export type RepresentType = 'constituency' | 'panel';
 export type Outcome = 'carried' | 'lost';
 export type QuestionType = 'oral' | 'written';
