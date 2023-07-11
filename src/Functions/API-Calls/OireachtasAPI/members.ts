@@ -1,12 +1,18 @@
 /** @format */
 
-import { Chamber } from '@/Models/_utility';
+import { Chamber, DateRange } from '@/Models/_utility';
 import fetcher from '..';
-import { MemberRequest, RawMember } from '@/Models/OireachtasAPI/member';
+import {
+	MemberRequest,
+	RawFormattedMember,
+	RawMember,
+} from '@/Models/OireachtasAPI/member';
 import { removeOuterObjects } from '@/Functions/Util/objects';
 import validateOireachtasRequest from './_validateRequest';
 
-export default async function fetchMembers(props: MemberRequest) {
+export default async function fetchMembers(
+	props: MemberRequest
+): Promise<RawFormattedMember[]> {
 	props = validateOireachtasRequest(props);
 
 	let url: string;
@@ -36,7 +42,6 @@ export default async function fetchMembers(props: MemberRequest) {
 		const lastName = m.lastName;
 		const dateRange = m.memberships.dateRange;
 		const house = m.memberships.house;
-
 		const offices = m.memberships.offices;
 		const constituencies = m.memberships.represents;
 		const parties = m.memberships.parties;
