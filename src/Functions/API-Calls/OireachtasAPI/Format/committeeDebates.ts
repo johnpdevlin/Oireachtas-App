@@ -1,0 +1,95 @@
+/** @format */
+
+import {
+	capitaliseFirstLetters,
+	getStringAfterFirstTargetPoint,
+} from '@/Functions/Util/strings';
+import {
+	CommitteeDebateRecord,
+	DebateRecord,
+} from '@/Models/OireachtasAPI/debate';
+import { CommitteeType } from '@/Models/_utility';
+export default function formatCommitteeDebates(
+	debates: DebateRecord[]
+): CommitteeDebateRecord[] {
+	const formatted = debates.reduce(
+		(results: CommitteeDebateRecord[], deb: DebateRecord) => {
+			const date = new Date(deb.date);
+			const dateStr = deb.date;
+			const name = capitaliseFirstLetters(
+				extractRootCommitteeDetails(deb.house.showAs.toLowerCase())
+			);
+			const pdf = deb.formats.pdf?.uri;
+			if (!pdf) {
+				console.warn(
+					`No PDF file found for ${name} debate on ${dateStr} \n ${deb}`
+				);
+			} else {
+				const uri = extractRootCommitteeDetails(deb.house.committeeCode!);
+				const subURI = deb.house.committeeCode!;
+				const type = extractCommitteeType(deb.house.showAs.toLowerCase());
+				const houseNo = parseInt(deb.house.houseNo);
+				const chamber = deb.house.houseCode;
+				const xml = deb.formats.xml?.uri;
+
+				results.push({
+					date,
+					dateStr,
+					name,
+					type,
+					chamber,
+					houseNo,
+					uri,
+					subURI,
+					pdf,
+					xml,
+				});
+			}
+			return results; // Return the updated results array in each iteration
+		},
+		[] // Provide an empty array as the initial value
+	);
+	return formatted;
+}
+
+function extractRootCommitteeDetails(str: string): string {
+	if (
+		str.startsWith('joint') ||
+		str.startsWith('standing') ||
+		str.startsWith('select')
+	) {
+		// Extract root committee details using the appropriate separator
+		const separator = str.includes('_') ? '_' : ' ';
+		const rootCommittee = getStringAfterFirstTargetPoint(str, separator);
+		return rootCommittee || str; // Return the extracted value or the original string
+	} else if (str.includes('choiste') || str.includes('coiste')) {
+		// Extraction to allow for inconsistencies with use of Irish / Gaeilge
+		let committee = '';
+		if (str.includes('meáin')) {
+			committee =
+				'Committee on Media, Tourism, Arts, Culture, Sport and the Gaeltacht';
+		} else {
+			committee =
+				'Committee on the Irish Language, Gaeltacht and the Irish-speaking Community';
+			if (str.includes('_')) committee = committee.replace(' the ', '-');
+		}
+		committee = committee.replaceAll(' ', '-'); // Replace spaces with hyphens
+		return committee;
+	} else {
+		// Extract the root committee details before the separator ('_')
+		const separator = '_';
+		const rootCommittee = str.split(separator)[0];
+		return rootCommittee || str; // Return the extracted value or the original string
+	}
+}
+
+function extractCommitteeType(uri: string): CommitteeType {
+	if (
+		uri.startsWith('joint') ||
+		uri.startsWith('comh') ||
+		uri.includes('public_petitions')
+	) {
+		return 'joint';
+	}
+	return 'select';
+}

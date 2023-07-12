@@ -1,13 +1,18 @@
 /** @format */
 
 import fetcher from '..';
-import { DebateRecord, DebateRequest } from '@/Models/OireachtasAPI/debate';
+import {
+	CommitteeDebateRecord,
+	DebateRecord,
+	DebateRequest,
+} from '@/Models/OireachtasAPI/debate';
 import validateOireachtasRequest from './_validateRequest';
 import { removeOuterObjects } from '../../Util/objects';
 
 export default async function fetchDebates(
-	props: DebateRequest
-): Promise<DebateRecord[]> {
+	props: DebateRequest,
+	formatter?: (dbRecords: DebateRecord[]) => CommitteeDebateRecord[]
+): Promise<DebateRecord[] | CommitteeDebateRecord[]> {
 	props = validateOireachtasRequest(props);
 
 	// converts date type to string
@@ -25,9 +30,17 @@ export default async function fetchDebates(
 	}${props.debate_id ? `&debate_id=${props.debate_id}` : ''}
 	`;
 	const debates = (await fetcher(url)).results;
-	const output = debates.map((debate: { [x: string]: any }) => {
-		return removeOuterObjects(debate.debateRecord);
-	});
+
+	// Remove outer objects
+	const output: DebateRecord[] = (await debates).map(
+		(debate: { [x: string]: any }) => {
+			return removeOuterObjects(debate.debateRecord);
+		}
+	);
+
+	if (formatter) {
+		return formatter(output);
+	}
 
 	return output;
 }

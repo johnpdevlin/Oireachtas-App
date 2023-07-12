@@ -1,6 +1,6 @@
 /** @format */
 
-import { Chamber, ChamberType } from '@/Models/_utility';
+import { Chamber, ChamberType, CommitteeType } from '@/Models/_utility';
 
 export type DebateRequest = {
 	member?: string;
@@ -24,7 +24,7 @@ export type DebateRecord = {
 		houseNo: string;
 		showAs: string;
 		committeeCode?: string;
-		houseCode: string;
+		houseCode: Chamber;
 		chamberType: string;
 	};
 	counts: {
@@ -59,4 +59,17 @@ export type DebateRecord = {
 		formats: Record<string, any>;
 	};
 	date: string;
+};
+
+export type CommitteeDebateRecord = {
+	date: Date;
+	dateStr: string;
+	name: string;
+	type: CommitteeType;
+	chamber: Chamber;
+	houseNo: number;
+	uri: string;
+	subURI: string; // to differentiate for joint, select etc.
+	pdf?: string;
+	xml?: string;
 };
