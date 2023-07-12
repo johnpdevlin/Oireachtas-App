@@ -214,3 +214,13 @@ export function isAllUpperCase(input: string): boolean {
 	}
 	return true; // All characters are uppercase
 }
+
+// EG for joint_committee_for_horses (target is _ so will return committee_for_horses)
+export function getStringAfterFirstTargetPoint(
+	str: string,
+	target: string
+): string {
+	const index = str.indexOf(target);
+
+	return str.slice(index + 1);
+}
