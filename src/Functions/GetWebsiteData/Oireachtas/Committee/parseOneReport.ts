@@ -6,6 +6,77 @@ import {
 	removeTextBetweenParentheses,
 } from '@/Functions/Util/strings';
 import axios from 'axios';
+
+export default async function parseCommitteeReport(
+	url: string
+): Promise<{ present: string[]; alsoPresent: string[] }> {
+	try {
+		if (url !== undefined) {
+			const response = await axios.get(`api/pdf2text?url=${url}`);
+			const text = response.data.text;
+			const lines = text?.split('\n');
+
+			let searching = false;
+			let present: string[] = [];
+			let alsoPresent: string[] = [];
+
+			for (let i = 0; i < lines.length; i++) {
+				const line = lines[i].toLowerCase();
+
+				// Check if the line indicates the start of attendee information
+				if (line.includes('present')) {
+					searching = true;
+				}
+
+				if (searching) {
+					// Skip lines that are not useful based on certain conditions
+					const shouldSkipLine =
+						line.includes('present') ||
+						line.includes('deputies') ||
+						line.includes('senators') ||
+						line.includes('1') ||
+						line.includes('clerk') ||
+						line === '' ||
+						line.includes(')');
+					if (!shouldSkipLine) {
+						if (line) {
+							if (line.includes('in attendance')) {
+								// If the line includes 'in attendance', extract additional attendees' names
+								const additionalNames = formatPresentString(line);
+								if (additionalNames.length === 0) console.error(lines);
+								alsoPresent.push(...additionalNames);
+							} else {
+								// Format the names of the present attendees
+								const processedNames = formatPresentString(line);
+								if (processedNames !== undefined) {
+									present.push(...processedNames);
+								}
+							}
+						}
+					}
+					// Check if the line indicates the end of attendee information
+					if (line.includes('in the chair')) {
+						searching = false;
+						break;
+					}
+				}
+			}
+
+			// Remove any undefined values from the arrays
+			present = present.filter(Boolean);
+			alsoPresent = alsoPresent.filter(Boolean);
+
+			// Return the attendees' lists
+			return { present, alsoPresent };
+		}
+	} catch (error) {
+		console.log(url, error);
+	}
+
+	// Return [] if an error occurred or if the URL is undefined
+	return { present: [], alsoPresent: [] };
+}
+
 function format(pr: string): string {
 	// remove unneccessary characters
 	if (pr == undefined || pr.length === 0) {
@@ -91,74 +162,4 @@ function formatPresentString(presence: string): string[] {
 
 	// If none of the above conditions match, treat the presence as a single name
 	return [format(presence)]; // Format the name and return it as a single-element array
-}
-
-export default async function parseCommitteeReport(
-	url: string
-): Promise<{ present: string[]; alsoPresent: string[] }> {
-	try {
-		if (url !== undefined) {
-			const response = await axios.get(`api/pdf2text?url=${url}`);
-			const text = response.data.text;
-			const lines = text?.split('\n');
-
-			let searching = false;
-			let present: string[] = [];
-			let alsoPresent: string[] = [];
-
-			for (let i = 0; i < lines.length; i++) {
-				const line = lines[i].toLowerCase();
-
-				// Check if the line indicates the start of attendee information
-				if (line.includes('present')) {
-					searching = true;
-				}
-
-				if (searching) {
-					// Skip lines that are not useful based on certain conditions
-					const shouldSkipLine =
-						line.includes('present') ||
-						line.includes('deputies') ||
-						line.includes('senators') ||
-						line.includes('1') ||
-						line.includes('clerk') ||
-						line === '' ||
-						line.includes(')');
-					if (!shouldSkipLine) {
-						if (line) {
-							if (line.includes('in attendance')) {
-								// If the line includes 'in attendance', extract additional attendees' names
-								const additionalNames = formatPresentString(line);
-								if (additionalNames.length === 0) console.error(lines);
-								alsoPresent.push(...additionalNames);
-							} else {
-								// Format the names of the present attendees
-								const processedNames = formatPresentString(line);
-								if (processedNames !== undefined) {
-									present.push(...processedNames);
-								}
-							}
-						}
-					}
-					// Check if the line indicates the end of attendee information
-					if (line.includes('in the chair')) {
-						searching = false;
-						break;
-					}
-				}
-			}
-
-			// Remove any undefined values from the arrays
-			present = present.filter(Boolean);
-			alsoPresent = alsoPresent.filter(Boolean);
-
-			// Return the attendees' lists
-			return { present, alsoPresent };
-		}
-	} catch (error) {
-		console.log(url, error);
-	}
-
-	// Return [] if an error occurred or if the URL is undefined
-	return { present: [], alsoPresent: [] };
 }
