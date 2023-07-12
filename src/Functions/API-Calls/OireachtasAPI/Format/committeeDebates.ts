@@ -27,6 +27,7 @@ export default function formatCommitteeDebates(
 			} else {
 				const uri = extractRootCommitteeDetails(deb.house.committeeCode!);
 				const subURI = deb.house.committeeCode!;
+
 				const type = extractCommitteeType(deb.house.showAs.toLowerCase());
 				const houseNo = parseInt(deb.house.houseNo);
 				const chamber = deb.house.houseCode;
@@ -53,17 +54,17 @@ export default function formatCommitteeDebates(
 }
 
 function extractRootCommitteeDetails(str: string): string {
+	let rootCommittee = '';
 	if (
 		str.startsWith('joint') ||
 		str.startsWith('standing') ||
 		str.startsWith('select')
 	) {
-		// Extract root committee details using the appropriate separator
-		const separator = str.includes('_') ? '_' : ' ';
-		const rootCommittee = getStringAfterFirstTargetPoint(str, separator);
-		return rootCommittee || str; // Return the extracted value or the original string
+		if (str.includes('_'))
+			rootCommittee = getStringAfterFirstTargetPoint(str, '_');
+		else if (str.includes(' '))
+			rootCommittee = getStringAfterFirstTargetPoint(str, ' ');
 	} else if (str.includes('choiste') || str.includes('coiste')) {
-		// Extraction to allow for inconsistencies with use of Irish / Gaeilge
 		let committee = '';
 		if (str.includes('meáin')) {
 			committee =
@@ -71,16 +72,26 @@ function extractRootCommitteeDetails(str: string): string {
 		} else {
 			committee =
 				'Committee on the Irish Language, Gaeltacht and the Irish-speaking Community';
-			if (str.includes('_')) committee = committee.replace(' the ', '-');
+			if (str.includes('_')) committee = committee.replace(' the ', '');
 		}
-		committee = committee.replaceAll(' ', '-'); // Replace spaces with hyphens
-		return committee;
-	} else {
-		// Extract the root committee details before the separator ('_')
-		const separator = '_';
-		const rootCommittee = str.split(separator)[0];
-		return rootCommittee || str; // Return the extracted value or the original string
+
+		if (str.includes('_')) committee = committee.replaceAll(' ', '-');
+		rootCommittee = committee;
 	}
+	if (rootCommittee === '') rootCommittee = str;
+	if (str.includes('_')) {
+		rootCommittee = rootCommittee
+			.toLowerCase()
+			.replaceAll(',', '')
+			.replaceAll('_', '-');
+		if (
+			!rootCommittee.includes('standing') &&
+			!rootCommittee.startsWith('committee-on-the') &&
+			rootCommittee.startsWith('committee-on-')
+		)
+			rootCommittee = rootCommittee.replace('committee-on-', '');
+	}
+	return rootCommittee;
 }
 
 function extractCommitteeType(uri: string): CommitteeType {
