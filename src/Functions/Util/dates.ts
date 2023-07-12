@@ -231,3 +231,7 @@ export function checkWithinDateRange(
 		date.getTime() <= range.end_date.getTime()
 	);
 }
+
+export function getDateTwoWeeksAgo(): number {
+	return Date.now() - 1209600000;
+}
