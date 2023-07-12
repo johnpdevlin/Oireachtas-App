@@ -7,7 +7,7 @@ import * as cheerio from 'cheerio';
 import { Cheerio, CheerioAPI } from 'cheerio';
 
 //Scrape committee information from the given URL.
-export default async function scrapeCommitteeInfo(
+export default async function scrapeCommitteePageInfo(
 	house_no: number,
 	uri: string
 ): Promise<Committee | undefined> {
@@ -33,7 +33,7 @@ export default async function scrapeCommitteeInfo(
 	let successorUrl: string | undefined;
 	let endDate: Date | undefined;
 
-	if (historic) {
+	if (historic.text().length > 0) {
 		historicText = historic.text().trim();
 		successorUrl =
 			'https://www.oireachtas.ie' + historic.find('a').attr('href');
@@ -64,7 +64,9 @@ export default async function scrapeCommitteeInfo(
 		const types: CommitteeType[] = [];
 		if ($('#joint').length > 0) types.push('joint');
 		if ($('#select').length > 0) types.push('select');
-		if ($('#standing').length > 0) types.push('standing');
+		if ($('#standing').length > 0)
+			if (uri.includes('dáil') || uri.includes('seanad')) types.push('select');
+			else types.push('standing');
 		return types;
 	};
 
