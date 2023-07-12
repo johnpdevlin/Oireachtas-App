@@ -5,9 +5,34 @@ import { Committee, PastCommitteeMember } from '@/Models/committee';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { Cheerio, CheerioAPI } from 'cheerio';
+import scrapeCommitteesBaseDetails, {
+	BaseCommittee,
+} from './scrapeAllCommittees';
+
+// Fetches all committees, scrapes individual pages and returns info
+export default async function getAllCommitteeInfo(): Promise<Committee[]> {
+	// Get all committee base details
+	const allCommitteesBaseDetails = await scrapeCommitteesBaseDetails();
+
+	// Get details for members of committee and other details
+	const committees = await allCommitteesBaseDetails.reduce(
+		async (resultsPromise: Promise<Committee[]>, c: BaseCommittee) => {
+			const results = await resultsPromise;
+			const info = await scrapeCommitteePageInfo(c.dailNo, c.uri);
+			if (info?.name) {
+				results.push(info);
+			} else {
+				console.error('Issue with committee scraping:', c.uri);
+			}
+			return results;
+		},
+		Promise.resolve([])
+	);
+	return committees;
+}
 
 //Scrape committee information from the given URL.
-export default async function scrapeCommitteePageInfo(
+export async function scrapeCommitteePageInfo(
 	house_no: number,
 	uri: string
 ): Promise<Committee | undefined> {
