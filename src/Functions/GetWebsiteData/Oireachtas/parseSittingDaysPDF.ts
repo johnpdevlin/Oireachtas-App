@@ -6,6 +6,40 @@ import {
 } from '@/Models/Scraped/attendanceReport';
 import axios from 'axios';
 import { convertDMYdate2YMD } from '../../Util/dates';
+import he from 'he';
+
+export default async function parseSittingDaysPDF(
+	url: string
+): Promise<SittingDaysReport[]> {
+	return axios
+		.get(`api/pdf2text?url=${url}`)
+		.then((response) => {
+			const matches = url.match(/\/(\d{4})\//);
+			const year = matches && matches[1]; // finds year
+			const text = he.decode(response.data.text);
+
+			// split by delimiter
+			const blocks = text.split('Member Sitting Days Report');
+
+			const reports: SittingDaysReport[] = blocks
+				.map((block: string) => {
+					const parsed = parseBlock(block);
+					if (typeof parsed === 'string') {
+						console.warn('the following block may need investigated:', parsed); // a sort of error message
+					} else if (parsed) {
+						// Constructs the SittingDaysReport object for each block
+						return { ...parsed, url: url, year: parseInt(year!) };
+					}
+				})
+				.filter(Boolean);
+
+			return reports;
+		})
+		.catch((error) => {
+			console.error('Error fetching data:', error);
+			return [];
+		});
+}
 
 function parseBlock(block: string): SittingDays | string {
 	// splits into lines and removes empty lines
@@ -148,37 +182,4 @@ function parseBlock(block: string): SittingDays | string {
 	}
 
 	return report;
-}
-
-export default async function parseSittingDaysPDF(
-	url: string
-): Promise<SittingDaysReport[]> {
-	return axios
-		.get(`api/pdf2text?url=${url}`)
-		.then((response) => {
-			const matches = url.match(/\/(\d{4})\//);
-			const year = matches && matches[1]; // finds year
-			const text = response.data.text;
-
-			// split by delimiter
-			const blocks = text.split('Member Sitting Days Report');
-
-			const reports: SittingDaysReport[] = blocks
-				.map((block: string) => {
-					const parsed = parseBlock(block);
-					if (typeof parsed === 'string') {
-						console.warn('the following block may need investigated:', parsed); // a sort of error message
-					} else if (parsed) {
-						// Constructs the SittingDaysReport object for each block
-						return { ...parsed, url: url, year: parseInt(year!) };
-					}
-				})
-				.filter((rep: SittingDaysReport) => rep !== undefined);
-
-			return reports;
-		})
-		.catch((error) => {
-			console.error('Error fetching data:', error);
-			return [];
-		});
 }
