@@ -16,17 +16,18 @@ export default function formatCommitteeDebates(
 		(results: CommitteeDebateRecord[], deb: DebateRecord) => {
 			const date = new Date(deb.date);
 			const dateStr = deb.date;
-			const name = capitaliseFirstLetters(
+			const rootName = capitaliseFirstLetters(
 				extractRootCommitteeDetails(deb.house.showAs.toLowerCase())
 			);
+			const name = deb.house.showAs.toLowerCase();
 			const pdf = deb.formats.pdf?.uri;
 			if (!pdf) {
 				console.warn(
 					`No PDF file found for ${name} debate on ${dateStr} \n ${deb}`
 				);
 			} else {
-				const uri = extractRootCommitteeDetails(deb.house.committeeCode!);
-				const subURI = deb.house.committeeCode!;
+				const rootURI = extractRootCommitteeDetails(deb.house.committeeCode!);
+				const uri = deb.house.committeeCode!;
 
 				const type = extractCommitteeType(deb.house.showAs.toLowerCase());
 				const houseNo = parseInt(deb.house.houseNo);
@@ -36,12 +37,13 @@ export default function formatCommitteeDebates(
 				results.push({
 					date,
 					dateStr,
+					rootName,
 					name,
 					type,
 					chamber,
 					houseNo,
+					rootURI,
 					uri,
-					subURI,
 					pdf,
 					xml,
 				});
@@ -72,7 +74,8 @@ function extractRootCommitteeDetails(str: string): string {
 		} else {
 			committee =
 				'Committee on the Irish Language, Gaeltacht and the Irish-speaking Community';
-			if (str.includes('_')) committee = committee.replace(' the ', '');
+			if (str.includes('_'))
+				committee = committee.replace('Committee on the ', '');
 		}
 
 		if (str.includes('_')) committee = committee.replaceAll(' ', '-');
