@@ -3,9 +3,9 @@
 import {
 	capitaliseFirstLetters,
 	removeTextAfterParenthesis,
-	removeTextBetweenParentheses,
 } from '@/Functions/Util/strings';
 import axios from 'axios';
+import he from 'he';
 
 export default async function parseCommitteeReport(
 	url: string
@@ -13,7 +13,7 @@ export default async function parseCommitteeReport(
 	try {
 		if (url !== undefined) {
 			const response = await axios.get(`api/pdf2text?url=${url}`);
-			const text = response.data.text;
+			const text = he.decode(response.data.text);
 			const lines = text?.split('\n');
 
 			let searching = false;
@@ -21,7 +21,7 @@ export default async function parseCommitteeReport(
 			let alsoPresent: string[] = [];
 
 			for (let i = 0; i < lines.length; i++) {
-				const line = lines[i].toLowerCase();
+				let line = lines[i].toLowerCase();
 
 				// Check if the line indicates the start of attendee information
 				if (line.includes('present')) {
@@ -40,16 +40,43 @@ export default async function parseCommitteeReport(
 						line.includes(')');
 					if (!shouldSkipLine) {
 						if (line) {
+							if (line.includes(',*') || line.includes('.*')) {
+								// Clause to find attendees who were there in absence of a member
+								const count = line.split('*');
+								let alsos = line.split(',');
+								if (count.length > 2) {
+									const additionalNames = formatPresentString(line);
+									alsoPresent.push(...additionalNames);
+									line = '';
+								} else if (count.length === 2) {
+									if (line.endsWith('*')) {
+										const additionalName = formatPresentString(alsos[1]);
+										alsoPresent.push(...additionalName);
+										line = alsos[0];
+									} else {
+										const additionalName = formatPresentString(alsos[0]);
+										alsoPresent.push(...additionalName);
+										line = alsos[1];
+									}
+								}
+							}
 							if (line.includes('in attendance')) {
 								// If the line includes 'in attendance', extract additional attendees' names
 								const additionalNames = formatPresentString(line);
 								if (additionalNames.length === 0) console.error(lines);
 								alsoPresent.push(...additionalNames);
+							} else if (line.includes('in the absence of')) {
+								const potentialName = format(
+									line.split('in the absence of')[0]
+								);
+								alsoPresent.push(potentialName);
 							} else {
 								// Format the names of the present attendees
-								const processedNames = formatPresentString(line);
-								if (processedNames !== undefined) {
-									present.push(...processedNames);
+								if (line.length > 0) {
+									const processedNames = formatPresentString(line);
+									if (processedNames !== undefined) {
+										present.push(...processedNames);
+									}
 								}
 							}
 						}
@@ -84,13 +111,15 @@ function format(pr: string): string {
 	}
 	pr = pr.toLowerCase().trim();
 
+	if (pr.includes('’')) pr.replace('’', "'"); // To normalise some Irish names
+
 	if (pr.includes('/')) pr = pr.replaceAll('/', '');
 	if (pr.includes('+')) pr = pr.replaceAll('+', '');
 	if (pr.includes('*')) pr = pr.replaceAll('*', '');
 	if (pr.includes(':')) pr = pr.replaceAll(':', '');
 	if (pr.includes('(')) pr = removeTextAfterParenthesis(pr);
 	if (pr.endsWith('.')) pr = pr.slice(0, -1);
-	if (pr.endsWith('.')) pr = pr.slice(0, -1).trim();
+	if (pr.endsWith(',')) pr = pr.slice(0, -1);
 
 	if (pr.includes('deputies')) pr = pr.replace('deputies', '');
 	if (pr.includes('deputy')) pr = pr.replaceAll('deputy', '');
@@ -112,14 +141,13 @@ function format(pr: string): string {
 	if (pr.includes('i láthair')) pr = pr.replace('i láthair', '');
 	if (pr.includes('in the chair')) pr = pr.replace('in the chair', '');
 	if (pr.includes('sa chathaoir')) pr = pr.replace('sa chathaoir', '');
-	if (pr.includes('comhaltaí a bhí'))
-		pr = pr.replace('comhaltaí a bhí', '').trim();
+	if (pr.includes('comhaltaí a bhí')) pr = pr.replace('comhaltaí a bhí', '');
 
 	if (pr.length === 0) {
 		return '';
 	}
 
-	pr = capitaliseFirstLetters(pr);
+	pr = capitaliseFirstLetters(pr.trim());
 	return pr;
 }
 function formatPresentString(presence: string): string[] {
@@ -130,10 +158,18 @@ function formatPresentString(presence: string): string[] {
 		return [format(present)]; // Format the name and return it as a single-element array
 	}
 
+	if (presence.split('.').length > 1) {
+		const present: string[] = presence
+			.split('.')
+			.map((name) => format(name.trim())) // Format each name and remove leading/trailing whitespace
+			.filter(Boolean); // Filter out any empty or undefined names
+		return present; // Return the array of formatted names
+	}
+
 	// Check if presence contains commas (multiple names separated by commas)
 	if (presence.includes(',')) {
 		const present: string[] = presence
-			.split(/,(?![^\(]*\))/)
+			.split(',')
 			.map((name) => format(name.trim())) // Format each name and remove leading/trailing whitespace
 			.filter(Boolean); // Filter out any empty or undefined names
 		return present; // Return the array of formatted names
