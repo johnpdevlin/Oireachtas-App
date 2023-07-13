@@ -24,3 +24,12 @@ export function isArrayOnlyValues(arr: []) {
 	}
 	return true; // Array contains only values
 }
+
+export function getObjectFromArrayOfObjects<T extends { uri: string }>(
+	arr: T[]
+): Record<string, T> {
+	return arr.reduce((result, item) => {
+		result[item.uri as string] = item;
+		return result;
+	}, {} as Record<string, T>);
+}
