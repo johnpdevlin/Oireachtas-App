@@ -1,5 +1,6 @@
 /** @format */
 
+import { CommitteeDebateRecord } from './OireachtasAPI/debate';
 import { Chamber, CommitteeType, URIpair } from './_utility';
 
 export type PastCommitteeMember = {
@@ -25,4 +26,9 @@ export type ExpiredDetails = {
 	historicText: string;
 	successorUrl?: string;
 	endDate: Date;
+};
+
+export type RawCommitteeAttendance = CommitteeDebateRecord & {
+	present: string[];
+	alsoPresent: string[];
 };

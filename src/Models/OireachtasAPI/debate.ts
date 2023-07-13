@@ -24,7 +24,7 @@ export type DebateRecord = {
 		houseNo: string;
 		showAs: string;
 		committeeCode?: string;
-		houseCode: Chamber;
+		houseCode: Exclude<Chamber, 'dail & seanad'>;
 		chamberType: string;
 	};
 	counts: {
@@ -64,12 +64,13 @@ export type DebateRecord = {
 export type CommitteeDebateRecord = {
 	date: Date;
 	dateStr: string;
+	rootName: string;
 	name: string;
 	type: CommitteeType;
-	chamber: Chamber;
+	chamber: Exclude<Chamber, 'dail & seanad'>;
 	houseNo: number;
-	uri: string;
-	subURI: string; // to differentiate for joint, select etc.
-	pdf?: string;
-	xml?: string;
+	rootURI: string;
+	uri: string; // to differentiate for joint, select etc.
+	pdf: string;
+	xml: string;
 };
