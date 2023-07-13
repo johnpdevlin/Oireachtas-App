@@ -1,6 +1,7 @@
 /** @format */
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import he from 'he';
 
 type MemberOirData = {
 	address: string;
@@ -13,7 +14,9 @@ export default async function scrapeMemberOirProfile(
 	uri: string
 ): Promise<MemberOirData> {
 	const url = `https://www.oireachtas.ie/en/members/member/${uri}`;
-	const response = (await axios.get(`api/webscrape?url=${url}`)).data.text;
+	const response = he.decode(
+		(await axios.get(`api/webscrape?url=${url}`)).data.text
+	);
 	const $ = cheerio.load(response);
 
 	const address: string = $(
