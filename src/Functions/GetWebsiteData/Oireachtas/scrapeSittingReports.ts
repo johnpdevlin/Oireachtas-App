@@ -7,46 +7,6 @@ import fetchMembers from '@/Functions/API-Calls/OireachtasAPI/members';
 import { RawMember } from '@/Models/OireachtasAPI/member';
 import { SittingDaysReport } from '@/Models/Scraped/attendanceReport';
 
-// Assign URIs to the reports
-async function assignUriToReports(
-	reports: Promise<SittingDaysReport[]>[],
-	members: { name: string; uri: string }[]
-): Promise<SittingDaysReport[]> {
-	const resolvedReports = await Promise.all(reports);
-	const mergedReports = resolvedReports.flat();
-	const processedReports: SittingDaysReport[] = [];
-
-	for (const report of mergedReports) {
-		let bestMatch: { name: string; uri: string } | undefined;
-		let maxSimilarity = 0;
-
-		// Find the best match for each report
-		for (const member of members) {
-			const similarityScore = similarity.compareTwoStrings(
-				report.name!.toLowerCase(), // Compare lowercase report name
-				member.name.toLowerCase() // Compare lowercase member name
-			);
-
-			// Keep track of the best match so far
-			if (similarityScore > maxSimilarity) {
-				maxSimilarity = similarityScore;
-				bestMatch = member;
-			}
-		}
-
-		if (bestMatch) {
-			const { name, ...rest } = report;
-			const processedReport = {
-				...rest,
-				uri: bestMatch.uri, // Assign the best match URI to the report
-			};
-			processedReports.push(processedReport);
-		}
-	}
-
-	return processedReports;
-}
-
 // Scrape sitting reports for a specific chamber and house number
 export default async function scrapeSittingReportsForChamber(
 	chamber: Chamber,
@@ -86,4 +46,44 @@ export default async function scrapeSittingReportsForChamber(
 	const parsedReports = await assignUriToReports(reports, members); // Assign URIs to the reports
 
 	return parsedReports;
+}
+
+// Assign URIs to the reports
+async function assignUriToReports(
+	reports: Promise<SittingDaysReport[]>[],
+	members: { name: string; uri: string }[]
+): Promise<SittingDaysReport[]> {
+	const resolvedReports = await Promise.all(reports);
+	const mergedReports = resolvedReports.flat();
+	const processedReports: SittingDaysReport[] = [];
+
+	for (const report of mergedReports) {
+		let bestMatch: { name: string; uri: string } | undefined;
+		let maxSimilarity = 0;
+
+		// Find the best match for each report
+		for (const member of members) {
+			const similarityScore = similarity.compareTwoStrings(
+				report.name!.toLowerCase(), // Compare lowercase report name
+				member.name.toLowerCase() // Compare lowercase member name
+			);
+
+			// Keep track of the best match so far
+			if (similarityScore > maxSimilarity) {
+				maxSimilarity = similarityScore;
+				bestMatch = member;
+			}
+		}
+
+		if (bestMatch) {
+			const { name, ...rest } = report;
+			const processedReport = {
+				...rest,
+				uri: bestMatch.uri, // Assign the best match URI to the report
+			};
+			processedReports.push(processedReport);
+		}
+	}
+
+	return processedReports;
 }
