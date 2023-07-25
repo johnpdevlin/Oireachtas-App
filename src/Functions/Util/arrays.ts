@@ -1,6 +1,6 @@
 /** @format */
 
-export function removeDuplicateObjects(arr: {}[]) {
+export function removeDuplicateObjects<T>(arr: T[]): T[] {
 	const seen = new Set();
 	return arr.filter((obj) => {
 		const serialized = JSON.stringify(obj);
@@ -10,10 +10,6 @@ export function removeDuplicateObjects(arr: {}[]) {
 		}
 		return false;
 	});
-}
-
-export function removeDuplicates<T>(arr: T[]): T[] {
-	return Array.from(new Set(arr));
 }
 
 export function isArrayOnlyValues(arr: []) {
