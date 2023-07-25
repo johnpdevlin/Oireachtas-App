@@ -28,7 +28,8 @@ export type ExpiredDetails = {
 	endDate: Date;
 };
 
-export type RawCommitteeAttendance = CommitteeDebateRecord & {
-	present: string[];
-	alsoPresent: string[];
+export type CommitteeAttendance = CommitteeDebateRecord & {
+	present: URIpair[];
+	absent: URIpair[];
+	alsoPresent: URIpair[];
 };
