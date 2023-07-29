@@ -104,6 +104,10 @@ function extractCommitteeType(uri: string): CommitteeType {
 		uri.includes('public_petitions')
 	) {
 		return 'joint';
+	} else if (uri.startsWith('standing')) {
+		return 'standing';
+	} else if (uri.startsWith('working') && uri.includes('group')) {
+		return 'working group';
 	}
 	return 'select';
 }
