@@ -1,26 +1,30 @@
 /** @format */
 
-import { Chamber, URIpair } from '@/Models/_utility';
+import { BinaryChamber, MemberBaseKeys, URIpair } from '@/Models/_utility';
 import fetchMembers from '../API-Calls/OireachtasAPI/members';
-import similarity, { BestMatch, Rating } from 'string-similarity';
-import { v4 as uuidv4 } from 'uuid';
+import similarity, { Rating } from 'string-similarity';
 import { capitaliseFirstLetters } from './strings';
+import { RawMember } from '@/Models/OireachtasAPI/member';
 
 export async function getMemberUrisAndNames(
 	names: string[],
-	chamber: Exclude<Chamber, 'dail & senead'>,
+	chamber: BinaryChamber,
 	houseNo: number
 ): Promise<URIpair[]> {
-	const memberObjs = await fetchMembers({
+	const memberObjs = (await fetchMembers({
 		chamber: chamber,
 		house_no: houseNo,
+	})) as RawMember[];
+
+	const memberURIs: MemberBaseKeys[] = memberObjs.map((member) => {
+		return {
+			name: member.fullName,
+			uri: member.memberCode,
+			houseCode: chamber,
+		};
 	});
 
-	const memberURIs: URIpair[] = memberObjs.map((member) => {
-		return { name: member.name, uri: member.uri };
-	});
-
-	const matchedMembers: URIpair[] = assignMemberURIsAndNames(
+	const matchedMembers: MemberBaseKeys[] = assignMemberURIsAndNames(
 		names,
 		memberURIs
 	).matches;
@@ -31,12 +35,12 @@ export async function getMemberUrisAndNames(
 // Uses similarity to match standard URI pairs to input string names
 export function assignMemberURIsAndNames(
 	names: string[],
-	members: URIpair[]
-): { matches: URIpair[]; unMatchedURIs?: string[] } {
+	members: MemberBaseKeys[]
+): { matches: MemberBaseKeys[]; unMatchedURIs?: string[] } {
 	names = names.map((name) => {
 		return capitaliseFirstLetters(name);
 	});
-	const matchedPairs: { name: string; member: URIpair }[] = [];
+	const matchedPairs: { name: string; member: MemberBaseKeys }[] = [];
 	let unSortedMatches: { name: string; bestMatch: Rating }[] = [];
 	const uriNames = members.map((member) => {
 		return member.name;
@@ -81,7 +85,11 @@ export function assignMemberURIsAndNames(
 	}
 
 	const matches = matchedPairs.map((match) => {
-		return { name: match.member.name, uri: match.member.uri };
+		return {
+			name: match.member.name,
+			uri: match.member.uri,
+			houseCode: match.member.houseCode,
+		};
 	});
 	return {
 		matches: matches,
