@@ -6,13 +6,14 @@ import {
 	MemberRequest,
 	RawFormattedMember,
 	RawMember,
+	RawOuterMember,
 } from '@/Models/OireachtasAPI/member';
 import { removeOuterObjects } from '@/Functions/Util/objects';
 import validateOireachtasRequest from './_validateRequest';
 
 export default async function fetchMembers(
 	props: MemberRequest
-): Promise<RawFormattedMember[]> {
+): Promise<RawFormattedMember[] | RawMember[]> {
 	props = validateOireachtasRequest(props);
 
 	let url: string;
@@ -32,10 +33,13 @@ export default async function fetchMembers(
 	}
 
 	let members = (await fetcher(url)).results;
-
+	if (props.formatted === false) {
+		return members.map((member: RawOuterMember) => {
+			return member.member;
+		});
+	}
 	const formattedMembers = members.map((member: RawMember) => {
 		const m = removeOuterObjects(member);
-
 		const uri = m.memberCode;
 		const name = m.fullName;
 		const firstName = m.firstName;
