@@ -35,6 +35,13 @@ export default async function parseCommitteeReport(
 			const text = he.decode(response.data.text);
 			const lines = text?.split('\n');
 
+			if (
+				url ===
+				'https://data.oireachtas.ie/ie/oireachtas/debateRecord/joint_committee_on_agriculture_food_and_the_marine/2023-07-13/debate/mul@/main.pdf'
+			) {
+				console.log(text);
+			}
+
 			let searching = false;
 			let present: string[] = [];
 			let alsoPresent: string[] = [];
@@ -48,15 +55,14 @@ export default async function parseCommitteeReport(
 						searching = true;
 					}
 
-					if (line.length > 0 && searching) {
+					if (searching && line.includes(' ') && line.length > 6) {
 						// Skip lines that are not useful based on certain conditions
 						const shouldSkipLine =
 							line.includes('present') ||
 							line.includes('/ deputies') ||
 							line.includes('/ senators') ||
 							line.includes('1') ||
-							line.includes('clerk') ||
-							line === '';
+							line.includes('clerk');
 
 						if (!shouldSkipLine && !lines[i - 1].endsWith('-')) {
 							if (line.endsWith('-'))
@@ -69,33 +75,85 @@ export default async function parseCommitteeReport(
 								line.includes('.+') ||
 								line.includes(',+')
 							) {
-								// Clause to find attendees who were there in absence of a member
-								const count = line.split('*');
-								let alsos = line.split(',');
-								if (count.length > 2) {
-									const additionalNames = formatPresentString(line, allMembers);
-									if (additionalNames!) {
-										alsoPresent.push(...additionalNames);
-										line = '';
-									}
-								} else if (count.length === 2) {
-									if (line.endsWith('*')) {
-										const additionalName = formatPresentString(
-											alsos[1],
+								// Clauses to find attendees who were there in absence of a member
+								if (line.includes('*')) {
+									const count = line.split('*');
+									let alsos: string[] = [];
+									if (line.endsWith('.*') && line.split('.').length === 2)
+										alsos = line.split('.');
+									else alsos = line.split(',');
+									if (line.endsWith(',*') && line.split(',').length === 2)
+										alsos = line.split(',');
+									else alsos = line.split('.');
+
+									if (count.length > 2) {
+										const additionalNames = formatPresentString(
+											line,
 											allMembers
 										);
-										if (additionalName!) {
-											alsoPresent.push(...additionalName);
-											line = alsos[0];
+										if (additionalNames!) {
+											alsoPresent.push(...additionalNames);
+											line = '';
 										}
-									} else {
-										const additionalName = formatPresentString(
-											alsos[0],
-											allMembers
-										);
-										if (additionalName!) {
-											alsoPresent.push(...additionalName);
-											line = alsos[1];
+									} else if (count.length === 2) {
+										if (line.endsWith('*')) {
+											const additionalName = formatPresentString(
+												alsos[1],
+												allMembers
+											);
+											if (additionalName!) {
+												alsoPresent.push(additionalName[1]);
+												present.push(additionalName[0]);
+											}
+										} else {
+											const additionalName = formatPresentString(
+												alsos[0],
+												allMembers
+											);
+											if (additionalName!) {
+												alsoPresent.push(additionalName[1]);
+												present.push(additionalName[0]);
+											}
+										}
+									} else if (line.includes('*')) {
+										const count = line.split('+');
+										let alsos: string[] = [];
+										if (line.endsWith('.+') && line.split('.').length === 2)
+											alsos = line.split('.');
+										else alsos = line.split(',');
+										if (line.endsWith(',+') && line.split(',').length === 2)
+											alsos = line.split(',');
+										else alsos = line.split('.');
+
+										if (count.length > 2) {
+											const additionalNames = formatPresentString(
+												line,
+												allMembers
+											);
+											if (additionalNames!) {
+												alsoPresent.push(...additionalNames);
+												line = '';
+											}
+										} else if (count.length === 2) {
+											if (line.endsWith('+')) {
+												const additionalName = formatPresentString(
+													alsos[1],
+													allMembers
+												);
+												if (additionalName!) {
+													alsoPresent.push(additionalName[1]);
+													present.push(additionalName[0]);
+												}
+											} else {
+												const additionalName = formatPresentString(
+													alsos[0],
+													allMembers
+												);
+												if (additionalName!) {
+													alsoPresent.push(additionalName[1]);
+													present.push(additionalName[0]);
+												}
+											}
 										}
 									}
 								}
@@ -103,6 +161,11 @@ export default async function parseCommitteeReport(
 							if (line!) {
 								if (line.includes('attendance:')) {
 									// If the line includes 'in attendance', extract additional attendees' names
+									if (
+										url ===
+										'https://data.oireachtas.ie/ie/oireachtas/debateRecord/joint_committee_on_agriculture_food_and_the_marine/2023-07-13/debate/mul@/main.pdf'
+									)
+										console.log(line);
 									let names = line.slice(line.indexOf(':') + 1);
 									if (!line.endsWith('.')) {
 										// deal with lines which go on to second line
@@ -116,16 +179,13 @@ export default async function parseCommitteeReport(
 									if (!additionalNames) console.error(lines);
 									else alsoPresent.push(...additionalNames);
 								} else if (line.includes('in the absence')) {
-									const potentialName = format(
-										line.split('in the absence of')[0]
-									);
+									const potentialName = format(line.split('in the absence')[0]);
 									if (potentialName!) alsoPresent.push(potentialName);
 									if (!line.endsWith('.'))
 										// avoids absent member being recorded as present
 										i++;
 								} else {
 									// Format the names of the present attendees
-
 									const processedNames = formatPresentString(line, allMembers);
 									if (processedNames!) {
 										present.push(...processedNames);
@@ -283,8 +343,11 @@ function verifyAttendance(
 		(member) => !confirmedPresent.matches.some((cp) => cp.uri == member.uri)
 	);
 
+	// Handle possible attendees picked up as committee members
 	if (confirmedPresent.unMatchedURIs!)
-		alsoPresent = [...confirmedPresent.unMatchedURIs!];
+		if (!alsoPresent) alsoPresent = [...confirmedPresent.unMatchedURIs!];
+		else if (alsoPresent!)
+			alsoPresent = [...alsoPresent, ...confirmedPresent.unMatchedURIs];
 
 	let confirmedAlsoPresent;
 	if (alsoPresent! && alsoPresent.length > 0) {
