@@ -1,6 +1,6 @@
 /** @format */
 
-import { Chamber } from '@/Models/_utility';
+import { BinaryChamber, Chamber } from '@/Models/_utility';
 import similarity from 'string-similarity';
 import parseSittingDaysPDF from './parseSittingDaysPDF';
 import fetchMembers from '@/Functions/API-Calls/OireachtasAPI/members';
@@ -9,7 +9,7 @@ import { SittingDaysReport } from '@/Models/Scraped/attendanceReport';
 
 // Scrape sitting reports for a specific chamber and house number
 export default async function scrapeSittingReportsForChamber(
-	chamber: Chamber,
+	chamber: BinaryChamber,
 	house_no: number
 ): Promise<SittingDaysReport[]> {
 	let reportURLs: string[] = [];

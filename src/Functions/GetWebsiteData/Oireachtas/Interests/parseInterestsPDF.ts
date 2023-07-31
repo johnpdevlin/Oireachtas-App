@@ -1,5 +1,4 @@
 /** @format */
-import { removeNumberPrefix } from '@/Functions/Util/strings';
 import axios from 'axios';
 
 interface Member {

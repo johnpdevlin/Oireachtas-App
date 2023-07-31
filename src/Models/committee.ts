@@ -1,14 +1,24 @@
 /** @format */
 
 import { CommitteeDebateRecord } from './OireachtasAPI/debate';
-import { Chamber, CommitteeType, URIpair } from './_utility';
+import { Chamber, CommitteeType, MemberBaseKeys, URIpair } from './_utility';
 
 export type PastCommitteeMember = {
 	dateRange: {
 		date_start: Date;
 		date_end: Date;
 	};
-} & URIpair;
+} & MemberBaseKeys;
+
+export type PastCommitteeMembers = {
+	dail?: PastCommitteeMember[];
+	seanad?: PastCommitteeMember[];
+};
+
+export type CommitteeMembers = {
+	dail?: MemberBaseKeys[];
+	seanad?: MemberBaseKeys[];
+};
 
 export type Committee = {
 	name: string;
@@ -17,9 +27,9 @@ export type Committee = {
 	chamber: Exclude<Chamber, 'dail & seanad'>;
 	types: CommitteeType[];
 	dail_no: number;
-	chair: URIpair;
-	members: URIpair[];
-	pastMembers?: PastCommitteeMember[];
+	chair: MemberBaseKeys;
+	members: CommitteeMembers;
+	pastMembers?: PastCommitteeMembers;
 } & Partial<ExpiredDetails>;
 
 export type ExpiredDetails = {
@@ -29,7 +39,7 @@ export type ExpiredDetails = {
 };
 
 export type CommitteeAttendance = CommitteeDebateRecord & {
-	present: URIpair[];
-	absent: URIpair[];
-	alsoPresent: URIpair[];
+	present: MemberBaseKeys[];
+	absent?: MemberBaseKeys[];
+	alsoPresent?: MemberBaseKeys[];
 };

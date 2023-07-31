@@ -1,6 +1,6 @@
 /** @format */
 
-import { SittingDaysReport } from './parseSittingDaysPDF';
+import { SittingDaysReport } from './Attendance/House/parseSittingDaysPDF';
 
 /** @format */
 export type SittingDates = {

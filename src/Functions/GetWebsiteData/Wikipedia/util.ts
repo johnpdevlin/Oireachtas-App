@@ -86,7 +86,7 @@ export function getListByTHtitle(
 		const item = removeSquareFootnotes($(li).find('a').text());
 
 		// Add the item text to the list array
-		list.push(item);
+		if (item!) list.push(item);
 	});
 
 	return list;

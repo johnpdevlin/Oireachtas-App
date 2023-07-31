@@ -5,7 +5,7 @@ import {
 	SittingDaysReport,
 } from '@/Models/Scraped/attendanceReport';
 import axios from 'axios';
-import { convertDMYdate2YMD } from '../../Util/dates';
+import { convertDMYdate2YMD } from '../../../../Util/dates';
 import he from 'he';
 
 export default async function parseSittingDaysPDF(

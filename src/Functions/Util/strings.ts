@@ -197,7 +197,7 @@ export function removeTextBetweenParentheses(str: string) {
 	return str.replace(/\([^)]*\)/g, '');
 }
 
-export function removeTextAfterParenthesis(str: string): string {
+export function removeTextAfterOpeningParenthesis(str: string): string {
 	let temp = '';
 	for (let i = str.length - 1; i >= 0; i--) {
 		if (str[i] === '(') {
@@ -205,6 +205,14 @@ export function removeTextAfterParenthesis(str: string): string {
 		}
 	}
 	return temp;
+}
+export function removeTextBeforeClosingParenthesis(str: string): string {
+	const closingParenthesisIndex = str.indexOf(')');
+	if (closingParenthesisIndex !== -1) {
+		return str.substring(closingParenthesisIndex + 1);
+	} else {
+		return str;
+	}
 }
 export function isAllUpperCase(input: string): boolean {
 	for (let i = 0; i < input.length; i++) {

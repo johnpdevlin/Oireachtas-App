@@ -1,7 +1,7 @@
 /** @format */
 
 import fetchHouses from '@/Functions/API-Calls/OireachtasAPI/houses';
-import scrapeSittingReportsForChamber from '@/Functions/GetWebsiteData/Oireachtas/scrapeSittingReports';
+import scrapeSittingReportsForChamber from '@/Functions/GetWebsiteData/Oireachtas/Attendance/House/scrapeSittingReports';
 import { House, HouseRequest } from '@/Models/OireachtasAPI/house';
 import { Chamber } from '@/Models/_utility';
 

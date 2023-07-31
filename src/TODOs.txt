@@ -13,3 +13,6 @@ INCONSISTENCIES (Committees and Attendance Reports)
 
 OFFICES 
 - d/w similar offices with root responsibilities
+
+IDEAS???
+- Classes for api or util 
