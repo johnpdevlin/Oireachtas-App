@@ -40,6 +40,6 @@ export type ExpiredDetails = {
 
 export type CommitteeAttendance = CommitteeDebateRecord & {
 	present: MemberBaseKeys[];
-	absent: MemberBaseKeys[];
-	alsoPresent: MemberBaseKeys[];
+	absent?: MemberBaseKeys[];
+	alsoPresent?: MemberBaseKeys[];
 };
