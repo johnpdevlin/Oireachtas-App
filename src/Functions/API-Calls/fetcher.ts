@@ -14,6 +14,5 @@ export default async function fetcher(url: string): Promise<any> {
 		return response.data;
 	} catch (error) {
 		console.error(`Error fetching data from URL: ${url}`, error);
-		throw error; // re-throw the error to allow the caller to handle it
 	}
 }
