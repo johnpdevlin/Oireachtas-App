@@ -1,5 +1,7 @@
 /** @format */
 
+export type Gender = 'male' | 'female';
+
 export type ChamberType = 'house' | 'committee';
 export type BinaryChamber = 'dail' | 'seanad';
 export type Chamber = BinaryChamber | 'dail & seanad';
