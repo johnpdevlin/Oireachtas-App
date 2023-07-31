@@ -1,6 +1,6 @@
 /** @format */
 
-import fetcher from '..';
+import fetcher from '../fetcher';
 import { Question, QuestionRequest } from '@/Models/OireachtasAPI/question';
 import validateOireachtasRequest from './_validateRequest';
 

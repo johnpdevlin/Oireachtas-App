@@ -1,7 +1,7 @@
 /** @format */
 // Importing necessary modules
 import { PartyRequest } from '@/Models/OireachtasAPI/party';
-import fetcher from '..';
+import fetcher from '../fetcher';
 
 export default async function fetchParties(props: PartyRequest): Promise<{}[]> {
 	// Constructing the API request URL with the given parameters

@@ -1,6 +1,6 @@
 /** @format */
 
-import fetcher from '..';
+import fetcher from '../fetcher';
 import {
 	CommitteeDebateRecord,
 	DebateRecord,

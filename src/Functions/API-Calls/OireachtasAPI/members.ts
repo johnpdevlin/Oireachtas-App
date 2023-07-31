@@ -1,7 +1,7 @@
 /** @format */
 
 import { Chamber, DateRange } from '@/Models/_utility';
-import fetcher from '..';
+import fetcher from '../fetcher';
 import {
 	MemberRequest,
 	RawFormattedMember,

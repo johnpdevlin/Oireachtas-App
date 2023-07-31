@@ -3,7 +3,7 @@ import {
 	ConstituencyOrPanel,
 	ConstituencyRequest,
 } from '@/Models/OireachtasAPI/constituency';
-import fetcher from '..';
+import fetcher from '../fetcher';
 import { ConstituencyOrPanelApiResponse } from '@/Models/OireachtasAPI/Response/constitResponse';
 
 export default async function fetchConstituencies(

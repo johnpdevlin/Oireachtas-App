@@ -5,7 +5,7 @@ import {
 	House,
 	HouseResult,
 } from '@/Models/OireachtasAPI/Response/houseResponse';
-import fetcher from '..';
+import fetcher from '../fetcher';
 
 export default async function fetchHouses(
 	props: HouseRequest

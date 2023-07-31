@@ -1,6 +1,6 @@
 /** @format */
 
-import fetcher from '..';
+import fetcher from '../fetcher';
 
 import { VoteRequest, RawVote } from '@/Models/OireachtasAPI/vote';
 import validateOireachtasRequest from './_validateRequest';
