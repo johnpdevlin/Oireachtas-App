@@ -8,7 +8,7 @@ import fetchMembers from '@/Functions/API-Calls/OireachtasAPI/members';
 import { RawFormattedMember, RawMember } from '@/Models/OireachtasAPI/member';
 import { CommitteeAttendance } from '@/Models/committee';
 import { getDateTwoWeeksAgo, dateToYMDstring } from '@/Functions/Util/dates';
-import getAllCommitteeInfo from '../../Committee/ScrapeInfo/scapePageInfo';
+import getAllCommitteeInfo from '../../Committee/WebPage/pageInfo';
 
 // Fetches from Orieachtas API: debates, members
 // Scrapes base committee info

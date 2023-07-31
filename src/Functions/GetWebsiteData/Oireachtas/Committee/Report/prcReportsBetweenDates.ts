@@ -4,7 +4,7 @@ import formatCommitteeDebates from '@/Functions/API-Calls/OireachtasAPI/Format/c
 import fetchDebates from '@/Functions/API-Calls/OireachtasAPI/debates';
 import { CommitteeDebateRecord } from '@/Models/OireachtasAPI/debate';
 import { bindReportsToDebateRecords } from './bindReports2DebateRecords';
-import getAllCommitteeInfo from '../ScrapeInfo/scapePageInfo';
+import getAllCommitteeInfo from '../WebPage/pageInfo';
 import fetchMembers from '@/Functions/API-Calls/OireachtasAPI/members';
 import { RawFormattedMember, RawMember } from '@/Models/OireachtasAPI/member';
 import { CommitteeAttendance } from '@/Models/committee';

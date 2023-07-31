@@ -3,7 +3,7 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { getNextTableElAfterH2text } from './util';
-import scrapeOneWikiConstituency from './scrapeOneConstituency';
+import scrapeOneWikiConstituency from './scrape1Constituency';
 
 interface RawWikiConstituency {
 	name: string;

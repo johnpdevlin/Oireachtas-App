@@ -15,6 +15,7 @@ import { mergeObjectsByDateProp } from '@/Functions/Util/objects';
 import { checkWithinDateRange } from '@/Functions/Util/dates';
 import { SittingDaysReport } from '@/Models/Scraped/attendanceReport';
 import prcCommitteeReports from '../Committee/prcCommitteeReports';
+import processCommitteeAttendanceBetweenDates from '@/Functions/GetWebsiteData/Oireachtas/Attendance/Commitee/prcAttendanceBetweenDates';
 
 export async function prcParticipation(
 	chamber: Chamber,
@@ -41,7 +42,7 @@ export async function prcParticipation(
 
 	// Gets aggregated Oireachtas API records
 	const aggregatedMemberOirRecords = await aggregateMemberOirRecords(
-		[members[0], members[1]],
+		[members[0] as RawFormattedMember, members[1] as RawFormattedMember],
 		dates.start!,
 		dates.end!
 	);
@@ -74,7 +75,12 @@ export async function prcParticipation(
 		exceptions
 	);
 
-	const committeeReports = prcCommitteeReports(dates.start!, dates.end);
+	console.log(dailRecord);
+
+	const committeeReports = processCommitteeAttendanceBetweenDates(
+		dates.start!,
+		dates.end
+	);
 }
 
 export default async function prcDailAttendance(
