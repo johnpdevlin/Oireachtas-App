@@ -1,39 +1,35 @@
 /** @format */
 
-import fetcher from '../index';
+import fetchNames from '@/Functions/API-Calls/IrishNamesAPI/fetchNames';
 
-export default function fetchNames(gender: string) {
-	// fetches all boy or girl names registered in Ireland
-	switch (gender) {
-		case 'boy':
-			return fetchBoyNames();
-		case 'girl':
-			return fetchGirlNames();
-	}
-}
+export default async function checkGender(
+	firstName: string
+): Promise<string | void> {
+	// gets all names registered by gender
+	const girlNames: string[] | undefined = await fetchNames('girl');
+	const boyNames: string[] | undefined = await fetchNames('boy');
 
-async function fetchGirlNames(): Promise<string[] | undefined> {
-	// Construct the URL for the girl names API and make the request
-	const url: string = `https://ws.cso.ie/public/api.restful/PxStat.Data.Cube_API.ReadDataset/VSA60/JSON-stat/1.0/en`;
-	const results = await fetcher(url);
+	if (firstName == (undefined || null)) return console.log('Name not found');
 
-	if (results!) {
-		// Extract the names from the API response and return them
-		const names = results.dataset.dimension.C02514V04120.category.label;
-		return names;
-	}
-	return;
-}
-
-async function fetchBoyNames(): Promise<string[] | undefined> {
-	// Construct the URL for the boy names API and make the request
-	const url: string = `https://ws.cso.ie/public/api.restful/PxStat.Data.Cube_API.ReadDataset/VSA50/JSON-stat/2.0/en`;
-	const results = await fetcher(url);
-
-	if (results!) {
-		// Extract the names from the API response and return them
-		const names = results.dimension.C02512V04117.category.label;
-		return names;
-	}
-	return;
+	if (
+		// Check if male and not female name
+		Object.values(boyNames!).includes(firstName)! &&
+		!Object.values(girlNames!).includes(firstName)
+	)
+		return 'Male';
+	else if (
+		// inverse of above
+		Object.values(girlNames!).includes(firstName)! &&
+		!Object.values(boyNames!).includes(firstName)
+	)
+		return 'Female';
+	else if (
+		// inverse of above
+		Object.values(girlNames!).includes(firstName)! &&
+		Object.values(boyNames!).includes(firstName)!
+	)
+		return console.log('Name is considered both a male and female name.');
+	return console.log(
+		'Name never been registered in Ireland or is considered both a male and female name.'
+	);
 }
