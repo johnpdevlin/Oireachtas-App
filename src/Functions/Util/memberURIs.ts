@@ -74,12 +74,6 @@ export function assignMemberURIsAndNames(
 				unSortedMatches = unSortedMatches.filter(
 					(m) => m.name === match.bestMatch.target
 				);
-			} else {
-				console.warn(
-					`${match.name} is not matched. \n Possible matches: ${uriNames.join(
-						', '
-					)} `
-				);
 			}
 		});
 	}

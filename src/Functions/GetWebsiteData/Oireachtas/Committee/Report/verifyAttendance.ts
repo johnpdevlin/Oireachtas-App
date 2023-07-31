@@ -10,9 +10,12 @@ import {
 } from '@/Models/_utility';
 import { Committee, PastCommitteeMember } from '@/Models/committee';
 
-// Cross references names against members of committees and if select or joint etc.
-// Checks for pastMembers who are current for given date
-// Returns verified attendances and absences
+type AttendanceResult = {
+	present: MemberBaseKeys[];
+	absent?: MemberBaseKeys[];
+	alsoPresent?: MemberBaseKeys[];
+};
+
 export function verifyAttendance(
 	type: CommitteeType,
 	present: string[],
@@ -20,119 +23,154 @@ export function verifyAttendance(
 	allMembers: RawFormattedMember[],
 	date: Date,
 	alsoPresent?: string[]
-): {
-	present: MemberBaseKeys[];
-	absent?: MemberBaseKeys[];
-	alsoPresent?: MemberBaseKeys[];
-} {
-	// Remove any undefined values from the arrays
-	let chamber: BinaryChamber = 'dail';
+): AttendanceResult {
+	const { members, nonMembers, warnings } = getMembersAndNonMembers(
+		committee,
+		allMembers
+	);
+	const pastMembers = getPastMembers(
+		members[0]?.houseCode || 'dail',
+		committee
+	);
 
-	// Get members specific to joint or select committees etc.
-	const members: MemberBaseKeys[] = [];
-	if (committee.members!) {
-		const dail = committee.members?.dail;
-		const seanad = committee.members?.seanad;
-		if (dail!) {
-			members.push(...(committee.members.dail as MemberBaseKeys[]));
-		}
-		if (seanad!) {
-			if (type === 'select') chamber = 'seanad';
-			if ((chamber === 'dail' && type !== 'select') || chamber === 'seanad')
-				members.push(...(committee.members.seanad as MemberBaseKeys[]));
-		}
-	} else {
-		console.warn('No committee.');
-	}
-	// Filter out oireachtas members that aren't on committee
-	const nonMembers: MemberBaseKeys[] = allMembers
-		.filter((am) => members.every((com) => com.uri !== am.uri))
-		?.map((member) => {
-			return {
-				name: member.name,
-				uri: member.uri,
-				houseCode: chamber,
-			};
-		});
-
-	// Ascertain how current pastMembers should be dealt with
-	// Some will be current for reports before their endDate
-	const pastMembers: PastCommitteeMember[] = [];
-	if (committee.pastMembers!) {
-		// Get members specific to joint or select committees etc.
-		const dail = committee.pastMembers?.dail;
-		const seanad = committee.pastMembers?.seanad;
-		if (dail! && dail!.length > 0) {
-			pastMembers.push(...(dail as PastCommitteeMember[]));
-		}
-		if (seanad! && seanad!.length > 0) {
-			if (type === 'select') chamber = 'seanad';
-			if (chamber === 'dail' && type !== 'select')
-				members.push(...(committee.members.seanad as MemberBaseKeys[]));
-			else if (chamber === 'seanad')
-				members.push(...(committee.members.seanad as MemberBaseKeys[]));
-			if (type === 'select') chamber = 'seanad';
-			if ((chamber === 'dail' && type !== 'select') || chamber === 'seanad')
-				pastMembers.push(...(seanad as PastCommitteeMember[]));
-		}
-		pastMembers.forEach((member) => {
-			const mDateRange = member.dateRange;
-			const memberObj: MemberBaseKeys = {
-				uri: member.uri,
-				name: member.name,
-				houseCode: member.houseCode,
-			};
-			if (date.getTime() > mDateRange.date_start.getTime()) {
-				if (
-					mDateRange.date_end! &&
-					date.getTime() < mDateRange.date_end.getTime()
-				)
-					members.push(memberObj);
-			} else {
-				nonMembers.push(memberObj);
-			}
-		});
-	}
+	// Sorts current past past members
+	// to members or non members as on given date
+	handlePastMembers(pastMembers, members, nonMembers, date);
 
 	const confirmedPresent = assignMemberURIsAndNames(present, members);
 	const confirmedAbsent = members.filter(
-		(member) => !confirmedPresent.matches.some((cp) => cp.uri == member.uri)
+		(member) => !confirmedPresent.matches.some((cp) => cp.uri === member.uri)
 	);
 
-	// Handle possible attendees picked up as committee members
-	if (confirmedPresent.unMatchedURIs!)
-		if (!alsoPresent) alsoPresent = [...confirmedPresent.unMatchedURIs!];
-		else if (alsoPresent!)
-			alsoPresent = [...alsoPresent, ...confirmedPresent.unMatchedURIs];
+	// handles any unmatched names which might be assigned to also present
+	alsoPresent = handleUnmatchedURIs(alsoPresent, confirmedPresent);
 
-	let confirmedAlsoPresent;
-	if (alsoPresent! && alsoPresent.length > 0) {
+	// Verifies alsoPresent's members attendance
+	// Deals with unmatched names to check if valid etc.
+	let confirmedAlsoPresent:
+		| { matches: MemberBaseKeys[]; unMatchedURIs?: string[] }
+		| undefined;
+	if (alsoPresent && alsoPresent.length > 0) {
 		confirmedAlsoPresent = assignMemberURIsAndNames(alsoPresent, nonMembers);
 		if (
 			confirmedAlsoPresent.unMatchedURIs &&
 			confirmedAlsoPresent.unMatchedURIs.length > 0
 		) {
-			console.warn(
+			warnings.push(
 				`No matches found for ${confirmedAlsoPresent.unMatchedURIs}`
 			);
 		}
-		const edgeCase = confirmedAlsoPresent.matches.filter((conAlso) =>
+		const edgeCases = confirmedAlsoPresent.matches.filter((conAlso) =>
 			confirmedPresent.matches.some((conAb) => conAb.uri === conAlso.uri)
 		);
-		if (edgeCase.length > 0) {
-			console.warn(
-				`Issue with ${edgeCase} \n Being picked up as also present rather than present.`
+		if (edgeCases.length > 0) {
+			warnings.push(
+				`Issue with ${edgeCases} \n Being picked up as also present rather than present.`
 			);
 		}
 	}
 
 	return {
 		present: removeDuplicateObjects(confirmedPresent.matches),
-		...(confirmedAlsoPresent! && {
+		...(confirmedAlsoPresent && {
 			alsoPresent: removeDuplicateObjects(confirmedAlsoPresent.matches),
 		}),
-		...(confirmedAbsent! && {
+		...(confirmedAbsent && {
 			absent: removeDuplicateObjects(confirmedAbsent),
 		}),
 	};
+}
+
+function getMembersAndNonMembers(
+	committee: Committee,
+	allMembers: RawFormattedMember[]
+): {
+	members: MemberBaseKeys[];
+	nonMembers: MemberBaseKeys[];
+	warnings: string[];
+} {
+	const warnings: string[] = [];
+	let chamber: BinaryChamber = 'dail';
+	let members: MemberBaseKeys[] = [];
+	let nonMembers: MemberBaseKeys[] = [];
+
+	if (committee.members) {
+		const dail = committee.members.dail;
+		const seanad = committee.members.seanad;
+
+		members = members.concat(dail || []);
+		if (seanad && (chamber === 'dail' || committee.types?.[0] === 'select')) {
+			members = members.concat(seanad);
+			chamber = 'seanad';
+		}
+	} else {
+		warnings.push('No committee.');
+	}
+
+	nonMembers = allMembers
+		.filter((am) => members.every((com) => com.uri !== am.uri))
+		.map((member) => ({
+			name: member.name,
+			uri: member.uri,
+			houseCode: chamber,
+		}));
+
+	return { members, nonMembers, warnings };
+}
+
+// Sorts into current members and non members on given date
+function getPastMembers(
+	chamber: BinaryChamber,
+	committee: Committee
+): PastCommitteeMember[] {
+	let pastMembers: PastCommitteeMember[] = [];
+	if (committee.pastMembers) {
+		const dail = committee.pastMembers.dail;
+		const seanad = committee.pastMembers.seanad;
+
+		pastMembers = pastMembers.concat(dail || []);
+		if (seanad && (chamber === 'dail' || committee.types?.[0] === 'select')) {
+			pastMembers = pastMembers.concat(seanad);
+		}
+	}
+	return pastMembers;
+}
+
+function handlePastMembers(
+	pastMembers: PastCommitteeMember[],
+	members: MemberBaseKeys[],
+	nonMembers: MemberBaseKeys[],
+	date: Date
+): void {
+	pastMembers.forEach((member) => {
+		const mDateRange = member.dateRange;
+		const memberObj: MemberBaseKeys = {
+			uri: member.uri,
+			name: member.name,
+			houseCode: member.houseCode,
+		};
+
+		if (date.getTime() > mDateRange.date_start.getTime()) {
+			if (
+				mDateRange.date_end &&
+				date.getTime() < mDateRange.date_end.getTime()
+			) {
+				members.push(memberObj);
+			} else {
+				nonMembers.push(memberObj);
+			}
+		}
+	});
+}
+
+function handleUnmatchedURIs(
+	alsoPresent: string[] | undefined,
+	confirmedPresent: { matches: MemberBaseKeys[]; unMatchedURIs?: string[] }
+): string[] | undefined {
+	if (confirmedPresent.unMatchedURIs) {
+		return alsoPresent
+			? [...alsoPresent, ...confirmedPresent.unMatchedURIs]
+			: confirmedPresent.unMatchedURIs;
+	}
+	return alsoPresent;
 }

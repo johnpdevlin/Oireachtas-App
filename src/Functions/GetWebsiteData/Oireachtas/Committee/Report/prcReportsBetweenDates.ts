@@ -8,6 +8,7 @@ import getAllCommitteeInfo from '../ScrapeInfo/scapePageInfo';
 import fetchMembers from '@/Functions/API-Calls/OireachtasAPI/members';
 import { RawFormattedMember, RawMember } from '@/Models/OireachtasAPI/member';
 import { CommitteeAttendance } from '@/Models/committee';
+import { getDateTwoWeeksAgo, dateToYMDstring } from '@/Functions/Util/dates';
 
 // Fetches from Orieachtas API: debates, members
 // Scrapes base committee info
@@ -18,8 +19,16 @@ export default async function processCommitteeReportsBetweenDates(
 	date_start: string,
 	date_end: string
 ): Promise<CommitteeAttendance[]> {
+	// variable to allow for time for oir records to be available
+	const twoWeeksPast = getDateTwoWeeksAgo();
+
+	if (!date_start) return [];
+	if (!date_end || new Date(date_end!).getTime() > twoWeeksPast)
+		// To allow time for pdfs to be uploaded
+		date_end = dateToYMDstring(new Date(twoWeeksPast));
+
 	console.log(`Records to be processed between ${date_start} and ${date_end}`);
-	console.log('Fetching and formatting debate records');
+	console.log('Fetching and formatting debate records . . .');
 
 	const formattedCommitteeDebates: Promise<CommitteeDebateRecord[]> =
 		fetchDebates(
@@ -31,6 +40,7 @@ export default async function processCommitteeReportsBetweenDates(
 			formatCommitteeDebates
 		) as Promise<CommitteeDebateRecord[]>;
 
+	console.log('Fetching base committee details and members . . .');
 	const baseCommittees = (await getAllCommitteeInfo()).map((bc) => {
 		return { ...bc, records: [] };
 	});

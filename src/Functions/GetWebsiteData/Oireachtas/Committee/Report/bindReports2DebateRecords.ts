@@ -1,16 +1,12 @@
 /** @format */
-
 import { CommitteeDebateRecord } from '@/Models/OireachtasAPI/debate';
 import { Chamber } from '@/Models/_utility';
-
 import { Committee, CommitteeAttendance } from '@/Models/committee';
 import { RawFormattedMember } from '@/Models/OireachtasAPI/member';
 import parseCommitteeReport from './parseReport';
 import similarity from 'string-similarity';
 
-// Receives Debate Records
-// Uses record ref to parse individual Committee Report
-// Binds Debate Records to Committee Attendance Reports
+// Main function to bind reports to debate records
 export async function bindReportsToDebateRecords(
 	records: CommitteeDebateRecord[],
 	committees: Committee[],
@@ -18,68 +14,97 @@ export async function bindReportsToDebateRecords(
 ): Promise<CommitteeAttendance[]> {
 	const parsed: CommitteeAttendance[] = [];
 	const total = records.length;
-	console.log(`binding ${total} reports to records...`);
+	console.log(`Binding ${total} reports to records...`);
 
-	const committeeURIs = committees.map((c) => c.uri);
 	let count = 0;
 	for (const record of records) {
 		count++;
-		if (record.pdf) {
-			let committee = committees.find((c) => c.uri == record.rootURI);
-			if (!committee) {
-				const match = similarity.findBestMatch(record.rootURI, committeeURIs)
-					.bestMatch.target;
-				committee = committees.find((c) => c.uri === match);
-				record.rootURI = match;
-
-				if (!committee)
-					console.log(
-						'no committee found rootURI: ',
-						record.rootURI,
-						'url:',
-						record.uri
-					);
-			}
-
-			const report = await parseCommitteeReport(
-				record.pdf,
-				committee as Committee,
-				members!,
-				record.date
+		try {
+			const parsedRecord = await bindReportToDebateRecord(
+				record,
+				committees,
+				members
 			);
-
-			parsed.push({
-				date: record.date,
-				dateStr: record.dateStr,
-				rootName: record.rootName,
-				name: record.name,
-				rootURI: record.rootURI,
-				uri: record.uri!,
-				type: record.type!,
-				houseNo: record.houseNo,
-				chamber: record.chamber as Exclude<Chamber, 'dail & seanad'>,
-				pdf: record.pdf,
-				xml: record.xml!,
-				present: report.present,
-				...(report.absent! && { absent: report.absent }),
-				...(report.alsoPresent! && { alsoPresent: report.alsoPresent }),
-			});
-		} else {
-			console.error('issue with following record: ' + record);
+			if (parsedRecord) {
+				parsed.push(parsedRecord);
+			}
+		} catch (error) {
+			console.error('Error binding report to debate record: ', error);
 		}
-		setTimeout(() => bindReportsToDebateRecords, 50); // To stop API returning errors
+
 		if (count % 50 === 0) {
 			console.log(`${count} bound...`);
-			break;
 		}
+
 		if (count % 500 === 0) {
 			break;
 		}
 	}
+
 	console.log(
 		`${count} reports successfully bound to records. Process completed.`
 	);
 	return parsed;
+}
+
+// Helper function to bind individual report to debate record
+async function bindReportToDebateRecord(
+	record: CommitteeDebateRecord,
+	committees: Committee[],
+	members: RawFormattedMember[]
+): Promise<CommitteeAttendance | null> {
+	if (!record.pdf) {
+		console.error('Issue with the following record: ', record);
+		return null;
+	}
+
+	let committee = committees.find((c) => c.uri === record.rootURI);
+	if (!committee) {
+		const match = similarity.findBestMatch(
+			record.rootURI,
+			committees.map((c) => c.uri)
+		).bestMatch.target;
+		committee = committees.find((c) => c.uri === match);
+		record.rootURI = match;
+
+		if (!committee) {
+			console.log(
+				'No committee found rootURI: ',
+				record.rootURI,
+				' url: ',
+				record.uri
+			);
+			return null;
+		}
+	}
+
+	const report = await parseCommitteeReport(
+		record.pdf,
+		committee,
+		members,
+		record.date
+	);
+	if (!report) {
+		console.error('Error parsing committee report: ', record);
+		return null;
+	}
+
+	return {
+		date: record.date,
+		dateStr: record.dateStr,
+		rootName: record.rootName,
+		name: record.name,
+		rootURI: record.rootURI,
+		uri: record.uri!,
+		type: record.type!,
+		houseNo: record.houseNo,
+		chamber: record.chamber as Exclude<Chamber, 'dail & seanad'>,
+		pdf: record.pdf,
+		xml: record.xml!,
+		present: report.present,
+		...(report.absent && { absent: report.absent }),
+		...(report.alsoPresent && { alsoPresent: report.alsoPresent }),
+	};
 }
 
 export function bindRecordToCommittee(
