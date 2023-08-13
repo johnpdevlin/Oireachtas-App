@@ -1,5 +1,7 @@
 /** @format */
 
+import { DailYear } from '@/Models/dates';
+
 type AnyObject = Record<string, any>;
 
 export function removeOuterObjects(obj: AnyObject): AnyObject {
@@ -43,4 +45,15 @@ export function mergeObjectsByDateProp(data: any[]): any[] {
 	});
 
 	return mergedObjects;
+}
+
+export function getUniqueYears<T extends { year: DailYear }>(
+	data: T[]
+): DailYear[] {
+	return data.reduce((years: DailYear[], item: T) => {
+		if (!years.includes(item.year)) {
+			years.push(item.year);
+		}
+		return years;
+	}, []);
 }

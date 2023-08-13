@@ -1,4 +1,8 @@
 /** @format */
+
+import { DateMMYYYY, DateYYYYMM, MonthChar, MonthChars } from '@/Models/dates';
+
+/** @format */
 export function convertDMYdate2YMD(dateStr: string): string {
 	const parts = dateStr.split(/[/|-]/);
 	let day, month, year;
@@ -234,4 +238,33 @@ export function checkWithinDateRange(
 
 export function getDateTwoWeeksAgo(): number {
 	return Date.now() - 1209600000;
+}
+
+export function getMonthStrFromNumber(months: number[]): MonthChar[] | void {
+	const monthNames: MonthChar[] = [
+		'Jan',
+		'Feb',
+		'Mar',
+		'Apr',
+		'May',
+		'Jun',
+		'Jul',
+		'Aug',
+		'Sep',
+		'Oct',
+		'Nov',
+		'Dec',
+	];
+
+	const output = months.map((month) => {
+		if (month >= 1 && month <= 12) {
+			return monthNames[month - 1];
+		} else {
+			return 'Unknown';
+		}
+	});
+
+	if (output.length > 0 && !output.includes('Unknown'))
+		return output as MonthChar[];
+	else console.warn('Error with months: ', output);
 }
