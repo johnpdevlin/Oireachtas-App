@@ -28,7 +28,7 @@ export default function LargeTDlayout(props: { member: unknown }): JSX.Element {
 							</Grid>
 
 							<Grid item lg={3}>
-								<Stack direction='column' spacing={1} sx={{ mt: 1, mr: 1 }}>
+								<Stack direction='column' spacing={1} sx={{ mt: 2, mr: 1 }}>
 									<CommitteesCard />
 									<FormerPositions />
 								</Stack>

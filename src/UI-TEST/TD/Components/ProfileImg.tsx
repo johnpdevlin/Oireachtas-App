@@ -20,6 +20,7 @@ export default function ProfileImage(props: {
 					maxWidth: '100%',
 					height: 'auto',
 					borderRadius: `${props.borderRadius?.toString()}px`,
+					boxShadow: '0 0 0 1.2px rgba(0, 0, 0, 0.1)',
 				}}
 			/>
 		</>
