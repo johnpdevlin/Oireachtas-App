@@ -23,7 +23,6 @@ export default async function scrapeCommitteesBaseDetails(): Promise<
 > {
 	try {
 		const url = 'https://www.oireachtas.ie/en/committees/';
-		const oirUrl = 'https://www.oireachtas.ie';
 
 		// Fetch the webpage content
 		let response = (await axios.get(`api/webscrape?url=${url}`)).data.text;
@@ -38,6 +37,7 @@ export default async function scrapeCommitteesBaseDetails(): Promise<
 
 function parseCommitteeBaseDetails($: cheerio.CheerioAPI) {
 	const houses: House[] = [];
+	const oirUrl = 'https://www.oireachtas.ie';
 	const committees: BaseCommittee[] = [];
 
 	// Iterate over the option elements and extract committee details

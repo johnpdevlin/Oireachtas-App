@@ -47,7 +47,7 @@ export async function getAllCommitteeInfo(): Promise<Committee[]> {
 }
 
 //Scrape committee information from the given URL.
-export async function scrapeCommitteePage(
+export async function scrapeCommitteePageInfo(
 	house_no: number,
 	uri: string
 ): Promise<Committee | undefined> {
@@ -98,10 +98,6 @@ export async function scrapeCommitteePage(
 
 	$ = cheerio.load(response);
 
-	return committee;
-}
-
-function parseCommitteePage($: cheerio.CheerioAPI): Committee {
 	// Extract committee information
 	const committeeName = $('.c-hero__subtitle').text().trim();
 	const chamber = committeeName.toLowerCase().includes('seanad')
@@ -151,5 +147,6 @@ function parseCommitteePage($: cheerio.CheerioAPI): Committee {
 		...(successorUrl && { successorUrl }),
 		...(endDate && { endDate }),
 	};
-	return Committee;
+
+	return committee;
 }
