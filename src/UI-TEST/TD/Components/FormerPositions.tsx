@@ -1,19 +1,14 @@
 /** @format */
 
-import * as React from 'react';
-
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-
-import CardContent from '@mui/material/CardContent';
-
-import Avatar from '@mui/material/Avatar';
-
-import Typography from '@mui/material/Typography';
-import { deepOrange, green, red } from '@mui/material/colors';
-
-import Work from '@mui/icons-material/Work';
-import AccountBalance from '@mui/icons-material/AccountBalance';
+import {
+	Card,
+	CardHeader,
+	CardContent,
+	Avatar,
+	Typography,
+} from '@mui/material';
+import { Work, AccountBalance } from '@mui/icons-material';
+import { green } from '@mui/material/colors';
 
 export default function FormerPositions() {
 	return (
