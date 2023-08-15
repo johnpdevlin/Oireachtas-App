@@ -33,5 +33,5 @@ export function parseOffices(membership: RawMembership): RawOffice[] {
 
 function parseOfficeType(office: string): string {
 	if (office.toLowerCase().includes('of state')) return 'junior';
-	else return 'senior;';
+	else return 'senior';
 }
