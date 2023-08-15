@@ -201,9 +201,16 @@ export type DailYear =
 	| 2099
 	| 2100;
 
-export type DateRange = {
-	date_start: Date | string;
-	date_end: Date | string;
+export type DateRange = StrDateRange | ObjDateRange;
+
+export type StrDateRange = {
+	date_start: string;
+	date_end: string | null | undefined;
+};
+
+export type ObjDateRange = {
+	date_start: Date;
+	date_end: Date | null | undefined;
 };
 
 export type DateYYYYMM = `${DailYear}/${ValidMonth}`;
