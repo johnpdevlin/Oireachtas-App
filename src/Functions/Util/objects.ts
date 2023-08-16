@@ -57,3 +57,18 @@ export function getUniqueYears<T extends { year: DailYear }>(
 		return years;
 	}, []);
 }
+
+export function groupObjectsByProperty<T>(arr: T[], property: keyof T): T[][] {
+	const groups = new Map<T[keyof T], T[]>();
+
+	arr.forEach((obj) => {
+		const value = obj[property];
+		if (groups.has(value)) {
+			groups.get(value)!.push(obj);
+		} else {
+			groups.set(value, [obj]);
+		}
+	});
+
+	return Array.from(groups.values());
+}
