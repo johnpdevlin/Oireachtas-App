@@ -1,42 +1,48 @@
 /** @format */
-
+import { getEndDateObj, getEndDateStr } from '@/Functions/Util/dates';
 import { groupObjectsByProperty } from '@/Functions/Util/objects';
 import { RawConstituency } from '.';
 import { OirDate } from '@/Models/dates';
-import { Constituency } from '@/Models/DB/constituency';
+import { MemberConstituency } from '@/Models/DB/constituency';
 import { BinaryChamber, RepresentType } from '@/Models/_utility';
-import { getEndDateObj, getEndDateStr } from '@/Functions/Util/dates';
 
 /*  Destructures by house (dail & seanad) and then by constit
     Destructures into periods, merges unbroken periods 
-    Returns structured objects */
-export default function parseConstituencies(
-	constits: RawConstituency[]
-): Constituency[] {
-	const formatted: Constituency[] = [];
-
+    Returns structured objects by most recent */
+export default function parseConstituencies(constits: RawConstituency[]): {
+	dail: MemberConstituency[];
+	seanad?: MemberConstituency[];
+} {
+	const dail: MemberConstituency[] = [];
+	const seanad: MemberConstituency[] = [];
 	// Deal with cases where member was td and senator
-	const constitsByHouses = groupObjectsByProperty(constits, 'representType');
-	constitsByHouses.forEach((constit) => {
+	const constitsByHouses: [RawConstituency[], RawConstituency[]?] =
+		groupObjectsByProperty(constits, 'representType') as [
+			RawConstituency[],
+			RawConstituency[]?
+		];
+	constitsByHouses.forEach((constit, index) => {
 		// Deal With cases where member represented different constits
-		const constitsByCode = groupObjectsByProperty(constit, 'representCode');
+		const constitsByCode = groupObjectsByProperty(constit!, 'representCode');
 		constitsByCode.forEach((con) => {
 			// Deal with cases where membership was broken up
 			const parsed = parseIndividualConstituency(con);
-			formatted.push(...parsed);
+			if (index === 0) dail.push(...parsed);
+			else seanad.push(...parsed);
 		});
 	});
 
-	return formatted.filter(Boolean);
+	return { dail: dail, seanad: seanad };
 }
 
+// Parses to return merged continuous constits
 function parseIndividualConstituency(
 	constits: RawConstituency[]
-): Constituency[] {
+): MemberConstituency[] {
 	constits.sort(
 		(a, b) => parseInt(a.house.houseNo) - parseInt(b.house.houseNo)
 	);
-	const results: Constituency[] = [];
+	const results: MemberConstituency[] = [];
 	let start: OirDate | '' = '';
 	let end: OirDate | undefined | null | '';
 	let houseNo = 0;
@@ -83,14 +89,15 @@ function parseIndividualConstituency(
 		dateRangeStr: { start: start, end: end },
 		dateRange: {
 			start: new Date(start as OirDate),
-			end: getEndDateObj(end),
+			end: getEndDateObj(end as OirDate | undefined | null),
 		},
 		houses: houses,
 	});
-	return results;
+	return results.reverse();
 }
 
-const getChamber = (representType: RepresentType): BinaryChamber | void => {
+// Parse the representType to get the chamber
+function getChamber(representType: RepresentType): BinaryChamber {
 	if (representType === 'constituency') return 'dail';
-	else if (representType === 'panel') return 'seanad';
-};
+	else return 'seanad';
+}
