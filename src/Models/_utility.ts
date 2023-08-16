@@ -1,5 +1,7 @@
 /** @format */
 
+import { DailYear, OirDate, ValidDayStr, ValidMonthStr } from './dates';
+
 export type Gender = 'male' | 'female';
 
 export type ChamberType = 'house' | 'committee';
@@ -18,3 +20,7 @@ export type URIpair = {
 };
 
 export type GroupType = 'dail' | 'seanad' | 'party' | 'constituency' | 'member';
+
+export type MemberURI = `${string}.${
+	| 'D'
+	| 'S'}.${number}-${ValidMonthStr}-${DailYear}`;

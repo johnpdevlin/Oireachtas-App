@@ -1,6 +1,6 @@
 /** @format */
 
-import { DateMMYYYY, DateYYYYMM, MonthChar, MonthChars } from '@/Models/dates';
+import { MonthChar, OirDate } from '@/Models/dates';
 
 /** @format */
 export function convertDMYdate2YMD(dateStr: string): string {
@@ -267,4 +267,13 @@ export function getMonthStrFromNumber(months: number[]): MonthChar[] | void {
 	if (output.length > 0 && !output.includes('Unknown'))
 		return output as MonthChar[];
 	else console.warn('Error with months: ', output);
+}
+
+export function getEndDateObj(end: OirDate | undefined | null) {
+	if (end!) return new Date(end);
+	else return undefined;
+}
+export function getEndDateStr(end: OirDate | undefined | null) {
+	if (end!) return end;
+	else return undefined;
 }
