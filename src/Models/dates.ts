@@ -1,14 +1,14 @@
 /** @format */
-export type DateRange = StrDateRange | ObjDateRange;
+export type DateRange = DateRangeStr | DateRangeObj;
 
-export type StrDateRange = {
-	date_start: OirDate;
-	date_end: OirDate | null | undefined;
+export type DateRangeStr = {
+	start: OirDate;
+	end: OirDate | null | undefined;
 };
 
-export type ObjDateRange = {
-	date_start: Date;
-	date_end: Date | null | undefined;
+export type DateRangeObj = {
+	start: Date;
+	end: Date | null | undefined;
 };
 
 export type DateYYYYMM = `${DailYear}/${ValidMonth}`;
