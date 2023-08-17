@@ -22,30 +22,7 @@ import {
 	getPastMembers,
 	removePastMembers,
 } from './parseDetails';
-
-// Fetches all committees, scrapes individual pages and returns info
-export async function getAllCommitteeInfo(): Promise<Committee[]> {
-	// Get all committee base details
-	const allCommitteesBaseDetails = await scrapeCommitteesBaseDetails();
-
-	// Get details for members of committee and other details
-	const committees = await allCommitteesBaseDetails.reduce(
-		async (resultsPromise: Promise<Committee[]>, c: BaseCommittee) => {
-			const results = await resultsPromise;
-			const info = await scrapeCommitteePageInfo(c.dailNo, c.uri);
-			if (info?.name) {
-				results.push(info);
-			} else {
-				console.error('Issue with committee scraping:', c.uri);
-			}
-			return results;
-		},
-		Promise.resolve([])
-	);
-	console.log(committees);
-	return committees;
-}
-
+import exceptions from '@/Data/BackendPocesses/committeeScraping.json';
 //Scrape committee information from the given URL.
 export async function scrapeCommitteePageInfo(
 	house_no: number,
@@ -53,6 +30,12 @@ export async function scrapeCommitteePageInfo(
 ): Promise<Committee | undefined> {
 	const url = `https://www.oireachtas.ie/en/committees/${house_no.toString()}/${uri}/`;
 	if (!url) throw new Error('No URL provided');
+	if (exceptions.urlPatterns.skip.includes(uri)) {
+		console.error(
+			`'${uri}' is / was not a standard committee and will be skipped`
+		);
+		return;
+	}
 
 	let response: string;
 	let $: cheerio.CheerioAPI;
@@ -80,20 +63,18 @@ export async function scrapeCommitteePageInfo(
 		endDate = new Date($('.c-historic-committee-ribbon__date').text().trim());
 	}
 
+	// url patterns have inconsistent pattern
+	let pattern = 'membership';
+	if (exceptions.urlPatterns.members.includes(uri)) pattern = 'members';
+
 	try {
 		// Attempt to fetch the membership page from the first URL format
-		response = (await axios.get(`api/webscrape?url=${url}membership/`)).data
+		response = (await axios.get(`api/webscrape?url=${url}${pattern}/`)).data
 			.text;
-	} catch (err1) {
-		try {
-			// If the first URL format fails, try the alternative format
-			response = (await axios.get(`api/webscrape?url=${url}members/`)).data
-				.text;
-		} catch (err2) {
-			// If both URL formats fail, handle the error gracefully and return undefined
-			console.error('Error fetching membership page:', err2);
-			return;
-		}
+	} catch (err) {
+		// If both URL formats fail, handle the error gracefully and return undefined
+		console.error('Error fetching membership page:', err);
+		return;
 	}
 
 	$ = cheerio.load(response);
