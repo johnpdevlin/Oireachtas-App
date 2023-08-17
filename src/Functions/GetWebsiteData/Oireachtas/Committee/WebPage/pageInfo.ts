@@ -1,21 +1,11 @@
 /** @format */
-import { removeDuplicateObjects } from '@/Functions/Util/arrays';
-import {
-	BinaryChamber,
-	CommitteeType,
-	MemberBaseKeys,
-} from '@/Models/_utility';
-import {
-	Committee,
-	CommitteeMembers,
-	PastCommitteeMember,
-} from '@/Models/committee';
+import { CommitteeType, MemberBaseKeys } from '@/Models/_utility';
+import { Committee } from '@/Models/committee';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { Cheerio, CheerioAPI } from 'cheerio';
-import scrapeCommitteesBaseDetails, { BaseCommittee } from './baseDetails';
+import { Cheerio } from 'cheerio';
 import fetchMembers from '@/Functions/API-Calls/OireachtasAPI/members';
-import { RawMember, RawOuterMembership } from '@/Models/OireachtasAPI/member';
+import { RawMember } from '@/Models/OireachtasAPI/member';
 import {
 	getMembers,
 	getChair,
@@ -23,10 +13,12 @@ import {
 	removePastMembers,
 } from './parseDetails';
 import exceptions from '@/Data/BackendPocesses/committeeScraping.json';
+
 //Scrape committee information from the given URL.
 export async function scrapeCommitteePageInfo(
 	house_no: number,
-	uri: string
+	uri: string,
+	rawMembers?: RawMember[]
 ): Promise<Committee | undefined> {
 	const url = `https://www.oireachtas.ie/en/committees/${house_no.toString()}/${uri}/`;
 	if (!url) throw new Error('No URL provided');
@@ -99,7 +91,9 @@ export async function scrapeCommitteePageInfo(
 		excpDate = endDate;
 	}
 
-	const allMembers = (await fetchMembers({ formatted: false })) as RawMember[]; // For parsing purposes
+	const allMembers = rawMembers
+		? rawMembers
+		: ((await fetchMembers({ formatted: false })) as RawMember[]); // For parsing purposes
 
 	const members = getMembers($, allMembers, excpDate ? excpDate : undefined);
 	const chair = getChair(
