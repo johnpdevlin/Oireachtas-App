@@ -7,9 +7,11 @@ import { RawOffice } from '.';
 import { getEndDateStr } from '../../../../../../Util/dates';
 import { MemberOffice, OfficeType } from '@/Models/DB/office';
 
-export default function parseAndFormatOffices(
-	offices: RawOffice[]
-): MemberOffice[] {
+export default function parseAndFormatOffices(offices: RawOffice[]): {
+	offices: MemberOffice[];
+	isActiveSeniorMinister: boolean;
+	isActiveJunior: boolean;
+} {
 	const parsed: MemberOffice[] = [];
 	offices.forEach((off) => {
 		const office = {
@@ -29,9 +31,25 @@ export default function parseAndFormatOffices(
 		};
 		parsed.push(office);
 	});
-	return parsed
+
+	parsed
 		.filter(Boolean)
 		.sort((a, b) => a.dateRange.start.getTime() - b.dateRange.start.getTime());
+
+	const isActiveSeniorMinister =
+		parsed[0] &&
+		parsed[0].dateRangeStr.end === undefined &&
+		parsed[0].type === 'senior'
+			? true
+			: false;
+	const isActiveJunior =
+		!isActiveSeniorMinister &&
+		parsed[0] &&
+		parsed[0].dateRangeStr.end === undefined
+			? true
+			: false;
+
+	return { offices: parsed, isActiveSeniorMinister, isActiveJunior };
 }
 
 function parseOfficeType(office: string): OfficeType {
