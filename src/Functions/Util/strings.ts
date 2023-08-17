@@ -9,6 +9,7 @@ export function startsWithNumber(str: string | undefined): boolean {
 }
 
 export function removeFullstopAfterNumber(str: string): string {
+	if (!str.includes('.')) return str;
 	// Remove "1. " or "1." etc. from the"
 	return str.replace(/^\d+\.\s*/, '');
 }
@@ -194,10 +195,14 @@ export function capitaliseFirstLetters(input: string): string {
 }
 
 export function removeTextBetweenParentheses(str: string) {
+	if (!str.includes('(')) return str;
+
 	return str.replace(/\([^)]*\)/g, '');
 }
 
 export function removeTextAfterOpeningParenthesis(str: string): string {
+	if (!str.includes('(')) return str;
+
 	let temp = '';
 	for (let i = str.length - 1; i >= 0; i--) {
 		if (str[i] === '(') {
@@ -207,6 +212,8 @@ export function removeTextAfterOpeningParenthesis(str: string): string {
 	return temp;
 }
 export function removeTextBeforeClosingParenthesis(str: string): string {
+	if (!str.includes(')')) return str;
+
 	const closingParenthesisIndex = str.indexOf(')');
 	if (closingParenthesisIndex !== -1) {
 		return str.substring(closingParenthesisIndex + 1);
