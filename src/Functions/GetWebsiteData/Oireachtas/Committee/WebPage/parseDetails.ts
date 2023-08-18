@@ -3,7 +3,7 @@
 import { removeDuplicateObjects } from '@/Functions/Util/arrays';
 import { RawMember, RawOuterMembership } from '@/Models/OireachtasAPI/member';
 import { MemberBaseKeys, BinaryChamber, MemberURI } from '@/Models/_utility';
-import { PastCommitteeMember, CommitteeMembers } from '@/Models/committee';
+import { CommitteeMember, CommitteeMembers } from '@/Models/committee';
 import { CheerioAPI } from 'cheerio';
 
 // Extract member URIs and houseCodes from the committee page.
@@ -147,9 +147,9 @@ export function getChair(
 export function getPastMembers(
 	$: CheerioAPI,
 	allMembers: RawMember[]
-): { dail?: PastCommitteeMember[]; seanad?: PastCommitteeMember[] } {
-	const dailMembers: PastCommitteeMember[] = [];
-	const seanadMembers: PastCommitteeMember[] = [];
+): { dail?: CommitteeMember[]; seanad?: CommitteeMember[] } {
+	const dailMembers: CommitteeMember[] = [];
+	const seanadMembers: CommitteeMember[] = [];
 	$('.member_box_bottom-history.current-print').each((_index, element) => {
 		const name = $(element).find('.committee_member_link').text().trim();
 		if (name.length === 0) return;
@@ -191,7 +191,7 @@ export function getPastMembers(
 				start: `${startYear}-${startMonth}-01`,
 				end: `${endYear}-${endMonth}-01`,
 			},
-		} as PastCommitteeMember;
+		} as CommitteeMember;
 
 		if (
 			houseCode === 'seanad' &&
@@ -217,7 +217,7 @@ export function getPastMembers(
 }
 
 export function checkForPastDuplicates(
-	members: PastCommitteeMember[],
+	members: CommitteeMember[],
 	uri: string,
 	date_end: Date
 ): Boolean {

@@ -9,7 +9,7 @@ import {
 	BinaryChamber,
 	MemberURI,
 } from '@/Models/_utility';
-import { Committee, PastCommitteeMember } from '@/Models/committee';
+import { Committee, CommitteeMember } from '@/Models/committee';
 
 type AttendanceResult = {
 	present: MemberBaseKeys[];
@@ -123,8 +123,8 @@ function getMembersAndNonMembers(
 function getPastMembers(
 	chamber: BinaryChamber,
 	committee: Committee
-): PastCommitteeMember[] {
-	let pastMembers: PastCommitteeMember[] = [];
+): CommitteeMember[] {
+	let pastMembers: CommitteeMember[] = [];
 	if (committee.pastMembers) {
 		const dail = committee.pastMembers.dail;
 		const seanad = committee.pastMembers.seanad;
@@ -138,7 +138,7 @@ function getPastMembers(
 }
 
 function handlePastMembers(
-	pastMembers: PastCommitteeMember[],
+	pastMembers: CommitteeMember[],
 	members: MemberBaseKeys[],
 	nonMembers: MemberBaseKeys[],
 	date: Date

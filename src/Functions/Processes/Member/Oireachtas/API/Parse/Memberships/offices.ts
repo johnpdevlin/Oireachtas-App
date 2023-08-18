@@ -3,9 +3,9 @@
 import { getEndDateObj } from '@/Functions/Util/dates';
 import { BinaryChamber } from '@/Models/_utility';
 import { DateRangeStr, OirDate } from '@/Models/dates';
-import { RawOffice } from '.';
+import { RawOffice } from './_index';
 import { getEndDateStr } from '../../../../../../Util/dates';
-import { MemberOffice, OfficeType } from '@/Models/DB/office';
+import { MemberOffice, OfficeType } from '@/Models/DB/Member/office';
 
 export default function parseAndFormatOffices(offices: RawOffice[]): {
 	offices: MemberOffice[];

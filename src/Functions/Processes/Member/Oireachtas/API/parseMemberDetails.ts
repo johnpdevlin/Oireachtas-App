@@ -1,12 +1,12 @@
 /** @format */
 import checkGender from '@/Functions/API-Calls/IrishNamesAPI';
 import fetcher from '@/Functions/API-Calls/fetcher';
-import parseMemberships from './Parse/Memberships';
-import { MemberConstituency } from '@/Models/DB/constituency';
-import { MemberOffice } from '@/Models/DB/office';
-import { MemberParty } from '@/Models/DB/party';
+import parseMemberships from './Parse/Memberships/_index';
+import { MemberConstituency } from '@/Models/DB/Member/constituency';
+import { MemberOffice } from '@/Models/DB/Member/office';
+import { MemberParty } from '@/Models/DB/Member/party';
 
-type MemberDetailsResponse = {
+export type MemberAPIdetailsResponse = {
 	uri: string;
 	fullName: string;
 	firstName: string;
@@ -29,7 +29,7 @@ export default async function parseMemberDetails(
 	uri: string,
 	boyNames?: Record<number, string>,
 	girlNames?: Record<number, string>
-): Promise<MemberDetailsResponse | void> {
+): Promise<MemberAPIdetailsResponse | void> {
 	try {
 		const response = await fetcher(
 			`https://api.oireachtas.ie/v1/members?member_id=https%3A%2F%2Fdata.oireachtas.ie%2Fie%2Foireachtas%2Fmember%2Fid%2F${uri}`

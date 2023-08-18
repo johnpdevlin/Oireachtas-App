@@ -18,6 +18,7 @@ import {
 } from './parseDetails';
 import exceptions from '@/Data/BackendPocesses/committeeScraping.json';
 import { DateRangeObj, DateRangeStr, OirDate } from '@/Models/dates';
+import { dateToYMDstring } from '@/Functions/Util/dates';
 
 //Scrape committee information from the given URL.
 export async function scrapeCommitteePageInfo(
@@ -65,8 +66,8 @@ export async function scrapeCommitteePageInfo(
 	);
 
 	let dateRangeStr: DateRangeStr = {
-		start: dateRange.start.toISOString() as OirDate,
-		end: dateRange.end! ? (dateRange.end?.toISOString() as OirDate) : undefined,
+		start: dateToYMDstring(dateRange.start),
+		end: dateRange.end! ? dateToYMDstring(dateRange.end) : undefined,
 	};
 
 	// Gets successor url / expiry details

@@ -4,19 +4,14 @@ import { CommitteeDebateRecord } from './OireachtasAPI/debate';
 import { BinaryChamber, CommitteeType, MemberBaseKeys } from './_utility';
 import { DateRangeObj, DateRangeStr } from './dates';
 
-export type PastCommitteeMember = {
+export type CommitteeMember = {
 	dateRange: DateRangeObj;
 	dateRangeStr: DateRangeStr;
 } & MemberBaseKeys;
 
-export type PastCommitteeMembers = {
-	dail?: PastCommitteeMember[];
-	seanad?: PastCommitteeMember[];
-};
-
 export type CommitteeMembers = {
-	dail?: MemberBaseKeys[];
-	seanad?: MemberBaseKeys[];
+	dail?: CommitteeMember[];
+	seanad?: CommitteeMember[];
 };
 
 export type Committee = {
@@ -28,7 +23,7 @@ export type Committee = {
 	dail_no: number;
 	chair: MemberBaseKeys;
 	members?: CommitteeMembers;
-	pastMembers?: PastCommitteeMembers;
+	pastMembers?: CommitteeMembers;
 	dateRange: DateRangeObj;
 	dateRangeStr: DateRangeStr;
 } & Partial<ExpiredDetails>;

@@ -1,8 +1,8 @@
 /** @format */
-import { RawParty } from '.';
+import { RawParty } from './_index';
 import { OirDate } from '@/Models/dates';
 import { getEndDateStr } from '@/Functions/Util/dates';
-import { MemberParty } from '@/Models/DB/party';
+import { MemberParty } from '@/Models/DB/Member/party';
 
 /* Sorts by earliest date
    Parses to find gaps where immediate party is not the same 

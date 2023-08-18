@@ -3,7 +3,7 @@
 import { Vote } from '../../../../Models/UI/participation';
 
 export default function formatVotes(
-	votes: any[],
+	votes: unknown[],
 	member?: any
 ): Promise<Vote[]> {
 	// Formats by removing unnecessary properties and passing into correct type interfaces

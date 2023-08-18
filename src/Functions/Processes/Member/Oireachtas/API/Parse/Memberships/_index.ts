@@ -13,9 +13,9 @@ import parseAndFormatParties from './parties';
 import { BinaryChamber } from '@/Models/_utility';
 import { getEndDateObj } from '@/Functions/Util/dates';
 import { DateRangeStr, OirDate } from '@/Models/dates';
-import { MemberConstituency } from '@/Models/DB/constituency';
-import { MemberOffice } from '@/Models/DB/office';
-import { MemberParty } from '@/Models/DB/party';
+import { MemberConstituency } from '@/Models/DB/Member/constituency';
+import { MemberOffice } from '@/Models/DB/Member/office';
+import { MemberParty } from '@/Models/DB/Member/party';
 
 type MembershipResponse = {
 	constituencies: {
