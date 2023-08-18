@@ -2,7 +2,7 @@
 
 import { removeDuplicateObjects } from '@/Functions/Util/arrays';
 import { RawMember, RawOuterMembership } from '@/Models/OireachtasAPI/member';
-import { MemberBaseKeys, BinaryChamber } from '@/Models/_utility';
+import { MemberBaseKeys, BinaryChamber, MemberURI } from '@/Models/_utility';
 import { PastCommitteeMember, CommitteeMembers } from '@/Models/committee';
 import { CheerioAPI } from 'cheerio';
 
@@ -20,7 +20,7 @@ export function getMembers(
 			.attr('href')
 			?.split('r/')[1]
 			?.replace('/', '')
-			.trim() as string;
+			.trim() as MemberURI;
 		const memberDetails = allMembers.find(
 			(member) => member.memberCode === uri
 		);
@@ -33,9 +33,9 @@ export function getMembers(
 			excpDate ? excpDate : undefined
 		) as BinaryChamber;
 		const memberObj = {
-			name,
-			uri,
 			houseCode,
+			uri,
+			name,
 		};
 
 		if (houseCode === 'seanad') seanadMembers.push(memberObj);
@@ -129,7 +129,7 @@ export function getChair(
 				.find('.committee_member_link')
 				.attr('href')
 				?.split('r/')[1]
-				?.replace('/', '') as string;
+				?.replace('/', '') as MemberURI;
 			const memberDetails = allMembers.find(
 				(member) => member.memberCode === uri
 			);
@@ -137,7 +137,7 @@ export function getChair(
 				memberDetails!.memberships,
 				excpDate ? excpDate : undefined
 			) as BinaryChamber;
-			chair = { name, uri, houseCode };
+			chair = { houseCode, uri, name };
 		}
 	});
 	return chair;
@@ -159,7 +159,7 @@ export function getPastMembers(
 			.attr('href')
 			?.split('r/')[1]
 			?.replace('/', '')
-			.trim() as string;
+			.trim() as MemberURI;
 
 		// Format Dates
 		const dateText = $(element).find('p > i').text().trim();
@@ -183,11 +183,15 @@ export function getPastMembers(
 		) as BinaryChamber;
 
 		const memberObj = {
-			name,
-			uri,
-			dateRange: { date_start, date_end },
-			houseCode,
-		};
+			name: name,
+			uri: uri,
+			houseCode: houseCode,
+			dateRange: { start: date_start, end: date_end },
+			dateRangeStr: {
+				start: `${startYear}-${startMonth}-01`,
+				end: `${endYear}-${endMonth}-01`,
+			},
+		} as PastCommitteeMember;
 
 		if (
 			houseCode === 'seanad' &&
@@ -221,8 +225,8 @@ export function checkForPastDuplicates(
 		members.some(
 			(sm) =>
 				sm.uri === uri &&
-				sm.dateRange.date_end.getFullYear() === date_end.getFullYear() &&
-				!(Math.abs(sm.dateRange.date_end.getMonth() - date_end.getMonth()) >= 1)
+				sm.dateRange.end!.getFullYear() === date_end.getFullYear() &&
+				!(Math.abs(sm.dateRange.end!.getMonth() - date_end.getMonth()) >= 1)
 		)
 	) {
 		return true;

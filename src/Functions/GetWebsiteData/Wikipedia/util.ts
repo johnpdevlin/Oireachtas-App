@@ -1,7 +1,5 @@
 /** @format */
 import * as cheerio from 'cheerio';
-import { ElectionData, DailElectionData } from './scrapePartyPage';
-import { extractNumberFromString } from '@/Functions/Util/strings';
 
 export function getInfoBoxTitle(
 	$: cheerio.CheerioAPI,

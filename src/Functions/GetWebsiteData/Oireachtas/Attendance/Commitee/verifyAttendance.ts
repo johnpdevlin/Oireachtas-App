@@ -7,6 +7,7 @@ import {
 	CommitteeType,
 	MemberBaseKeys,
 	BinaryChamber,
+	MemberURI,
 } from '@/Models/_utility';
 import { Committee, PastCommitteeMember } from '@/Models/committee';
 
@@ -145,16 +146,13 @@ function handlePastMembers(
 	pastMembers.forEach((member) => {
 		const mDateRange = member.dateRange;
 		const memberObj: MemberBaseKeys = {
-			uri: member.uri,
+			uri: member.uri as MemberURI,
 			name: member.name,
 			houseCode: member.houseCode,
 		};
 
-		if (date.getTime() > mDateRange.date_start.getTime()) {
-			if (
-				mDateRange.date_end &&
-				date.getTime() < mDateRange.date_end.getTime()
-			) {
+		if (date.getTime() > mDateRange.start.getTime()) {
+			if (mDateRange.end && date.getTime() < mDateRange.end.getTime()) {
 				members.push(memberObj);
 			} else {
 				nonMembers.push(memberObj);
