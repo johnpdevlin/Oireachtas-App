@@ -13,6 +13,7 @@ import {
 	startsWithNumber,
 } from '@/Functions/Util/strings';
 import { extractDateFromYMDstring } from '@/Functions/Util/dates';
+import { OirDate } from '@/Models/dates';
 
 type WikiProfileDetails = {
 	wikiURI: string;
@@ -40,7 +41,7 @@ export default async function scrapeTDWikiPage(
 
 		// Extract the birth information
 		const bornThElement = $('th:contains("Born")').next().text();
-		const birthdate = extractDateFromYMDstring(bornThElement);
+		const birthdate = extractDateFromYMDstring(bornThElement as OirDate);
 		const birthplace = removeSquareFootnotes(
 			getTextAfterLastParentheses(bornThElement)! // extracts the birthplace from the string
 		);
