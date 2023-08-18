@@ -1,5 +1,5 @@
 /** @format */
-import { RawParty } from './_index';
+import { RawMparty } from './_index';
 import { OirDate } from '@/Models/dates';
 import { getEndDateStr } from '@/Functions/Util/dates';
 import { MemberParty } from '@/Models/DB/Member/party';
@@ -8,10 +8,10 @@ import { MemberParty } from '@/Models/DB/Member/party';
    Parses to find gaps where immediate party is not the same 
    Returns structured objects by most recent */
 export default function parseAndFormatParties(
-	parties: RawParty[]
+	parties: RawMparty[]
 ): MemberParty[] {
 	const sortedParties = parties.sort(
-		(a, b) => a.start.getTime() - b.start.getTime()
+		(a, b) => b.dateRange.start.getTime() - a.dateRange.start.getTime()
 	);
 
 	let currentParty: MemberParty | null = null;
@@ -30,13 +30,13 @@ export default function parseAndFormatParties(
 					start: p.dateRange.start as OirDate,
 					end: getEndDateStr(p.dateRange.end as OirDate | undefined | null),
 				},
-				dateRange: { start: p.start, end: p.end },
+				dateRange: { start: p.dateRange.start, end: p.dateRange.end },
 			};
 		} else {
 			currentParty.dateRangeStr.end = getEndDateStr(
 				p.dateRange.end as OirDate | undefined | null
 			);
-			currentParty.dateRange.end = p.end;
+			currentParty.dateRange.end = p.dateRange.end;
 		}
 
 		if (index === sortedParties.length - 1 && currentParty) {
@@ -44,5 +44,5 @@ export default function parseAndFormatParties(
 		}
 	});
 
-	return results.reverse();
+	return results;
 }
