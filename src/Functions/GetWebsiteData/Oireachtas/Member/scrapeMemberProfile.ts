@@ -2,13 +2,16 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import he from 'he';
+import { extractWebsiteDomainName } from '../../../Util/strings';
 
 type MemberOirData = {
 	address: string;
 	contactNumbers: string[];
 	email: string;
-	webpages: string[];
+	webpages: WebsitePair[];
 };
+
+type WebsitePair = { website: string | undefined; url: string };
 
 export default async function scrapeMemberOirProfile(
 	uri: string
@@ -44,6 +47,17 @@ export default async function scrapeMemberOirProfile(
 		address,
 		contactNumbers,
 		email,
-		webpages,
+		webpages: formatWebpages(webpages, uri),
 	};
+}
+
+function formatWebpages(webpages: string[], uri: string): WebsitePair[] {
+	const name = uri.split('-')[0];
+
+	return webpages.map((page: string) => {
+		return {
+			website: extractWebsiteDomainName(page, name),
+			url: page,
+		} as WebsitePair;
+	});
 }
