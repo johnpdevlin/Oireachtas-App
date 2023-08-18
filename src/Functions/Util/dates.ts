@@ -3,7 +3,7 @@
 import { MonthChar, OirDate } from '@/Models/dates';
 
 /** @format */
-export function convertDMYdate2YMD(dateStr: string): string {
+export function convertDMYdate2YMD(dateStr: string): OirDate {
 	const parts = dateStr.split(/[/|-]/);
 	let day, month, year;
 
@@ -24,7 +24,7 @@ export function convertDMYdate2YMD(dateStr: string): string {
 	}
 
 	// format the date as "yyyy/mm/dd"
-	return `${year}-${month}-${day}`;
+	return `${year}-${month}-${day}` as OirDate;
 }
 
 export function convertDMYdate2MDY(dateStr: string): string {
@@ -77,7 +77,7 @@ export function convertMDYdate2DMY(dateStr: string): string {
 	return `${day}-${month}-${year}`;
 }
 
-export function convertYMDdate2DMY(dateStr: string): string {
+export function convertYMDdate2DMY(dateStr: OirDate): string {
 	// Split the date string into its day, month, and year components
 	const parts = dateStr.split(/[/|-]/);
 	let day: string, month: string, year: string;
@@ -102,7 +102,7 @@ export function convertYMDdate2DMY(dateStr: string): string {
 	return `${day}-${month}-${year}`;
 }
 
-export function convertDMYdate2YMDstring(dateStr: string): string {
+export function convertDMYdate2YMDstring(dateStr: string): OirDate {
 	// Split the date string into its day, month, and year components
 	const parts = dateStr.split(/[/|-]/);
 	let day: string, month: string, year: string;
@@ -121,10 +121,10 @@ export function convertDMYdate2YMDstring(dateStr: string): string {
 		// The date string is invalid
 		throw new Error('Invalid date string: ' + dateStr);
 	}
-	return `${year}-${month}-${day}`;
+	return `${year}-${month}-${day}` as OirDate;
 }
 
-export function extractDateFromYMDstring(input: string): Date | undefined {
+export function extractDateFromYMDstring(input: OirDate): Date | undefined {
 	// Extracts a date string in "YYYY-MM-DD" format from the input string and
 	// Returns it as a Date object.
 
@@ -204,14 +204,14 @@ function getMonthNumber(month: string): number {
 	return monthNames[month];
 }
 
-export function dateToYMDstring(date: Date): string {
+export function dateToYMDstring(date: Date): OirDate {
 	const year = date.getFullYear().toString().padStart(4, '0');
 	const month = (date.getMonth() + 1).toString().padStart(2, '0');
 	const day = date.getDate().toString().padStart(2, '0');
-	return `${year}-${month}-${day}`;
+	return `${year}-${month}-${day}` as OirDate;
 }
 
-export function YMDstringToDate(dateString: string): Date {
+export function YMDstringToDate(dateString: OirDate): Date {
 	const [year, month, day] = dateString.split('-').map(Number);
 	return new Date(year, month - 1, day);
 }
@@ -228,11 +228,11 @@ export function getUniqueDatesFromObjects(data: { date: string }[]): string[] {
 
 export function checkWithinDateRange(
 	date: Date,
-	range: { start_date: Date; end_date: Date }
+	dateRange: { start: Date; end: Date }
 ): boolean {
 	return (
-		date.getTime() >= range.start_date.getTime() &&
-		date.getTime() <= range.end_date.getTime()
+		date.getTime() >= dateRange.start.getTime() &&
+		date.getTime() <= dateRange.end.getTime()
 	);
 }
 

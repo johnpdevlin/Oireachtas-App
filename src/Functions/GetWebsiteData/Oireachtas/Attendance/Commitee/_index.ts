@@ -8,7 +8,7 @@ import fetchMembers from '@/Functions/API-Calls/OireachtasAPI/members';
 import { RawFormattedMember, RawMember } from '@/Models/OireachtasAPI/member';
 import { CommitteeAttendance } from '@/Models/committee';
 import { getDateTwoWeeksAgo, dateToYMDstring } from '@/Functions/Util/dates';
-import getAllCommitteeInfo from '../../Committee/WebPage/pageInfo';
+import { processAllCommitteeInfo } from '@/Functions/Processes/Committee/allCommitteesInfo';
 
 // Fetches from Orieachtas API: debates, members
 // Scrapes base committee info
@@ -41,7 +41,7 @@ export default async function processCommitteeReportsBetweenDates(
 		) as Promise<CommitteeDebateRecord[]>;
 
 	console.log('Fetching base committee details and members . . .');
-	const baseCommittees = (await getAllCommitteeInfo()).map((bc) => {
+	const baseCommittees = (await processAllCommitteeInfo()).map((bc) => {
 		return { ...bc, records: [] };
 	});
 

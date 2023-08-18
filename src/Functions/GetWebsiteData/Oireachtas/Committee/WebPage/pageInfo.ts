@@ -1,21 +1,15 @@
 /** @format */
-import { removeDuplicateObjects } from '@/Functions/Util/arrays';
 import {
 	BinaryChamber,
 	CommitteeType,
 	MemberBaseKeys,
 } from '@/Models/_utility';
-import {
-	Committee,
-	CommitteeMembers,
-	PastCommitteeMember,
-} from '@/Models/committee';
+import { Committee } from '@/Models/committee';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { Cheerio, CheerioAPI } from 'cheerio';
-import scrapeCommitteesBaseDetails, { BaseCommittee } from './baseDetails';
+import { Cheerio } from 'cheerio';
 import fetchMembers from '@/Functions/API-Calls/OireachtasAPI/members';
-import { RawMember, RawOuterMembership } from '@/Models/OireachtasAPI/member';
+import { RawMember } from '@/Models/OireachtasAPI/member';
 import {
 	getMembers,
 	getChair,
@@ -23,10 +17,14 @@ import {
 	removePastMembers,
 } from './parseDetails';
 import exceptions from '@/Data/BackendPocesses/committeeScraping.json';
+import { DateRangeObj, DateRangeStr, OirDate } from '@/Models/dates';
+import { dateToYMDstring } from '@/Functions/Util/dates';
+
 //Scrape committee information from the given URL.
 export async function scrapeCommitteePageInfo(
 	house_no: number,
-	uri: string
+	uri: string,
+	rawMembers?: RawMember[]
 ): Promise<Committee | undefined> {
 	const url = `https://www.oireachtas.ie/en/committees/${house_no.toString()}/${uri}/`;
 	if (!url) throw new Error('No URL provided');
@@ -48,19 +46,40 @@ export async function scrapeCommitteePageInfo(
 		return undefined;
 	}
 
-	// Extract the historic information
+	let dateRange: DateRangeObj = {
+		start: new Date(),
+		end: undefined,
+	};
+
+	const dateDetails = $('.c-committee-summary__meta-item').each(
+		(_index, element) => {
+			const text = $(element).text().trim();
+			if (text.includes('established')) {
+				dateRange.start = new Date(text.split(':')[1].trim());
+			} else if (text.includes('dissolved')) {
+				dateRange.end = new Date(text.split(':')[1].trim());
+			} else if (text.includes('House')) {
+				// if (text.includes('Dáil')) chamber = 'dail';
+				// if (text.includes('Seanad')) chamber = 'seanad';
+			}
+		}
+	);
+
+	let dateRangeStr: DateRangeStr = {
+		start: dateToYMDstring(dateRange.start),
+		end: dateRange.end! ? dateToYMDstring(dateRange.end) : undefined,
+	};
+
+	// Gets successor url / expiry details
 	const historic: Cheerio<cheerio.Element> | undefined = $(
 		'.c-historic-committee-ribbon__message'
 	);
 	let historicText: string | undefined;
 	let successorUrl: string | undefined;
-	let endDate: Date | undefined;
-
 	if (historic.text().length > 0) {
 		historicText = historic.text().trim();
 		successorUrl =
 			'https://www.oireachtas.ie' + historic.find('a').attr('href');
-		endDate = new Date($('.c-historic-committee-ribbon__date').text().trim());
 	}
 
 	// url patterns have inconsistent pattern
@@ -84,6 +103,7 @@ export async function scrapeCommitteePageInfo(
 	const chamber = committeeName.toLowerCase().includes('seanad')
 		? 'seanad'
 		: 'dail';
+
 	const committeeTypes = (): CommitteeType[] => {
 		const types: CommitteeType[] = [];
 		if ($('#joint').length > 0) types.push('joint');
@@ -95,11 +115,10 @@ export async function scrapeCommitteePageInfo(
 	};
 
 	let excpDate;
-	if (endDate) {
-		excpDate = endDate;
-	}
 
-	const allMembers = (await fetchMembers({ formatted: false })) as RawMember[]; // For parsing purposes
+	const allMembers = rawMembers
+		? rawMembers
+		: ((await fetchMembers({ formatted: false })) as RawMember[]); // For parsing purposes
 
 	const members = getMembers($, allMembers, excpDate ? excpDate : undefined);
 	const chair = getChair(
@@ -118,15 +137,16 @@ export async function scrapeCommitteePageInfo(
 		name: committeeName,
 		uri,
 		url,
-		types: committeeTypes(),
 		chamber,
+		types: committeeTypes(),
 		dail_no: house_no,
 		chair,
 		members: filteredMembers,
+		dateRange,
+		dateRangeStr,
 		...(pastMembers && { pastMembers }),
 		...(historicText && { historicText }),
 		...(successorUrl && { successorUrl }),
-		...(endDate && { endDate }),
 	};
 
 	return committee;

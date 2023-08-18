@@ -1,9 +1,9 @@
 /** @format */
 import { getEndDateObj, getEndDateStr } from '@/Functions/Util/dates';
 import { groupObjectsByProperty } from '@/Functions/Util/objects';
-import { RawMemberConstituency } from '.';
+import { RawMemberConstituency } from './_index';
 import { OirDate } from '@/Models/dates';
-import { MemberConstituency } from '@/Models/DB/constituency';
+import { MemberConstituency } from '@/Models/DB/Member/constituency';
 import { BinaryChamber } from '@/Models/_utility';
 
 /*  

@@ -239,3 +239,20 @@ export function getStringAfterFirstTargetPoint(
 
 	return str.slice(index + 1);
 }
+
+export function extractWebsiteDomainName(
+	url: string,
+	name?: string
+): string | undefined {
+	const regex = /^(?:https?:\/\/)?(?:www\.)?([^./]+)/i;
+	const match = url.match(regex);
+
+	if (match && match[1]) {
+		if (name! && match[1].includes(name.toLowerCase()))
+			// Check if its possibly a personal page
+			return 'website';
+		else return match[1];
+	}
+
+	return undefined;
+}

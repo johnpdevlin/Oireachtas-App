@@ -1,7 +1,7 @@
 /** @format */
 
-import { BinaryChamber } from '../_utility';
-import { DateRangeObj, DateRangeStr } from '../dates';
+import { BinaryChamber } from '../../_utility';
+import { DateRangeObj, DateRangeStr } from '../../dates';
 
 export type OfficeType = 'junior' | 'senior';
 

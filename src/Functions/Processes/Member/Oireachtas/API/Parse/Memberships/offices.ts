@@ -3,16 +3,16 @@
 import { getEndDateObj } from '@/Functions/Util/dates';
 import { BinaryChamber } from '@/Models/_utility';
 import { DateRangeStr, OirDate } from '@/Models/dates';
-import { RawOffice } from '.';
+import { RawMoffice } from './_index';
 import { getEndDateStr } from '../../../../../../Util/dates';
-import { MemberOffice, OfficeType } from '@/Models/DB/office';
+import { MemberOffice, OfficeType } from '@/Models/DB/Member/office';
 
-export default function parseAndFormatOffices(offices: RawOffice[]): {
+export default function parseAndFormatOffices(offices: RawMoffice[]): {
 	offices: MemberOffice[];
 	isActiveSeniorMinister: boolean;
 	isActiveJunior: boolean;
 } {
-	const parsed: MemberOffice[] = [];
+	let parsed: MemberOffice[] = [];
 	offices.forEach((off) => {
 		const office = {
 			name: off.officeName.showAs,
@@ -32,9 +32,9 @@ export default function parseAndFormatOffices(offices: RawOffice[]): {
 		parsed.push(office);
 	});
 
-	parsed
+	parsed = parsed
 		.filter(Boolean)
-		.sort((a, b) => a.dateRange.start.getTime() - b.dateRange.start.getTime());
+		.sort((a, b) => b.dateRange.start.getTime() - a.dateRange.start.getTime());
 
 	const isActiveSeniorMinister =
 		parsed[0] &&

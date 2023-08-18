@@ -12,10 +12,10 @@ import parseAndFormatConstituencies from './constituencies';
 import parseAndFormatParties from './parties';
 import { BinaryChamber } from '@/Models/_utility';
 import { getEndDateObj } from '@/Functions/Util/dates';
-import { DateRangeStr, OirDate } from '@/Models/dates';
-import { MemberConstituency } from '@/Models/DB/constituency';
-import { MemberOffice } from '@/Models/DB/office';
-import { MemberParty } from '@/Models/DB/party';
+import { DateRangeObj, DateRangeStr, OirDate } from '@/Models/dates';
+import { MemberConstituency } from '@/Models/DB/Member/constituency';
+import { MemberOffice } from '@/Models/DB/Member/office';
+import { MemberParty } from '@/Models/DB/Member/party';
 
 type MembershipResponse = {
 	constituencies: {
@@ -35,7 +35,6 @@ type MembershipResponse = {
 	Parses objects to merge periods and infers certain data
 	Returns above object
 */
-
 export default function parseMemberships(
 	memberships: RawOuterMembership[]
 ): MembershipResponse {
@@ -50,9 +49,7 @@ export default function parseMemberships(
 	};
 
 	const parties = parseAndFormatParties(destructured.parties);
-	const offices = parseAndFormatOffices(
-		destructured.offices as RawMemberOffice[]
-	);
+	const offices = parseAndFormatOffices(destructured.offices as RawMoffice[]);
 
 	return {
 		constituencies,
@@ -71,25 +68,24 @@ export default function parseMemberships(
 
 type House = RawMemberHouse & { dateRange: DateRangeStr };
 
-export type RawMemberOffice = RawMemberOffice & { house: House };
+export type RawMoffice = RawMemberOffice & { house: House };
 export type RawMemberConstituency = RawMemberRepresent & { house: House };
-export type RawMemberParty = RawMemberParty & {
+export type RawMparty = RawMemberParty & {
 	house: House;
 	chamber: BinaryChamber;
-	start: Date;
-	end: Date | undefined;
+	dateRange: DateRangeObj;
 };
 
 type RawMembershipsObj = {
-	offices?: RawMemberOffice[];
+	offices?: RawMoffice[];
 	constits: { dail: RawMemberConstituency[]; seanad: RawMemberConstituency[] };
-	parties: RawMemberParty[];
+	parties: RawMparty[];
 };
 // Destructures and formats so can be easily processed / compared
 function destructureMemberships(
 	memberships: RawOuterMembership[]
 ): RawMembershipsObj {
-	const offices: RawMemberOffice[] = [];
+	const offices: RawMoffice[] = [];
 	const constits: {
 		dail: RawMemberConstituency[];
 		seanad: RawMemberConstituency[];
@@ -97,7 +93,7 @@ function destructureMemberships(
 		dail: [],
 		seanad: [],
 	};
-	const parties: RawMemberParty[] = [];
+	const parties: RawMparty[] = [];
 
 	memberships.map((membership) => {
 		const mem = membership.membership;
@@ -109,7 +105,9 @@ function destructureMemberships(
 		};
 
 		if (mem.offices?.length > 0)
-			mem.offices.map((office) => offices.push({ house, ...office.office }));
+			mem.offices.map((office) =>
+				offices.push({ house: house, ...office.office })
+			);
 		if (mem.represents?.length > 0)
 			mem.represents.map((represent) => {
 				if (represent.represent.representType === 'panel')
@@ -120,14 +118,16 @@ function destructureMemberships(
 		if (mem.parties?.length > 0)
 			mem.parties.map((party) =>
 				parties.push({
+					...party.party,
 					house,
 					chamber: house.houseCode,
-					start: new Date(party.party.dateRange.start),
-					end: getEndDateObj(
-						party.party.dateRange.end as OirDate | undefined | null
-					),
-					...party.party,
-				})
+					dateRange: {
+						start: new Date(party.party.dateRange.start),
+						end: getEndDateObj(
+							party.party.dateRange.end as OirDate | undefined
+						),
+					} as DateRangeObj,
+				} as RawMparty)
 			);
 	});
 

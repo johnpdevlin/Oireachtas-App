@@ -6,18 +6,23 @@ import { scrapeCommitteePageInfo } from '@/Functions/GetWebsiteData/Oireachtas/C
 import scrapeCommitteesBaseDetails, {
 	BaseCommittee,
 } from '@/Functions/GetWebsiteData/Oireachtas/Committee/WebPage/baseDetails';
+import fetchMembers from '@/Functions/API-Calls/OireachtasAPI/members';
+import { RawMember } from '@/Models/OireachtasAPI/member';
 
 export async function processAllCommitteeInfo(): Promise<Committee[]> {
 	console.log('Scraping data for all committees has begun.');
 	// Get all committee base details
 	const allCommitteesBaseDetails = await scrapeCommitteesBaseDetails();
 
+	// Passed in to avoid refetching for each committee
+	const rawMembers = (await fetchMembers({ formatted: false })) as RawMember[];
+
 	// Get details for members of committee and other details
 	const committees = await (
 		await allCommitteesBaseDetails.reduce(
 			async (resultsPromise: Promise<Committee[]>, c: BaseCommittee) => {
 				const results = await resultsPromise;
-				const info = await scrapeCommitteePageInfo(c.dailNo, c.uri);
+				const info = await scrapeCommitteePageInfo(c.dailNo, c.uri, rawMembers);
 				if (info?.name) {
 					results.push(info);
 				} else {
