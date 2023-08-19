@@ -1,8 +1,7 @@
 /** @format */
 
-import fetcher from '../fetcher';
 import { Question, QuestionRequest } from '@/Models/OireachtasAPI/question';
-import validateOireachtasRequest from './_validateRequest';
+import axios from 'axios';
 
 export async function formatQuestions(questions: any[]): Promise<Question[]> {
 	// Formats by removing unnecessary properties and passing into correct type
@@ -25,9 +24,8 @@ export async function formatQuestions(questions: any[]): Promise<Question[]> {
 
 export default async function fetchQuestions(
 	props: QuestionRequest
-): Promise<Question[]> {
-	props = validateOireachtasRequest(props);
-
+): Promise<Question[] | undefined> {
+	// Constructing the API request URL with the given parameters
 	const url = `https://api.oireachtas.ie/v1/questions?date_start=${
 		props.date_start ? props.date_start : '1900-01-01'
 	}&date_end=${
@@ -42,7 +40,10 @@ export default async function fetchQuestions(
 			: ''
 	}`;
 
-	const questions = formatQuestions((await fetcher(url)).results); // requests json response
-
-	return questions;
+	try {
+		const response = await axios.get(url);
+		return formatQuestions(response.data.results);
+	} catch (error) {
+		console.error(`Error fetching data from URL: ${url}`, error);
+	}
 }

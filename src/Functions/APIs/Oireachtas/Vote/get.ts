@@ -1,15 +1,10 @@
 /** @format */
-
-import fetcher from '../fetcher';
-
 import { VoteRequest, RawVote } from '@/Models/OireachtasAPI/vote';
-import validateOireachtasRequest from './_validateRequest';
+import axios from 'axios';
 
 export default async function fetchVotes(
 	props: VoteRequest
-): Promise<RawVote[]> {
-	props = validateOireachtasRequest(props);
-
+): Promise<RawVote[] | undefined> {
 	// url to execute API request
 	const url = `https://api.oireachtas.ie/v1/divisions?${
 		props.chamber_type ? `chamber_type=${props.chamber_type}` : ''
@@ -27,11 +22,12 @@ export default async function fetchVotes(
 	}
 	&outcome=${props.outcome ? `${props.outcome}` : ''}`;
 
-	const votes: RawVote[] = (await fetcher(url)).results.map(
-		(v: { division: {} }) => {
+	try {
+		const response = await axios.get(url);
+		return response.data.results.map((v: { division: {} }) => {
 			return v.division;
-		}
-	); // requests json response
-
-	return votes;
+		});
+	} catch (error) {
+		console.error(`Error fetching data from URL: ${url}`, error);
+	}
 }

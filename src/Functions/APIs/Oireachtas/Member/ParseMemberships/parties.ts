@@ -1,7 +1,7 @@
 /** @format */
-import { RawMparty } from './_index';
+import { RawMparty } from '.';
 import { OirDate } from '@/Models/dates';
-import { getEndDateStr } from '@/Functions/Util/dates';
+import { getEndDateStr } from '@/Functions/_util/dates';
 import { MemberParty } from '@/Models/DB/Member/party';
 
 /* Sorts by earliest date
