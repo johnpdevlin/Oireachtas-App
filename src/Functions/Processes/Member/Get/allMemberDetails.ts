@@ -40,7 +40,7 @@ async function bindAllData(
 	const boyNames = (await fetchNames('boy')) as Record<number, string>;
 	const girlNames = (await fetchNames('girl')) as Record<number, string>;
 
-	const bound = uris.map((uri: MemberURI) => {
+	const bound = uris.map(async (uri: MemberURI) => {
 		const api = apiData.find((data) => data.uri === uri);
 		const oir = oirData.find((data: OirData) => data.uri === uri);
 		let wiki = wikiData.find(
@@ -57,7 +57,7 @@ async function bindAllData(
 			wiki = wikiData.find((w) => w.wikiURI === matches.bestMatch.target);
 		}
 
-		const gender = checkGender(
+		const gender = await checkGender(
 			api!.firstName.toLowerCase(),
 			boyNames,
 			girlNames
