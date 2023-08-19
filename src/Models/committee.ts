@@ -1,41 +1,36 @@
 /** @format */
 
 import { CommitteeDebateRecord } from './OireachtasAPI/debate';
-import { Chamber, CommitteeType, MemberBaseKeys, URIpair } from './_utility';
+import { BinaryChamber, CommitteeType, MemberBaseKeys } from './_util';
+import { DateRangeObj, DateRangeStr } from './dates';
 
-export type PastCommitteeMember = {
-	dateRange: {
-		date_start: Date;
-		date_end: Date;
-	};
+export type CommitteeMember = {
+	dateRange: DateRangeObj;
+	dateRangeStr: DateRangeStr;
 } & MemberBaseKeys;
 
-export type PastCommitteeMembers = {
-	dail?: PastCommitteeMember[];
-	seanad?: PastCommitteeMember[];
-};
-
 export type CommitteeMembers = {
-	dail?: MemberBaseKeys[];
-	seanad?: MemberBaseKeys[];
+	dail?: CommitteeMember[];
+	seanad?: CommitteeMember[];
 };
 
 export type Committee = {
 	name: string;
 	uri: string;
 	url: string;
-	chamber: Exclude<Chamber, 'dail & seanad'>;
+	chamber: BinaryChamber;
 	types: CommitteeType[];
 	dail_no: number;
 	chair: MemberBaseKeys;
-	members: CommitteeMembers;
-	pastMembers?: PastCommitteeMembers;
+	members?: CommitteeMembers;
+	pastMembers?: CommitteeMembers;
+	dateRange: DateRangeObj;
+	dateRangeStr: DateRangeStr;
 } & Partial<ExpiredDetails>;
 
 export type ExpiredDetails = {
 	historicText: string;
 	successorUrl?: string;
-	endDate: Date;
 };
 
 export type CommitteeAttendance = CommitteeDebateRecord & {

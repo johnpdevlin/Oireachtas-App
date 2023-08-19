@@ -1,9 +1,15 @@
 /** @format */
 
-import { BinaryChamber, Chamber, ChamberType, DateRange } from '../_utility';
+import {
+	BinaryChamber,
+	Chamber,
+	ChamberType,
+	DateRange,
+	MemberURI,
+} from '../_util';
 
 export type MemberRequest = {
-	uri?: string;
+	uri?: MemberURI;
 	date_start?: string | Date;
 	date_end?: string | Date;
 	house_no?: number;
@@ -46,20 +52,22 @@ export type RawOuterMembership = {
 	membership: RawMembership;
 };
 
+export type RawMemberHouse = {
+	houseCode: BinaryChamber;
+	uri: string;
+	houseNo: string;
+	showAs: string;
+	chamberType: ChamberType;
+};
+
 export type RawMembership = {
-	parties: RawMemberParty[];
-	house: {
-		houseCode: BinaryChamber;
-		uri: string;
-		houseNo: string;
-		showAs: string;
-		chamberType: ChamberType;
-	};
+	parties: { party: RawMemberParty }[];
+	house: RawMemberHouse;
 	offices: {
 		office: RawMemberOffice;
 	}[];
 	uri: string;
-	represents: RawMemberRepresent[];
+	represents: { represent: RawMemberRepresent }[];
 	dateRange: {
 		start: string;
 		end: string | null;
@@ -72,7 +80,7 @@ export type RawMember = {
 	firstName: string;
 	gender: string;
 	memberships: RawOuterMembership[];
-	uri: string;
+	uri: MemberURI;
 	wikiTitle: string;
 	fullName: string;
 	dateOfDeath: null;

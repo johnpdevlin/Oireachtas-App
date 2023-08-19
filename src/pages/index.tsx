@@ -4,8 +4,9 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { Inter } from 'next/font/google';
 import styles from '@/styles/Home.module.css';
-import prcAttendanceReports from '@/Functions/Processes/Attendance/prcAttendanceReport';
-import { prcParticipation } from '@/Functions/Processes/Participation/prcParticipation';
+// import prcAttendanceReports from '@/Functions/Processes/Attendance/prcAttendanceReports';
+// import { prcParticipation } from '@/Functions/Processes/Participation/prcParticipation';
+import processAllMemberDetails from '@/Functions/Processes/Member/Get/allMemberDetails';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -44,9 +45,10 @@ export default function Home() {
 	// c
 	//
 
-	prcParticipation('dail', 33);
+	// prcParticipation('dail', 33);
 	// console.log(prcAttendanceReports({ chamber: 'dail', house_no: 33 }));
 	// console.log(scrapeCommitteesBaseDetails());
+	processAllMemberDetails();
 	return (
 		<>
 			<Head>
