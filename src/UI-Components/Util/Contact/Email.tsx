@@ -4,7 +4,7 @@ import { Typography, Stack } from '@mui/material';
 
 import { AlternateEmail } from '@mui/icons-material';
 
-export default function ContactCard(props: { email: string }) {
+export default function Email(props: { email: string }) {
 	return (
 		<>
 			<Stack direction='row'>

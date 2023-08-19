@@ -1,6 +1,6 @@
 /** @format */
 
-import TDlayout from '@/UI-TEST/TD/Layouts';
+import TDlayout from '@/UI-Components/TD/Layouts';
 
 export default function TeachtaDála() {
 	return (

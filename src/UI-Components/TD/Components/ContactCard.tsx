@@ -13,7 +13,7 @@ import {
 import { MarkunreadMailbox, Call, AlternateEmail } from '@mui/icons-material';
 import Image from 'next/image';
 
-import SocialIcons from '../../Util/SocialIcons';
+import SocialIcons from '../../../UI-TEST/Util/SocialIcons';
 import Address from '@/UI-TEST/Util/Address';
 import PhoneNumber from '@/UI-TEST/Util/PhoneNumber';
 import Email from '@/UI-TEST/Util/Email';
