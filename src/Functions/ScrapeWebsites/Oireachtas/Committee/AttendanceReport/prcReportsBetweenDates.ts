@@ -7,7 +7,7 @@ import { bindReportsToDebateRecords } from './bindReports2DebateRecords';
 import getAllCommitteeInfo from '../WebPage/Get/CommitteeInfo';
 import fetchMembers from '@/Functions/APIs/Oireachtas/members';
 import { RawFormattedMember, RawMember } from '@/Models/OireachtasAPI/member';
-import { CommitteeAttendance } from '@/Models/committee';
+import { CommitteeAttendance } from '@/Models/Scraped/Oireachtas/committee';
 import { getDateTwoWeeksAgo, dateToYMDstring } from '@/Functions/_util/dates';
 
 // Fetches from Orieachtas API: debates, members

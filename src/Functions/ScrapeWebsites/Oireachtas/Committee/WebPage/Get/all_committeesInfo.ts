@@ -1,7 +1,7 @@
 /** @format */
 
 /** @format */
-import { Committee } from '@/Models/committee';
+import { Committee } from '@/Models/Scraped/Oireachtas/committee';
 import { scrapeCommitteePageInfo } from './committeeInfo';
 import fetchMembers from '@/Functions/APIs/Oireachtas/Member/Get/Raw/get';
 import { RawMember } from '@/Models/OireachtasAPI/member';
@@ -9,7 +9,7 @@ import scrapeCommitteesBaseDetails, {
 	BaseCommittee,
 } from '../BasicDetails/GetAll';
 
-export async function processAllCommitteeInfo(): Promise<Committee[]> {
+export default async function processAllCommitteeInfo(): Promise<Committee[]> {
 	console.log('Scraping data for all committees has begun.');
 	// Get all committee base details
 	const allCommitteesBaseDetails = await scrapeCommitteesBaseDetails();

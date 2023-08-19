@@ -1,7 +1,10 @@
 /** @format */
 import { CommitteeDebateRecord } from '@/Models/OireachtasAPI/debate';
 import { Chamber } from '@/Models/_util';
-import { Committee, CommitteeAttendance } from '@/Models/committee';
+import {
+	Committee,
+	CommitteeAttendance,
+} from '@/Models/Scraped/Oireachtas/committee';
 import { RawFormattedMember } from '@/Models/OireachtasAPI/member';
 import parseCommitteeReport from './parseReport';
 import similarity from 'string-similarity';

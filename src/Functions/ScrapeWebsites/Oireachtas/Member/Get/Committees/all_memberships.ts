@@ -1,10 +1,12 @@
 /** @format */
 
-import { MemberCommittee } from '@/Models/DB/Member/committee';
+import { MemberCommittee } from '@/Models/Scraped/Oireachtas/member';
 import { MemberURI, BinaryChamber, MemberBaseKeys } from '@/Models/_util';
-import { Committee, CommitteeMembers } from '@/Models/committee';
-import { scrapeAllCommitteeInfo } from '../../../Committee/WebPage/Get/all_committeesInfo';
-
+import {
+	Committee,
+	CommitteeMembers,
+} from '@/Models/Scraped/Oireachtas/committee';
+import processAllCommitteeInfo from '@/Functions/ScrapeWebsites/Oireachtas/Committee/WebPage/Get/all_committeesInfo';
 /** @format */
 export type MemberCommitteeDetail = {
 	uri: MemberURI;
@@ -18,7 +20,7 @@ export default async function getAllMembersFromCommittees(): Promise<{
 	const currentMemberships: MemberCommitteeDetail[] = [];
 	const pastMemberships: MemberCommitteeDetail[] = [];
 
-	const committeeData = (await scrapeAllCommitteeInfo()).forEach(
+	const committeeData = (await processAllCommitteeInfo()).forEach(
 		(committee: Committee) => {
 			const parsed = parseMemberCommitteeDetails(committee, committee.chamber);
 			if (parsed?.current) currentMemberships.push(...parsed.current);

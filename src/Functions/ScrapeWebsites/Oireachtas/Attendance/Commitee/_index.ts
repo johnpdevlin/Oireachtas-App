@@ -6,7 +6,7 @@ import { CommitteeDebateRecord } from '@/Models/OireachtasAPI/debate';
 import { bindReportsToDebateRecords } from './bindReports2DebateRecords';
 import fetchMembers from '@/Functions/APIs/Oireachtas/members';
 import { RawFormattedMember, RawMember } from '@/Models/OireachtasAPI/member';
-import { CommitteeAttendance } from '@/Models/committee';
+import { CommitteeAttendance } from '@/Models/Scraped/Oireachtas/committee';
 import { getDateTwoWeeksAgo, dateToYMDstring } from '@/Functions/_util/dates';
 import { processAllCommitteeInfo } from '@/Functions/ScrapeWebsites/Oireachtas/Committee/WebPage/Get/all_committeesInfo';
 

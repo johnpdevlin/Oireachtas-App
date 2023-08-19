@@ -2,7 +2,7 @@
 
 import { RawFormattedMember } from '@/Models/OireachtasAPI/member';
 import { CommitteeType, MemberBaseKeys } from '@/Models/_util';
-import { Committee } from '@/Models/committee';
+import { Committee } from '@/Models/Scraped/Oireachtas/committee';
 import axios from 'axios';
 import he from 'he';
 import { formatPresentStr, parsePresentLine } from './parsePresentLine';

@@ -4,7 +4,7 @@ import fetchMembers from '@/Functions/APIs/Oireachtas/Member/Get/Raw/get';
 import scrapeMemberOirProfile, { MemberOirProfile } from './memberProfile';
 import { MemberURI } from '@/Models/_util';
 
-export default async function getMultiMembersAPIdetails(
+export default async function getMultiMembersOirdetails(
 	uris?: MemberURI[],
 	request?: MemberRequest
 ): Promise<MemberOirProfile[] | void> {
@@ -14,7 +14,7 @@ export default async function getMultiMembersAPIdetails(
 				(member: RawMember) => member.uri
 			);
 			if (uris!) {
-				return Promise.all(
+				const results = Promise.all(
 					uris.map((uri) => {
 						return scrapeMemberOirProfile(uri);
 					})

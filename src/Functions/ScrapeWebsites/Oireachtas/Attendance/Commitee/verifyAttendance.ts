@@ -9,7 +9,10 @@ import {
 	BinaryChamber,
 	MemberURI,
 } from '@/Models/_util';
-import { Committee, CommitteeMember } from '@/Models/committee';
+import {
+	Committee,
+	CommitteeMember,
+} from '@/Models/Scraped/Oireachtas/committee';
 
 type AttendanceResult = {
 	present: MemberBaseKeys[];

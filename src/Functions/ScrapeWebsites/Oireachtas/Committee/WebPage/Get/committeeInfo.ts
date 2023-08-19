@@ -1,6 +1,6 @@
 /** @format */
 import { CommitteeType, MemberBaseKeys } from '@/Models/_util';
-import { Committee } from '@/Models/committee';
+import { Committee } from '@/Models/Scraped/Oireachtas/committee';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { Cheerio } from 'cheerio';
