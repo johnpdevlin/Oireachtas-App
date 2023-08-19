@@ -1,12 +1,7 @@
 /** @format */
 
-import {
-	BinaryChamber,
-	Chamber,
-	ChamberType,
-	DateRange,
-	MemberURI,
-} from '../_util';
+import { BinaryChamber, ChamberType, MemberURI } from '../_util';
+import { DateRangeStr } from '../dates';
 
 export type MemberRequest = {
 	uri?: MemberURI;
@@ -25,10 +20,7 @@ export type RawMemberOffice = {
 		showAs: string;
 		uri: string;
 	};
-	dateRange: {
-		start: string;
-		end: string | null | undefined;
-	};
+	dateRange: DateRangeStr;
 };
 
 export type RawMemberRepresent = {
@@ -42,10 +34,7 @@ export type RawMemberParty = {
 	partyCode: string;
 	uri: string;
 	showAs: string;
-	dateRange: {
-		start: string;
-		end: string | null | undefined;
-	};
+	dateRange: DateRangeStr;
 };
 
 export type RawOuterMembership = {
@@ -68,10 +57,7 @@ export type RawMembership = {
 	}[];
 	uri: string;
 	represents: { represent: RawMemberRepresent }[];
-	dateRange: {
-		start: string;
-		end: string | null;
-	};
+	dateRange: DateRangeStr;
 };
 
 export type RawMember = {
@@ -84,7 +70,7 @@ export type RawMember = {
 	wikiTitle: string;
 	fullName: string;
 	dateOfDeath: null;
-	memberCode: string;
+	memberCode: MemberURI;
 	image: boolean;
 	pId: string;
 };
@@ -99,10 +85,7 @@ export type MemberApiResponse = {
 			memberCount: number;
 			resultCount: number;
 		};
-		dateRange: {
-			start: string;
-			end: string | null | undefined;
-		};
+		dateRange: DateRangeStr;
 		lang: string;
 	};
 	results: RawOuterMember[];
@@ -113,7 +96,7 @@ export type RawFormattedMember = {
 	name: string;
 	firstName: string;
 	lastName: string;
-	dateRange: DateRange;
+	dateRange: DateRangeStr;
 	house: {
 		houseCode: BinaryChamber;
 		uri: string;
