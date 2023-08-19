@@ -1,5 +1,7 @@
 /** @format */
 
+import { DailYear, OirDate, ValidDayStr, ValidMonthStr } from './dates';
+
 export type Gender = 'male' | 'female';
 
 export type ChamberType = 'house' | 'committee';
@@ -14,7 +16,11 @@ export type QuestionType = 'oral' | 'written';
 export type MemberBaseKeys = { houseCode: BinaryChamber } & URIpair;
 export type URIpair = {
 	name: string;
-	uri: string;
+	uri: MemberURI;
 };
 
 export type GroupType = 'dail' | 'seanad' | 'party' | 'constituency' | 'member';
+
+export type MemberURI = `${string}.${
+	| 'D'
+	| 'S'}.${number}-${ValidMonthStr}-${DailYear}`;

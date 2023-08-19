@@ -5,12 +5,6 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { getInfoBoxTitle, removeSquareFootnotes } from './util';
 
-type PartyInfo = {
-	name: string;
-	uri: string;
-	isGovernment: boolean;
-};
-
 export type WikiDailDetails = {
 	[x: string]: any;
 	ceannComhairle: string;
@@ -22,42 +16,6 @@ export type WikiDailDetails = {
 	tdWikiUris: { uri?: string; name: string }[];
 	parties: PartyInfo[];
 };
-
-function parsePartyInfo($: cheerio.CheerioAPI): PartyInfo[] {
-	// Find all tables on the page
-	const tables = $('table.wikitable');
-
-	// Find the first relevant table and ignore any further tables
-	const table = $(tables[0]);
-
-	// Find all rows in the table except the header row
-	const rows = table.find('tr:not(:first-child)');
-
-	const parties: PartyInfo[] = [];
-
-	// Iterate over each row
-	rows.each((index, row) => {
-		const tds = $(row).find('td');
-
-		// Check if the first column contains a government indicator
-		const isGovernment: boolean = $(tds[0]).find('span').length > 0;
-
-		// Extract party name and href from the second column
-		const partyCell = $(tds[1]);
-		const partyName = partyCell.find('a').text();
-		const partyHref = partyCell.find('a').attr('href')!;
-
-		// Create party object and add it to the parties array
-		const party = {
-			name: partyName,
-			uri: partyHref,
-			isGovernment: isGovernment,
-		};
-		parties.push(party);
-	});
-
-	return parties.filter((party) => party.name !== '');
-}
 
 // Scrapes the Wikipedia page for Dáil session details
 export default async function scrapeWikiDailSession(
@@ -126,4 +84,46 @@ export default async function scrapeWikiDailSession(
 		console.log(error);
 		throw new Error('Error scraping wiki page');
 	}
+}
+
+type PartyInfo = {
+	name: string;
+	uri: string;
+	isGovernment: boolean;
+};
+
+function parsePartyInfo($: cheerio.CheerioAPI): PartyInfo[] {
+	// Find all tables on the page
+	const tables = $('table.wikitable');
+
+	// Find the first relevant table and ignore any further tables
+	const table = $(tables[0]);
+
+	// Find all rows in the table except the header row
+	const rows = table.find('tr:not(:first-child)');
+
+	const parties: PartyInfo[] = [];
+
+	// Iterate over each row
+	rows.each((index, row) => {
+		const tds = $(row).find('td');
+
+		// Check if the first column contains a government indicator
+		const isGovernment: boolean = $(tds[0]).find('span').length > 0;
+
+		// Extract party name and href from the second column
+		const partyCell = $(tds[1]);
+		const partyName = partyCell.find('a').text();
+		const partyHref = partyCell.find('a').attr('href')!;
+
+		// Create party object and add it to the parties array
+		const party = {
+			name: partyName,
+			uri: partyHref,
+			isGovernment: isGovernment,
+		};
+		parties.push(party);
+	});
+
+	return parties.filter((party) => party.name !== '');
 }

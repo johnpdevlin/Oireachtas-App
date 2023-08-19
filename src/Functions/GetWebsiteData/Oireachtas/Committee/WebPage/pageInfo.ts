@@ -1,58 +1,39 @@
 /** @format */
-import { removeDuplicateObjects } from '@/Functions/Util/arrays';
 import {
 	BinaryChamber,
 	CommitteeType,
 	MemberBaseKeys,
 } from '@/Models/_utility';
-import {
-	Committee,
-	CommitteeMembers,
-	PastCommitteeMember,
-} from '@/Models/committee';
+import { Committee } from '@/Models/committee';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { Cheerio, CheerioAPI } from 'cheerio';
-import scrapeCommitteesBaseDetails, { BaseCommittee } from './baseDetails';
+import { Cheerio } from 'cheerio';
 import fetchMembers from '@/Functions/API-Calls/OireachtasAPI/members';
-import { RawMember, RawOuterMembership } from '@/Models/OireachtasAPI/member';
+import { RawMember } from '@/Models/OireachtasAPI/member';
 import {
 	getMembers,
 	getChair,
 	getPastMembers,
 	removePastMembers,
 } from './parseDetails';
-
-// Fetches all committees, scrapes individual pages and returns info
-export async function getAllCommitteeInfo(): Promise<Committee[]> {
-	// Get all committee base details
-	const allCommitteesBaseDetails = await scrapeCommitteesBaseDetails();
-
-	// Get details for members of committee and other details
-	const committees = await allCommitteesBaseDetails.reduce(
-		async (resultsPromise: Promise<Committee[]>, c: BaseCommittee) => {
-			const results = await resultsPromise;
-			const info = await scrapeCommitteePageInfo(c.dailNo, c.uri);
-			if (info?.name) {
-				results.push(info);
-			} else {
-				console.error('Issue with committee scraping:', c.uri);
-			}
-			return results;
-		},
-		Promise.resolve([])
-	);
-	console.log(committees);
-	return committees;
-}
+import exceptions from '@/Data/BackendPocesses/committeeScraping.json';
+import { DateRangeObj, DateRangeStr, OirDate } from '@/Models/dates';
+import { dateToYMDstring } from '@/Functions/Util/dates';
 
 //Scrape committee information from the given URL.
-export async function scrapeCommitteePage(
+export async function scrapeCommitteePageInfo(
 	house_no: number,
-	uri: string
+	uri: string,
+	rawMembers?: RawMember[]
 ): Promise<Committee | undefined> {
 	const url = `https://www.oireachtas.ie/en/committees/${house_no.toString()}/${uri}/`;
 	if (!url) throw new Error('No URL provided');
+	if (exceptions.urlPatterns.skip.includes(uri)) {
+		console.error(
+			`'${uri}' is / was not a standard committee and will be skipped`
+		);
+		return;
+	}
 
 	let response: string;
 	let $: cheerio.CheerioAPI;
@@ -65,48 +46,64 @@ export async function scrapeCommitteePage(
 		return undefined;
 	}
 
-	// Extract the historic information
+	let dateRange: DateRangeObj = {
+		start: new Date(),
+		end: undefined,
+	};
+
+	const dateDetails = $('.c-committee-summary__meta-item').each(
+		(_index, element) => {
+			const text = $(element).text().trim();
+			if (text.includes('established')) {
+				dateRange.start = new Date(text.split(':')[1].trim());
+			} else if (text.includes('dissolved')) {
+				dateRange.end = new Date(text.split(':')[1].trim());
+			} else if (text.includes('House')) {
+				// if (text.includes('Dáil')) chamber = 'dail';
+				// if (text.includes('Seanad')) chamber = 'seanad';
+			}
+		}
+	);
+
+	let dateRangeStr: DateRangeStr = {
+		start: dateToYMDstring(dateRange.start),
+		end: dateRange.end! ? dateToYMDstring(dateRange.end) : undefined,
+	};
+
+	// Gets successor url / expiry details
 	const historic: Cheerio<cheerio.Element> | undefined = $(
 		'.c-historic-committee-ribbon__message'
 	);
 	let historicText: string | undefined;
 	let successorUrl: string | undefined;
-	let endDate: Date | undefined;
-
 	if (historic.text().length > 0) {
 		historicText = historic.text().trim();
 		successorUrl =
 			'https://www.oireachtas.ie' + historic.find('a').attr('href');
-		endDate = new Date($('.c-historic-committee-ribbon__date').text().trim());
 	}
+
+	// url patterns have inconsistent pattern
+	let pattern = 'membership';
+	if (exceptions.urlPatterns.members.includes(uri)) pattern = 'members';
 
 	try {
 		// Attempt to fetch the membership page from the first URL format
-		response = (await axios.get(`api/webscrape?url=${url}membership/`)).data
+		response = (await axios.get(`api/webscrape?url=${url}${pattern}/`)).data
 			.text;
-	} catch (err1) {
-		try {
-			// If the first URL format fails, try the alternative format
-			response = (await axios.get(`api/webscrape?url=${url}members/`)).data
-				.text;
-		} catch (err2) {
-			// If both URL formats fail, handle the error gracefully and return undefined
-			console.error('Error fetching membership page:', err2);
-			return;
-		}
+	} catch (err) {
+		// If both URL formats fail, handle the error gracefully and return undefined
+		console.error('Error fetching membership page:', err);
+		return;
 	}
 
 	$ = cheerio.load(response);
 
-	return committee;
-}
-
-function parseCommitteePage($: cheerio.CheerioAPI): Committee {
 	// Extract committee information
 	const committeeName = $('.c-hero__subtitle').text().trim();
 	const chamber = committeeName.toLowerCase().includes('seanad')
 		? 'seanad'
 		: 'dail';
+
 	const committeeTypes = (): CommitteeType[] => {
 		const types: CommitteeType[] = [];
 		if ($('#joint').length > 0) types.push('joint');
@@ -118,11 +115,10 @@ function parseCommitteePage($: cheerio.CheerioAPI): Committee {
 	};
 
 	let excpDate;
-	if (endDate) {
-		excpDate = endDate;
-	}
 
-	const allMembers = (await fetchMembers({ formatted: false })) as RawMember[]; // For parsing purposes
+	const allMembers = rawMembers
+		? rawMembers
+		: ((await fetchMembers({ formatted: false })) as RawMember[]); // For parsing purposes
 
 	const members = getMembers($, allMembers, excpDate ? excpDate : undefined);
 	const chair = getChair(
@@ -141,15 +137,17 @@ function parseCommitteePage($: cheerio.CheerioAPI): Committee {
 		name: committeeName,
 		uri,
 		url,
-		types: committeeTypes(),
 		chamber,
+		types: committeeTypes(),
 		dail_no: house_no,
 		chair,
 		members: filteredMembers,
+		dateRange,
+		dateRangeStr,
 		...(pastMembers && { pastMembers }),
 		...(historicText && { historicText }),
 		...(successorUrl && { successorUrl }),
-		...(endDate && { endDate }),
 	};
-	return Committee;
+
+	return committee;
 }

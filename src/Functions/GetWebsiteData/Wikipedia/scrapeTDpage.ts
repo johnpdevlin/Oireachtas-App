@@ -13,8 +13,10 @@ import {
 	startsWithNumber,
 } from '@/Functions/Util/strings';
 import { extractDateFromYMDstring } from '@/Functions/Util/dates';
+import { OirDate } from '@/Models/dates';
 
 type WikiProfileDetails = {
+	wikiURI: string;
 	birthdate: Date | undefined;
 	birthplace: string | undefined;
 	birthCountry: string | undefined;
@@ -28,10 +30,10 @@ type WikiProfileDetails = {
 };
 
 // Scrapes the Wikipedia profile of Niamh Smyth.
-export default async function scrapeWikiTDprofile(
-	wiki_uri: string
+export default async function scrapeTDWikiPage(
+	wikiURI: string
 ): Promise<WikiProfileDetails> {
-	const url = `https://en.wikipedia.org${wiki_uri}`;
+	const url = `https://en.wikipedia.org${wikiURI}`;
 
 	try {
 		let response = (await axios.get(`api/webscrape?url=${url}`)).data.text;
@@ -39,7 +41,7 @@ export default async function scrapeWikiTDprofile(
 
 		// Extract the birth information
 		const bornThElement = $('th:contains("Born")').next().text();
-		const birthdate = extractDateFromYMDstring(bornThElement);
+		const birthdate = extractDateFromYMDstring(bornThElement as OirDate);
 		const birthplace = removeSquareFootnotes(
 			getTextAfterLastParentheses(bornThElement)! // extracts the birthplace from the string
 		);
@@ -71,6 +73,7 @@ export default async function scrapeWikiTDprofile(
 
 		// Construct and return the WikiProfileDetails object
 		const wikiProfileDetails: WikiProfileDetails = {
+			wikiURI,
 			birthdate,
 			birthplace,
 			birthCountry,

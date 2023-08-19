@@ -46,20 +46,22 @@ export type RawOuterMembership = {
 	membership: RawMembership;
 };
 
+export type RawMemberHouse = {
+	houseCode: BinaryChamber;
+	uri: string;
+	houseNo: string;
+	showAs: string;
+	chamberType: ChamberType;
+};
+
 export type RawMembership = {
-	parties: RawMemberParty[];
-	house: {
-		houseCode: BinaryChamber;
-		uri: string;
-		houseNo: string;
-		showAs: string;
-		chamberType: ChamberType;
-	};
+	parties: { party: RawMemberParty }[];
+	house: RawMemberHouse;
 	offices: {
 		office: RawMemberOffice;
 	}[];
 	uri: string;
-	represents: RawMemberRepresent[];
+	represents: { represent: RawMemberRepresent }[];
 	dateRange: {
 		start: string;
 		end: string | null;
