@@ -10,7 +10,6 @@ export default async function processTDwikiData(dailSession: number) {
 	const tdData = Promise.all(
 		dail.tdWikiUris.map(async (td) => {
 			return {
-				name: removeTextBetweenParentheses(td.name),
 				...(await scrapeTDWikiPage(td.uri!)),
 			};
 		})

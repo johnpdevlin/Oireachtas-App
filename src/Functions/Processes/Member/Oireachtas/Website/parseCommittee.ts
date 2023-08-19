@@ -1,10 +1,7 @@
 /** @format */
 
 import { BinaryChamber, MemberURI } from '@/Models/_utility';
-import {
-	Committee,
-	CommitteeMembers,
-} from '../../../../../../Models/committee';
+import { Committee, CommitteeMembers } from '../../../../../Models/committee';
 import { MemberCommittee } from '@/Models/DB/Member/committee';
 
 export type MemberCommitteeDetail = {

@@ -1,12 +1,12 @@
 /** @format */
 
 import fetchMembers from '@/Functions/API-Calls/OireachtasAPI/members';
-import parseMemberDetails from './Oireachtas/API/parseMemberDetails';
+import parseMemberDetails from './Oireachtas/API/MemberDetails';
 import fetchNames from '@/Functions/API-Calls/IrishNamesAPI/fetchNames';
-import processTDwikiData from './Wiki/Dail/TDwikiData';
+import processTDwikiData from './Wiki/Dail/TDdataByDailSession';
 import { processAllCommitteeInfo } from '../Committee/allCommitteesInfo';
 import { MemberURI } from '@/Models/_utility';
-import parseCommitteeMemberDetails from './Oireachtas/Website/Parse/committees';
+import parseCommitteeMemberDetails from './Oireachtas/Website/parseCommittee';
 import { Committee } from '@/Models/committee';
 import { MemberCommittee } from '@/Models/DB/Member/committee';
 import bindCommittees2Members from './Bind/Committees2Members';

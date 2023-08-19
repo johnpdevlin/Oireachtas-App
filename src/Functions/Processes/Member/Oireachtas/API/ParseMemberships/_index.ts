@@ -7,7 +7,7 @@ import {
 	RawOuterMembership,
 } from '@/Models/OireachtasAPI/member';
 import parseAndFormatOffices from './offices';
-import { RawMemberOffice } from '../../../../../../../Models/OireachtasAPI/member';
+import { RawMemberOffice } from '../../../../../../Models/OireachtasAPI/member';
 import parseAndFormatConstituencies from './constituencies';
 import parseAndFormatParties from './parties';
 import { BinaryChamber } from '@/Models/_utility';

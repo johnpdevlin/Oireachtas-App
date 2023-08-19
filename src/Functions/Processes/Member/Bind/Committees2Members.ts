@@ -1,6 +1,6 @@
 /** @format */
 
-import { MemberCommitteeDetail } from '../Oireachtas/Website/Parse/committees';
+import { MemberCommitteeDetail } from '../Oireachtas/Website/parseCommittee';
 
 export default function bindCommittees2Members<T extends { uri: string }>(
 	currentCommittees: MemberCommitteeDetail[],

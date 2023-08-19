@@ -1,7 +1,7 @@
 /** @format */
 import checkGender from '@/Functions/API-Calls/IrishNamesAPI';
 import fetcher from '@/Functions/API-Calls/fetcher';
-import parseMemberships from './Parse/Memberships/_index';
+import parseMemberships from './Parse/_index';
 import { MemberConstituency } from '@/Models/DB/Member/constituency';
 import { MemberOffice } from '@/Models/DB/Member/office';
 import { MemberParty } from '@/Models/DB/Member/party';
