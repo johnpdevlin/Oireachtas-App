@@ -1,9 +1,9 @@
 /** @format */
 
-import fetchHouses from '@/Functions/API-Calls/OireachtasAPI/houses';
-import scrapeSittingReportsForChamber from '@/Functions/GetWebsiteData/Oireachtas/Attendance/House/scrapeSittingReports';
+import fetchHouses from '@/Functions/APIs/Oireachtas/houses';
+import scrapeSittingReportsForChamber from '@/Functions/ScrapeWebsites/Oireachtas/Attendance/House/scrapeSittingReports';
 import { House, HouseRequest } from '@/Models/OireachtasAPI/house';
-import { Chamber } from '@/Models/_utility';
+import { Chamber } from '@/Models/_util';
 
 export default async function prcAttendanceReports(
 	house?: { chamber: Chamber; house_no: number },

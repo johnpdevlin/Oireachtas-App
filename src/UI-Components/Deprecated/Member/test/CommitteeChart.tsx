@@ -4,10 +4,10 @@
 
 import { useEffect, useState } from 'react';
 
-import { GroupType } from '@/Models/_utility';
-import { getUniqueYears } from '@/Functions/Util/objects';
+import { GroupType } from '@/Models/_util';
+import { getUniqueYears } from '@/Functions/_util/objects';
 import { DailYear, MonthChar } from '@/Models/dates';
-import { getMonthStrFromNumber } from '@/Functions/Util/dates';
+import { getMonthStrFromNumber } from '@/Functions/_util/dates';
 import SelectSmall from './_smallSelect_';
 import { LineChart } from '@mui/x-charts/LineChart/index.js';
 

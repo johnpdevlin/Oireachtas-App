@@ -1,6 +1,6 @@
 /** @format */
 
-import { Chamber } from '@/Models/_utility';
+import { Chamber } from '@/Models/_util';
 
 export type HouseRequest = {
 	chamber?: Chamber & 'dail & seanad';
