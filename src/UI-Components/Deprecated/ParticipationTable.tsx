@@ -15,7 +15,7 @@ import {
 	TableFooter,
 } from '@mui/material';
 
-import DropDownSelect from './DropDownPeriod';
+import DropDownSelect from '../UI-TEST/Deprecated/DropDownPeriod';
 import {
 	groupParticipationRecord,
 	participationRecord,

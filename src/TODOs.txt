@@ -1,18 +1,37 @@
-FORMATTING MEMBERS
-- Fix 
-- Change scapePageInfo members fetch
+++ IMMEDIATE  ++
+
+COMMITTEES
+- Parsing -Handle committee types / chambers, rewrite code
+
+State / Reactive
+- Organise Offices, positions - ProfileHeader, Former...
+
+
+INCONSISTENCIES (Committees and Attendance Reports)
+- d/w dateRange change date_start to start etc., make consistent with Oir dates
+- d/w changing and recording new roles etc. such as new committee chairs
+- d/w committees where no reports e.g. committee on budgetary oversight
+- d/w committee differences between member / membership patterns
+
+OFFICES
+- Scrape wiki for all ministries
+- 
+
+
+
+++ MEDIUM TERM ++
+- Get Offices from Wikipedia
+- Get party positions from wiki front bench or td page etc.
+
+++ LONG TERM TERM ++
+- Constituency Election details etc. compare vs polls give vulnerability rating
+
 
 DEAL WITH NEXT DAIL TERM
 - Cron jobs stop once new term is created
 - How to handle committees 
 
-INCONSISTENCIES (Committees and Attendance Reports)
-- d/w changing and recording new roles etc. such as new committee chairs
-- d/w committees where no reports e.g. committee on budgetary oversight
-- d/w committee differences between member / membership patterns
 
-OFFICES 
-- d/w similar offices with root responsibilities
-
-IDEAS???
+!!! IDEAS??? !!!
 - Classes for api or util 
+

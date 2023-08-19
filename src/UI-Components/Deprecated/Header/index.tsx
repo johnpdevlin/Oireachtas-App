@@ -9,7 +9,7 @@ import Container from '@mui/material/Container';
 import SearchBar from './SearchBar';
 import MobileMenu from './MobileMenu';
 import DesktopMenu from './DesktopMenu';
-import { LogoButton } from '../../UI-Components/LogoButton';
+import { LogoButton } from '../LogoButton';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 
