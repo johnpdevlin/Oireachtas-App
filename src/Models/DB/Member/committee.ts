@@ -1,6 +1,6 @@
 /** @format */
 
-import { BinaryChamber } from '@/Models/_utility';
+import { BinaryChamber } from '@/Models/_util';
 import { DateRangeObj, DateRangeStr } from '@/Models/dates';
 
 export type MemberCommittee = {
