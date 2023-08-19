@@ -1,7 +1,7 @@
 /** @format */
 
 import { CommitteeDebateRecord } from './OireachtasAPI/debate';
-import { BinaryChamber, CommitteeType, MemberBaseKeys } from './_utility';
+import { BinaryChamber, CommitteeType, MemberBaseKeys } from './_util';
 import { DateRangeObj, DateRangeStr } from './dates';
 
 export type CommitteeMember = {
