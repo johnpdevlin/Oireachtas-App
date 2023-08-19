@@ -1,7 +1,10 @@
 /** @format */
+
+import { MemberAPIdetails } from '@/Models/OireachtasAPI/Formatted/Member/member';
 import { MemberRequest } from '@/Models/OireachtasAPI/member';
-import getMemberAPIdetails, { MemberAPIdetails } from './MemberDetails';
-import fetchMembers from '../../../Deprecated_Fetch/members';
+import fetchMembers from '../Raw/get';
+import getMemberAPIdetails from './MemberDetails';
+import { MemberURI } from '@/Models/_util';
 
 export default async function getMultiMembersAPIdetails(
 	uris?: string[],
@@ -9,12 +12,20 @@ export default async function getMultiMembersAPIdetails(
 ): Promise<MemberAPIdetails[] | void> {
 	try {
 		if (!uris && request!) {
-			uris = (await fetchMembers(request)).map((member) => member.uri);
-			return Promise.all(
-				uris.map((uri) => {
-					return getMemberAPIdetails(uri);
-				})
-			) as Promise<MemberAPIdetails[]>;
+			try {
+				uris = (await fetchMembers(request))?.map((member) => {
+					return member.memberCode;
+				});
+				if (uris!) {
+					return Promise.all(
+						uris!.map((uri) => {
+							return getMemberAPIdetails(uri as MemberURI);
+						})
+					) as Promise<MemberAPIdetails[]>;
+				}
+			} catch (err) {
+				console.log(err);
+			}
 		} else if (uris!) {
 			return Promise.all(
 				uris!.map((uri) => {
