@@ -4,6 +4,7 @@
  */
 
 const nextConfig = {
+	transpilePackages: ['@mui/x-charts'],
 	reactStrictMode: true,
 	webpack: (config) => {
 		// this will override the experiments
