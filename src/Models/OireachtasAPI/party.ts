@@ -1,6 +1,6 @@
 /** @format */
 
-import { Chamber } from '@/Models/_util';
+import { Chamber } from '@/models/_utils';
 
 export type PartyRequest = {
 	chamber_id?: Chamber;

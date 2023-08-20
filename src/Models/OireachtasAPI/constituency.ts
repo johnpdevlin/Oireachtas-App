@@ -1,6 +1,6 @@
 /** @format */
 
-import { Chamber, RepresentType } from '../_util';
+import { Chamber, RepresentType } from '../_utils';
 
 export type ConstituencyRequest = {
 	chamber: Chamber;

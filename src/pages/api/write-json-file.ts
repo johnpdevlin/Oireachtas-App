@@ -2,14 +2,13 @@
 import fs from 'fs';
 import { join } from 'path';
 import { NextApiRequest, NextApiResponse } from 'next';
-
 interface JsonObject {
 	[key: string]: any;
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
 	if (req.method === 'POST') {
-		const { data, filename, directory } = req.body;
+		const { data, filename, directory, key } = req.body;
 
 		if (!data || !filename) {
 			return res.status(400).json({ error: 'Data and filename are required' });

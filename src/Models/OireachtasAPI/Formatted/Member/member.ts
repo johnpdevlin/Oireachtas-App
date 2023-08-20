@@ -1,9 +1,9 @@
 /** @format */
 
-import { MemberConstituency } from '@/Models/OireachtasAPI/Formatted/Member/constituency';
-import { MemberOffice } from '@/Models/OireachtasAPI/Formatted/Member/office';
+import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/constituency';
+import { MemberOffice } from '@/models/oireachtasApi/Formatted/Member/office';
 import { MemberParty } from '@/Models/DB/Member/party';
-import { MemberURI } from '@/Models/_util';
+import { MemberURI } from '@/models/_utils';
 
 export type MemberAPIdetails = {
 	uri: MemberURI;

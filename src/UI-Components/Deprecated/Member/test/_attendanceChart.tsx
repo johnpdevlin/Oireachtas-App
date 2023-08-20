@@ -13,7 +13,7 @@ import { Dispatch, SetStateAction, useState, useEffect } from 'react';
 import Chart from 'react-google-charts';
 import { NavigateNextSharp, NavigateBeforeSharp } from '@mui/icons-material';
 import React from 'react';
-import { isLargestNumber, isSmallestNumber } from '@/Functions/_util/numbers';
+import { isLargestNumber, isSmallestNumber } from '@/functions/_utils/numbers';
 
 // differentiate time periods, committee vs dail
 // flexible layout // month to Q1, Q2 etc.

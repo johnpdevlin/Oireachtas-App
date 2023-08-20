@@ -1,6 +1,6 @@
 /** @format */
 
-import { BinaryChamber, ChamberType, MemberURI } from '../_util';
+import { BinaryChamber, ChamberType, MemberURI } from '../_utils';
 import { DateRangeStr } from '../dates';
 
 export type MemberRequest = {
