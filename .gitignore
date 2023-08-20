@@ -36,3 +36,6 @@ next-env.d.ts
 
 # Txt files
 /TODOs.txt
+
+# Secret Keys
+/src/FirestoreDB/service-account-key.json
