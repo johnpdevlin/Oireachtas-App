@@ -113,11 +113,14 @@ function getMembersAndNonMembers(
 
 	nonMembers = allMembers
 		.filter((am) => members.every((com) => com.uri !== am.uri))
-		.map((member) => ({
-			name: member.name,
-			uri: member.uri,
-			houseCode: chamber,
-		}));
+		.map(
+			(member) =>
+				({
+					name: member.name,
+					uri: member.uri,
+					houseCode: chamber,
+				} as MemberBaseKeys)
+		);
 
 	return { members, nonMembers, warnings };
 }
