@@ -1,6 +1,6 @@
 /** @format */
 
-import { Chamber, ChamberType, Outcome } from '@/Models/_util';
+import { Chamber, ChamberType, Outcome } from '@/models/_utils';
 
 export type VoteRequest = {
 	member_id?: string;

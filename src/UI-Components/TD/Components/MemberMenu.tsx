@@ -11,37 +11,39 @@ import MapsHomeWork from '@mui/icons-material/MapsHomeWork';
 import CellTower from '@mui/icons-material/CellTower';
 export default function MemberMenu() {
 	return (
-		<MenuList>
-			<MenuItem>
-				<ListItemIcon>
-					<Portrait fontSize='large' />
-				</ListItemIcon>
-				<ListItemText>Biograghy</ListItemText>
-			</MenuItem>
-			<MenuItem>
-				<ListItemIcon>
-					<Poll fontSize='large' />
-				</ListItemIcon>
-				<ListItemText>Attendance</ListItemText>
-			</MenuItem>
-			<MenuItem>
-				<ListItemIcon>
-					<MapsHomeWork fontSize='large' />
-				</ListItemIcon>
-				<ListItemText>Property</ListItemText>
-			</MenuItem>
-			<MenuItem>
-				<ListItemIcon>
-					<CardGiftcard fontSize='large' />
-				</ListItemIcon>
-				<ListItemText>Interests</ListItemText>
-			</MenuItem>
-			<MenuItem>
-				<ListItemIcon>
-					<CellTower fontSize='large' />
-				</ListItemIcon>
-				<ListItemText>Latest Posts</ListItemText>
-			</MenuItem>
-		</MenuList>
+		<nav>
+			<MenuList>
+				<MenuItem>
+					<ListItemIcon>
+						<Portrait fontSize='large' />
+					</ListItemIcon>
+					<ListItemText>Biograghy</ListItemText>
+				</MenuItem>
+				<MenuItem>
+					<ListItemIcon>
+						<Poll fontSize='large' />
+					</ListItemIcon>
+					<ListItemText>Attendance</ListItemText>
+				</MenuItem>
+				<MenuItem>
+					<ListItemIcon>
+						<MapsHomeWork fontSize='large' />
+					</ListItemIcon>
+					<ListItemText>Property</ListItemText>
+				</MenuItem>
+				<MenuItem>
+					<ListItemIcon>
+						<CardGiftcard fontSize='large' />
+					</ListItemIcon>
+					<ListItemText>Interests</ListItemText>
+				</MenuItem>
+				<MenuItem>
+					<ListItemIcon>
+						<CellTower fontSize='large' />
+					</ListItemIcon>
+					<ListItemText>Latest Posts</ListItemText>
+				</MenuItem>
+			</MenuList>
+		</nav>
 	);
 }

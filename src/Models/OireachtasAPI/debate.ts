@@ -1,6 +1,6 @@
 /** @format */
 
-import { BinaryChamber, Chamber, ChamberType } from '@/Models/_util';
+import { BinaryChamber, Chamber, ChamberType } from '@/models/_utils';
 
 export type DebateRequest = {
 	member?: string;

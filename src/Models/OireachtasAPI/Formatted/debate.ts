@@ -1,6 +1,6 @@
 /** @format */
 
-import { BinaryChamber, CommitteeType } from '@/Models/_util';
+import { BinaryChamber, CommitteeType } from '@/models/_utils';
 
 export type CommitteeDebateRecord = {
 	date: Date;

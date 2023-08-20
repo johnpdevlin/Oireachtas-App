@@ -1,6 +1,6 @@
 /** @format */
 
-import { Chamber } from './_util';
+import { Chamber } from './_utils';
 
 export type MembershipType =
 	| 'house'
