@@ -4,10 +4,6 @@ import { Box, Divider, Grid, Stack, Typography } from '@mui/material';
 import ProfileImage from '../Components/ProfileImg';
 import ProfileHeader from '../Components/ProfileHeader';
 import BasicDetails from '../Components/BasicDetails';
-import SocialIcons from '@/UI-TEST/Util/SocialIcons';
-import Address from '@/UI-TEST/Util/Address';
-import PhoneNumber from '@/UI-TEST/Util/PhoneNumber';
-import Email from '@/UI-TEST/Util/Email';
 
 export default function SmallTDlayout(props: { member: unknown }): JSX.Element {
 	// member: unknown

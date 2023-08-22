@@ -132,8 +132,8 @@ export default function CommitteeAttendanceChart() {
 				label='Period'
 				state={year}
 				setState={setYear}
-			/> */}
-			{/* <LineChart
+			/>  */}
+			<LineChart
 				width={500}
 				height={300}
 				series={[
@@ -146,7 +146,7 @@ export default function CommitteeAttendanceChart() {
 					'--ChartsLegend-itemWidth': '200px',
 				}}
 				xAxis={[{ scaleType: 'point', data: labels }]}
-			/> */}
+			/>
 		</>
 	);
 }

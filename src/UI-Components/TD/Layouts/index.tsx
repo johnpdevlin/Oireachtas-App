@@ -4,11 +4,13 @@ import LargeTDlayout from './lg';
 import MobileTDlayout from './xs-mobile';
 import SmalllTDlayout from './sm';
 import MediumTDlayout from './md';
+import CommitteeAttendanceChart from '@/UI-Components/Deprecated/Member/test/CommitteeChart';
 export default function TDlayout() {
 	const member = { name: 'Leo Varadkar', uri: 'Leo-Varadkar.D.2007-06-14' };
 	return (
 		<>
-			<Box
+			<CommitteeAttendanceChart />
+			{/* <Box
 				sx={{
 					display: {
 						xs: 'block',
@@ -47,7 +49,7 @@ export default function TDlayout() {
 			<Box
 				sx={{ display: { xs: 'none', sm: 'none', md: 'none', lg: 'block' } }}>
 				<LargeTDlayout member={member} />
-			</Box>
+			</Box> */}
 		</>
 	);
 }
