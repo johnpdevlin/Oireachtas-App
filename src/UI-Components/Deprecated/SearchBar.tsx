@@ -1,6 +1,5 @@
 /** @format */
 
-import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import InputBase from '@mui/material/InputBase';
@@ -16,6 +15,7 @@ const Search = styled('div')(({ theme }) => ({
 	},
 	marginLeft: 1,
 	width: '100%',
+
 	[theme.breakpoints.up('sm')]: {
 		marginLeft: theme.spacing(1),
 		width: 'auto',
