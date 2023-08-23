@@ -54,17 +54,14 @@ function HeaderNavBar(): JSX.Element {
 
 						<Grid container>
 							{/* LOGO FOR HOME */}
-							<Grid item xs={7} sm={8} md={3} lg={2.5}>
+							<Grid item xs={7} sm={8} md={3} lg={2.5} sx={{ mt: 1 }}>
 								<LogoButton />
 							</Grid>
 							{/* END LOGO FOR HOME */}
 
 							{/* DESKTOP MENU */}
 							<Grid item md={6.5} lg={6.5}>
-								<DesktopMenu
-									pages={pages}
-									handleCloseNavMenu={handleCloseNavMenu}
-								/>
+								<DesktopMenu pages={pages} />
 							</Grid>
 							{/* END DESKTOP MENU */}
 
@@ -75,7 +72,7 @@ function HeaderNavBar(): JSX.Element {
 								sm={4}
 								md={2.5}
 								lg={3}
-								sx={{ mt: marginTopValue }}>
+								sx={{ mt: marginTopValue, mb: 1 }}>
 								<SearchBar />
 							</Grid>
 							{/* END SEARCHBAR */}
