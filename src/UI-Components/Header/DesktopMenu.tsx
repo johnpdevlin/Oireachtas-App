@@ -6,14 +6,10 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 type DesktopMenuProps = {
-	handleCloseNavMenu: () => void;
 	pages: { name: string; path: string }[];
 };
 
-function DesktopMenu({
-	handleCloseNavMenu,
-	pages,
-}: DesktopMenuProps): JSX.Element {
+function DesktopMenu({ pages }: DesktopMenuProps): JSX.Element {
 	const { breakpoint } = useViewport();
 	const [marginXvalue, setMarginXvalue] = useState<number>(() => 0);
 	const [fontSizeValue, setFontSizeValue] = useState<string>(() => '');
@@ -41,7 +37,6 @@ function DesktopMenu({
 						<Link href={page.path}>
 							<Button
 								key={page.path}
-								onClick={handleCloseNavMenu}
 								size='large'
 								sx={{
 									mx: marginXvalue,
