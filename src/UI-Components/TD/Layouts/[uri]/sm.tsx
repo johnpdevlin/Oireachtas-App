@@ -1,9 +1,9 @@
 /** @format */
 
 import { Box, Divider, Grid, Stack, Typography } from '@mui/material';
-import ProfileImage from '../Components/ProfileImg';
-import ProfileHeader from '../Components/ProfileHeader';
-import BasicDetails from '../Components/BasicDetails';
+import ProfileImage from '../../Components/ProfileImg';
+import ProfileHeader from '../../Components/ProfileHeader';
+import BasicDetails from '../../Components/BasicDetails';
 
 export default function SmallTDlayout(props: { member: unknown }): JSX.Element {
 	// member: unknown

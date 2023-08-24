@@ -1,8 +1,8 @@
 /** @format */
 
-import ProfileImage from '../Components/ProfileImg';
-import ProfileHeader from '../Components/ProfileHeader';
-import BasicDetails from '../Components/BasicDetails';
+import ProfileImage from '../../Components/ProfileImg';
+import ProfileHeader from '../../Components/ProfileHeader';
+import BasicDetails from '../../Components/BasicDetails';
 import { Box } from '@mui/material';
 
 export default function MobileTDlayout(props: {

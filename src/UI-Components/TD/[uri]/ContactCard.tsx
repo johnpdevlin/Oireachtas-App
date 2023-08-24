@@ -10,14 +10,11 @@ import {
 	Stack,
 } from '@mui/material';
 
-import { MarkunreadMailbox, Call, AlternateEmail } from '@mui/icons-material';
-import Image from 'next/image';
-
-import SocialIcons from '../../../UI-TEST/Util/SocialIcons';
-import Address from '@/UI-TEST/Util/Address';
-import PhoneNumber from '@/UI-TEST/Util/PhoneNumber';
-import Email from '@/UI-TEST/Util/Email';
-import ProfileImage from './ProfileImg';
+import SocialIcons from '@/UI-Components/_utils/SocialIcons';
+import ProfileImage from '../_utils/ProfileImg';
+import Address from '@/UI-Components/_utils/Contact/Address';
+import PhoneNumber from '@/UI-Components/_utils/Contact/PhoneNumber';
+import Email from '@/UI-Components/_utils/Contact/Email';
 
 export default function ContactCard() {
 	return (

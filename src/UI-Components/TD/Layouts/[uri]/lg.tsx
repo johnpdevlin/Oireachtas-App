@@ -1,11 +1,11 @@
 /** @format */
 
 import { Grid, Stack } from '@mui/material';
-import MemberMenu from '../Components/MemberMenu';
-import ContactCard from '../Components/ContactCard';
-import ProfileCard from '../Components/ProfileCard';
-import CommitteesCard from '../Components/CommitteesCard';
-import FormerPositions from '../Components/FormerPositions';
+import MemberMenu from '../../Components/MemberMenu';
+import ContactCard from '../../Components/ContactCard';
+import ProfileCard from '../../Components/ProfileCard';
+import CommitteesCard from '../../Components/CommitteesCard';
+import FormerPositions from '../../Components/FormerPositions';
 
 export default function LargeTDlayout(props: { member: unknown }): JSX.Element {
 	// member: unknown

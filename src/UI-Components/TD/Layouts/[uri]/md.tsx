@@ -10,8 +10,8 @@ import {
 	Stack,
 	Typography,
 } from '@mui/material';
-import ProfileCard from '../Components/ProfileCard';
-import ProfileImage from '../Components/ProfileImg';
+import ProfileCard from '../../Components/ProfileCard';
+import ProfileImage from '../../Components/ProfileImg';
 import Address from '@/UI-TEST/Util/Address';
 import PhoneNumber from '@/UI-TEST/Util/PhoneNumber';
 import SocialIcons from '@/UI-TEST/Util/SocialIcons';
