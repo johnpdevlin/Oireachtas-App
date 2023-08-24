@@ -55,7 +55,7 @@ export default async function scrapeTDWikiPage(
 			if (!spouse) {
 				spouse = getInfoBoxText($, 'Spouse(s)');
 			}
-			return spouse;
+			if (!spouse?.startsWith('.')) return spouse;
 		};
 
 		// Construct and return the WikiProfileDetails object
