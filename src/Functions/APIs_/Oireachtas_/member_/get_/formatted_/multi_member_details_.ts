@@ -16,6 +16,7 @@ export default async function getMultiMembersAPIdetails(
 				uris = (await fetchMembers(request))?.map((member) => {
 					return member.memberCode;
 				});
+
 				if (uris!) {
 					return Promise.all(
 						uris!.map((uri) => {

@@ -2,6 +2,12 @@
 
 import { Chamber, RepresentType } from '../_utils';
 
+export type ConstituencyAPI = {
+	type: RepresentType;
+	uri: string;
+	name: string;
+};
+
 export type ConstituencyRequest = {
 	chamber: Chamber;
 	house_no: number;

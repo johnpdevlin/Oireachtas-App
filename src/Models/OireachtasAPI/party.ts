@@ -3,7 +3,7 @@
 import { Chamber } from '@/models/_utils';
 
 export type PartyRequest = {
-	chamber_id?: Chamber;
+	chamber?: Chamber;
 	house_no?: number;
 	house_details?: boolean;
 	showAs?: string;
@@ -12,8 +12,7 @@ export type PartyRequest = {
 
 export type PartyAPI = {
 	uri: string;
-	partyCode: string;
-	showAs: string;
+	name: string;
 };
 
 export type PartyResult = {
