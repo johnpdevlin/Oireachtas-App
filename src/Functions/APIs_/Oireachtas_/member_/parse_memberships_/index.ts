@@ -11,11 +11,10 @@ import { RawMemberOffice } from '@/models/oireachtasApi/member';
 import parseAndFormatConstituencies from './constituencies_';
 import parseAndFormatParties from './parties_';
 import { BinaryChamber } from '@/models/_utils';
-import { getEndDateObj } from '@/functions/_utils/dates';
 import { DateRangeObj, DateRangeStr, OirDate } from '@/models/dates';
 import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/constituency';
 import { MemberOffice } from '@/models/oireachtasApi/Formatted/Member/office';
-import { MemberParty } from '@/Models/DB/Member/party';
+import { MemberParty } from '@/models/oireachtasApi/Formatted/Member/party';
 
 type MembershipResponse = {
 	constituencies: {
@@ -36,7 +35,8 @@ type MembershipResponse = {
 	Returns above object
 */
 export default function parseMemberships(
-	memberships: RawOuterMembership[]
+	memberships: RawOuterMembership[],
+	serializable: boolean = false
 ): MembershipResponse {
 	const destructured = destructureMemberships(memberships);
 
@@ -73,7 +73,8 @@ export type RawMemberConstituency = RawMemberRepresent & { house: House };
 export type RawMparty = RawMemberParty & {
 	house: House;
 	chamber: BinaryChamber;
-	dateRange: DateRangeObj;
+	dateRange?: DateRangeObj;
+	dateRangeStr: DateRangeStr;
 };
 
 type RawMembershipsObj = {
@@ -121,12 +122,7 @@ function destructureMemberships(
 					...party.party,
 					house,
 					chamber: house.houseCode,
-					dateRange: {
-						start: new Date(party.party.dateRange.start),
-						end: getEndDateObj(
-							party.party.dateRange.end as OirDate | undefined
-						),
-					} as DateRangeObj,
+					dateRange: house.dateRange,
 				} as RawMparty)
 			);
 	});

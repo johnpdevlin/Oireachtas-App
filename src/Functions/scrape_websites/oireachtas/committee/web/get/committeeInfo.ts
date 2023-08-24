@@ -1,6 +1,9 @@
 /** @format */
 import { CommitteeType, MemberBaseKeys } from '@/models/_utils';
-import { Committee } from '@/models/scraped/oireachtas/committee';
+import {
+	Committee,
+	CommitteeMembers,
+} from '@/models/scraped/oireachtas/committee';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { Cheerio } from 'cheerio';
@@ -13,7 +16,7 @@ import {
 } from '@/functions/scrape_websites/oireachtas/committee/web/parse/members';
 import getChair from '@/functions/scrape_websites/oireachtas/committee/web/parse/chair';
 import exceptions from '../../url-pattern-exceptions.json';
-import { DateRangeObj, DateRangeStr, OirDate } from '@/models/dates';
+import { DateRangeStr, OirDate } from '@/models/dates';
 import { dateToYMDstring } from '@/functions/_utils/dates';
 
 //Scrape committee information from the given URL.
@@ -42,8 +45,8 @@ export async function scrapeCommitteePageInfo(
 		return undefined;
 	}
 
-	let dateRange: DateRangeObj = {
-		start: new Date(),
+	let dateRange: DateRangeStr = {
+		start: '2099-12-01',
 		end: undefined,
 	};
 
@@ -51,9 +54,9 @@ export async function scrapeCommitteePageInfo(
 		(_index, element) => {
 			const text = $(element).text().trim();
 			if (text.includes('established')) {
-				dateRange.start = new Date(text.split(':')[1].trim());
+				dateRange.start = text.split(':')[1].trim() as OirDate;
 			} else if (text.includes('dissolved')) {
-				dateRange.end = new Date(text.split(':')[1].trim());
+				dateRange.end = text.split(':')[1].trim() as OirDate;
 			} else if (text.includes('House')) {
 				// if (text.includes('Dáil')) chamber = 'dail';
 				// if (text.includes('Seanad')) chamber = 'seanad';
@@ -61,9 +64,9 @@ export async function scrapeCommitteePageInfo(
 		}
 	);
 
-	let dateRangeStr: DateRangeStr = {
-		start: dateToYMDstring(dateRange.start),
-		end: dateRange.end! ? dateToYMDstring(dateRange.end) : undefined,
+	dateRange = {
+		start: dateRange.start,
+		end: dateRange.end ? dateRange.end : undefined,
 	};
 
 	// Gets successor url / expiry details
@@ -126,7 +129,10 @@ export async function scrapeCommitteePageInfo(
 	const pastMembers = getPastMembers($, allMembers);
 
 	// Remove past members from the array of current members
-	const filteredMembers = removePastMembers(members, pastMembers);
+	const filteredMembers = removePastMembers(
+		members as CommitteeMembers,
+		pastMembers
+	);
 
 	// Create the Committee object with the extracted information
 	const committee: Committee = {
@@ -139,7 +145,6 @@ export async function scrapeCommitteePageInfo(
 		chair,
 		members: filteredMembers,
 		dateRange,
-		dateRangeStr,
 		...(pastMembers && { pastMembers }),
 		...(historicText && { historicText }),
 		...(successorUrl && { successorUrl }),
