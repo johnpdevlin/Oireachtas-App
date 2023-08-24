@@ -6,7 +6,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -61,12 +61,12 @@ export default function MultipleSelect({
 		const selectedOptions = options.filter((option) =>
 			value.includes(option.id)
 		);
-		() => setSelectedOptions(selectedOptions);
+		setSelectedOptions(selectedOptions);
 	};
 
 	return (
 		<div>
-			<FormControl sx={{ m: 1, width: width }}>
+			<FormControl sx={{ m: 1, width: width, backgroundColor: 'whitesmoke' }}>
 				<InputLabel id='multiple-name-label'>{label}</InputLabel>
 				<Select
 					labelId={`${label}-multiple-name-label`}
