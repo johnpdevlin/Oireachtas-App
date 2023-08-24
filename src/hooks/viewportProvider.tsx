@@ -34,11 +34,11 @@ const ViewportProvider: React.FunctionComponent<ViewportProviderProps> = ({
 	const updateBreakpoint = (width: number) => {
 		if (width < 600) {
 			setBreakpoint('xs');
-		} else if (width < 960) {
+		} else if (width < 900) {
 			setBreakpoint('sm');
-		} else if (width < 1280) {
+		} else if (width < 1200) {
 			setBreakpoint('md');
-		} else if (width < 1920) {
+		} else if (width < 1536) {
 			setBreakpoint('lg');
 		} else {
 			setBreakpoint('xl');
