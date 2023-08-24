@@ -26,9 +26,8 @@ export default async function getAllMemberDetails() {
 	const wikiDetails = await getTDsWikiData(33);
 	const mergedData = await bindAllData(uris, oirData, wikiDetails, apiData);
 
-	console.log(mergedData);
-
 	console.info('Process to get all member details completed.');
+	return mergedData;
 }
 
 async function bindAllData(
