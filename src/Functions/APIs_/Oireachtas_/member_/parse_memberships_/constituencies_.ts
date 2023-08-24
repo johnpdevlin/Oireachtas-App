@@ -1,5 +1,5 @@
 /** @format */
-import { getEndDateObj, getEndDateStr } from '@/functions/_utils/dates';
+import { getEndDateStr } from '@/functions/_utils/dates';
 import { groupObjectsByProperty } from '@/functions/_utils/objects';
 import { RawMemberConstituency } from '.';
 import { OirDate } from '@/models/dates';
@@ -54,15 +54,18 @@ export default function parseConstituencies(constits: {
 
 	// Sort so most recent periods are first
 	dail.sort(
-		(a, b) => b.dateRange.start.getTime() - a.dateRange.start.getTime()
+		(a, b) =>
+			new Date(b.dateRange.start).getTime() -
+			new Date(a.dateRange.start).getTime()
 	);
 	seanad.sort(
-		(a, b) => b.dateRange.start.getTime() - a.dateRange.start.getTime()
+		(a, b) =>
+			new Date(b.dateRange.start).getTime() -
+			new Date(a.dateRange.start).getTime()
 	);
 
-	const isActiveTD = !dail[0] || dail[0].dateRangeStr.end! ? false : true;
-	const isActiveSenator =
-		!seanad[0] || seanad[0].dateRangeStr.end! ? false : true;
+	const isActiveTD = !dail[0] || dail[0].dateRange.end! ? false : true;
+	const isActiveSenator = !seanad[0] || seanad[0].dateRange.end! ? false : true;
 
 	return { dail, seanad, isActiveTD, isActiveSenator };
 }
@@ -81,7 +84,7 @@ function parseIndividualConstituency(
 
 	const results: MemberConstituency[] = [];
 	let start: OirDate | '' = '';
-	let end: OirDate | undefined | null = undefined;
+	let end: OirDate | undefined | null = null;
 	let houseNo = 0;
 	let houses: number[] = [];
 
@@ -89,10 +92,8 @@ function parseIndividualConstituency(
 		const tempHouseNo = parseInt(con.house.houseNo);
 		if (start === '') {
 			// If first iteration of loop, assign values
-			start = con.house.dateRange.start as OirDate;
-			end = getEndDateStr(
-				con.house.dateRange.end as OirDate | undefined | null
-			);
+			start = con.house.dateRange.start;
+			end = getEndDateStr(con.house.dateRange.end);
 			houseNo = tempHouseNo;
 			houses.push(houseNo);
 		} else if (tempHouseNo - houseNo !== 1) {
@@ -101,22 +102,17 @@ function parseIndividualConstituency(
 				name: con.showAs,
 				chamber: type,
 				uri: con.representCode,
-				dateRangeStr: { start: start, end: end },
-				dateRange: { start: new Date(start), end: end! },
+				dateRange: { start: start, end: end },
 				houses: houses,
 			});
 			start = con.house.dateRange.start as OirDate;
-			end = getEndDateStr(
-				con.house.dateRange.end as OirDate | undefined | null
-			);
+			end = getEndDateStr(con.house.dateRange.end);
 			houseNo = tempHouseNo;
 			houses = [tempHouseNo];
 		} else {
 			houses.push(tempHouseNo);
 			houseNo = tempHouseNo;
-			end = getEndDateStr(
-				con.house.dateRange.end as OirDate | undefined | null
-			);
+			end = getEndDateStr(con.house.dateRange.end);
 		}
 	});
 
@@ -125,11 +121,7 @@ function parseIndividualConstituency(
 		name: constits.at(-1)!.showAs,
 		chamber: type,
 		uri: constits.at(-1)!.representCode,
-		dateRangeStr: { start: start, end: end },
-		dateRange: {
-			start: new Date(start as OirDate),
-			end: getEndDateObj(end as OirDate | undefined | null),
-		},
+		dateRange: { start: start as OirDate, end },
 		houses: houses,
 	});
 

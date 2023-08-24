@@ -5,8 +5,7 @@ import { BinaryChamber, CommitteeType, MemberBaseKeys } from '../../_utils';
 import { DateRangeObj, DateRangeStr } from '../../dates';
 
 export type CommitteeMember = {
-	dateRange: DateRangeObj;
-	dateRangeStr: DateRangeStr;
+	dateRange: DateRangeStr;
 } & MemberBaseKeys;
 
 export type CommitteeMembers = {
@@ -24,8 +23,7 @@ export type Committee = {
 	chair: MemberBaseKeys;
 	members?: CommitteeMembers;
 	pastMembers?: CommitteeMembers;
-	dateRange: DateRangeObj;
-	dateRangeStr: DateRangeStr;
+	dateRange: DateRangeStr;
 } & Partial<ExpiredDetails>;
 
 export type ExpiredDetails = {

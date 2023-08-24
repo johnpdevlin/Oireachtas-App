@@ -14,7 +14,8 @@ export default async function getMemberAPIdetails(
 		const fullName = member.fullName;
 		const firstName = member.firstName;
 		const lastName = member.lastName;
-		const dateOfDeath = member.dateOfDeath ? member.dateOfDeath : undefined;
+		const dateOfDeath =
+			member.dateOfDeath !== ('' || undefined) ? member.dateOfDeath : null;
 		const memberships = parseMemberships(member.memberships);
 
 		return {

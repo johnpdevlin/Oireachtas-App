@@ -1,11 +1,9 @@
 /** @format */
 
 import { DateRangeObj, DateRangeStr } from '@/models/dates';
-import { BinaryChamber } from '../../../_utils';
 
-export type MemberConstituency = {
+export type MemberParty = {
 	name: string;
-	chamber: BinaryChamber;
 	uri: string;
 	dateRange: DateRangeStr;
 	houses: number[];

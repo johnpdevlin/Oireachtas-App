@@ -1,7 +1,7 @@
 /** @format */
 
 import { BinaryChamber } from '../../../_utils';
-import { DateRangeObj, DateRangeStr } from '../../../dates';
+import { DateRangeStr } from '../../../dates';
 
 export type OfficeType = 'junior' | 'senior';
 
@@ -11,6 +11,5 @@ export type MemberOffice = {
 	chamber: BinaryChamber;
 	houseNo: number;
 	chamberStr: string;
-	dateRange: DateRangeObj;
-	dateRangeStr: DateRangeStr;
+	dateRange: DateRangeStr;
 };

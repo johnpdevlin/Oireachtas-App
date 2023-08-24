@@ -7,20 +7,18 @@ export type OirData = MemberOirProfile & {
 };
 
 import { BinaryChamber } from '@/models/_utils';
-import { DateRangeObj, DateRangeStr } from '@/models/dates';
+import { DateRangeStr } from '@/models/dates';
 
 export type MemberCommittee = {
 	name: string;
 	uri: string;
 	chamber: BinaryChamber;
 	houseNo: number;
-	dateRange: DateRangeObj;
-	dateRangeStr: DateRangeStr;
+	dateRange: DateRangeStr;
 };
 
 export type MemberParty = {
 	name: string;
 	uri: string;
-	dateRangeStr: DateRangeStr;
-	dateRange: DateRangeObj;
+	dateRange: DateRangeStr;
 };

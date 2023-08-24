@@ -24,10 +24,6 @@ export default function parseAndFormatOffices(offices: RawMoffice[]): {
 			houseNo: parseInt(off.house.houseNo),
 			chamberStr: off.house.showAs,
 			dateRange: {
-				start: new Date(off.dateRange.start),
-				end: getEndDateObj(off.dateRange.end as OirDate | undefined | null),
-			},
-			dateRangeStr: {
 				start: off.dateRange.start,
 				end: getEndDateStr(off.dateRange.end as OirDate | undefined | null),
 			} as DateRangeStr,
@@ -37,18 +33,22 @@ export default function parseAndFormatOffices(offices: RawMoffice[]): {
 
 	parsed = parsed
 		.filter(Boolean)
-		.sort((a, b) => b.dateRange.start.getTime() - a.dateRange.start.getTime());
+		.sort(
+			(a, b) =>
+				new Date(b.dateRange.start).getTime() -
+				new Date(a.dateRange.start).getTime()
+		);
 
 	const isActiveSeniorMinister =
 		parsed[0] &&
-		parsed[0].dateRangeStr.end === undefined &&
+		parsed[0].dateRange.end === undefined &&
 		parsed[0].type === 'senior'
 			? true
 			: false;
 	const isActiveJunior =
 		!isActiveSeniorMinister &&
 		parsed[0] &&
-		parsed[0].dateRangeStr.end === undefined
+		parsed[0].dateRange.end === undefined
 			? true
 			: false;
 

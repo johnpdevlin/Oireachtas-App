@@ -99,8 +99,7 @@ export function getPastMembers(
 			name: name,
 			uri: uri,
 			houseCode: houseCode,
-			dateRange: { start: date_start, end: date_end },
-			dateRangeStr: {
+			dateRange: {
 				start: `${startYear}-${startMonth}-01`,
 				end: `${endYear}-${endMonth}-01`,
 			},
@@ -138,8 +137,12 @@ export function checkForPastDuplicates(
 		members.some(
 			(sm) =>
 				sm.uri === uri &&
-				sm.dateRange.end!.getFullYear() === date_end.getFullYear() &&
-				!(Math.abs(sm.dateRange.end!.getMonth() - date_end.getMonth()) >= 1)
+				new Date(sm.dateRange.end!).getFullYear() === date_end.getFullYear() &&
+				!(
+					Math.abs(
+						new Date(sm.dateRange.end!).getMonth() - date_end.getMonth()
+					) >= 1
+				)
 		)
 	) {
 		return true;

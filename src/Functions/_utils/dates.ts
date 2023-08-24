@@ -271,9 +271,9 @@ export function getMonthStrFromNumber(months: number[]): MonthChar[] | void {
 
 export function getEndDateObj(end: OirDate | undefined | null) {
 	if (end!) return new Date(end);
-	else return undefined;
+	else return null;
 }
 export function getEndDateStr(end: OirDate | undefined | null) {
 	if (end!) return end;
-	else return undefined;
+	else return null;
 }

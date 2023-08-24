@@ -10,7 +10,7 @@ export type MemberAPIdetails = {
 	fullName: string;
 	firstName: string;
 	lastName: string;
-	dateOfDeath?: string | undefined;
+	dateOfDeath?: string | undefined | null;
 	constituencies: {
 		dail?: MemberConstituency[];
 		seanad?: MemberConstituency[];

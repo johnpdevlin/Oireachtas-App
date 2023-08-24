@@ -1,8 +1,7 @@
 /** @format */
 import { RawMparty } from '.';
-import { OirDate } from '@/models/dates';
 import { getEndDateStr } from '@/functions/_utils/dates';
-import { MemberParty } from '@/Models/DB/Member/party';
+import { MemberParty } from '@/models/members/MemberParty';
 
 /* Sorts by earliest date
    Parses to find gaps where immediate party is not the same 
@@ -11,7 +10,9 @@ export default function parseAndFormatParties(
 	parties: RawMparty[]
 ): MemberParty[] {
 	const sortedParties = parties.sort(
-		(a, b) => b.dateRange.start.getTime() - a.dateRange.start.getTime()
+		(a, b) =>
+			new Date(b.dateRange.start).getTime() -
+			new Date(a.dateRange.start).getTime()
 	);
 
 	let currentParty: MemberParty | null = null;
@@ -26,17 +27,13 @@ export default function parseAndFormatParties(
 			currentParty = {
 				name: p.showAs,
 				uri: p.partyCode,
-				dateRangeStr: {
-					start: p.dateRange.start as OirDate,
-					end: getEndDateStr(p.dateRange.end as OirDate | undefined | null),
+				dateRange: {
+					start: p.dateRange.start,
+					end: getEndDateStr(p.dateRange.end),
 				},
-				dateRange: { start: p.dateRange.start, end: p.dateRange.end },
 			};
 		} else {
-			currentParty.dateRangeStr.end = getEndDateStr(
-				p.dateRange.end as OirDate | undefined | null
-			);
-			currentParty.dateRange.end = p.dateRange.end;
+			currentParty.dateRange.end = getEndDateStr(p.dateRange.end);
 		}
 
 		if (index === sortedParties.length - 1 && currentParty) {
