@@ -13,8 +13,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
 	try {
 		if (req.method === 'POST') {
+			const data = JSON.parse(req.query.data as string);
 			const newDocRef = await db.collection(collection as string).add({
-				...req.body,
+				...data,
 				created: new Date().toISOString(),
 			});
 			res.status(200).json({ id: newDocRef.id });
