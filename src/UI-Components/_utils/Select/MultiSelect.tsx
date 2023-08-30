@@ -40,6 +40,7 @@ type MultiSelectProps = {
 	setSelectedOptions: React.Dispatch<React.SetStateAction<Option[]>>;
 };
 
+// Selector with multiple options
 export default function MultipleSelect({
 	width,
 	label,
@@ -50,6 +51,7 @@ export default function MultipleSelect({
 
 	const [selectedString, setSelectedString] = useState<string[]>([]);
 
+	// Handles selection change and using useState from props, sets selected option
 	const handleChange = (event: SelectChangeEvent<typeof selectedString>) => {
 		const {
 			target: { name, value },
