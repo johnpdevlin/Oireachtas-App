@@ -4,11 +4,14 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 import { Readable } from 'stream';
 import pdf from 'pdf-parse';
+import handleCors from '@/pages/api/middleware/corsMiddleware';
 
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
+	await handleCors(req, res);
+
 	const url = req.query.url as string;
 	try {
 		const response = await axios.get(url, { responseType: 'arraybuffer' });

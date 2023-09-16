@@ -3,12 +3,15 @@
 // Importing necessary dependencies and types from Next.js, axios, stream and pdf-parse
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
+import handleCors from '@/pages/api/middleware/corsMiddleware';
 
 // Handler function that accepts a Next.js API request and response object
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
+	await handleCors(req, res);
+
 	// Extract the URL from the query parameter
 	const url = req.query.url as string;
 	try {

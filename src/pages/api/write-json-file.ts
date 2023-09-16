@@ -2,11 +2,17 @@
 import fs from 'fs';
 import { join } from 'path';
 import { NextApiRequest, NextApiResponse } from 'next';
+import handleCors from '@/pages/api/middleware/corsMiddleware';
 interface JsonObject {
 	[key: string]: any;
 }
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+	req: NextApiRequest,
+	res: NextApiResponse
+) {
+	await handleCors(req, res);
+
 	if (req.method === 'POST') {
 		const { data, filename, directory, key } = req.body;
 

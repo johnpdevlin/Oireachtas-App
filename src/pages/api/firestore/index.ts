@@ -1,15 +1,13 @@
 /** @format */
 
 import db from '@/FirestoreDB/index';
+import handleCors from '@/pages/api/middleware/corsMiddleware';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-	const { token, id, collection, overwrite, id_field } = req.query;
-	const apiSecret = process.env.API_SECRET;
+	await handleCors(req, res);
 
-	// if (token !== apiSecret) {
-	// 	return res.status(808).json({ message: 'Access not authorised.' });
-	// }
+	const { token, id, collection, overwrite, id_field } = req.query;
 
 	try {
 		if (req.method === 'POST') {
