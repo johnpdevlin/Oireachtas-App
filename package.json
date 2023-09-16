@@ -20,8 +20,10 @@
 		"@types/react-dom": "18.2.1",
 		"axios": "^1.4.0",
 		"cheerio": "^1.0.0-rc.12",
+		"cors": "^2.8.5",
 		"d3-scale": "^4.0.2",
 		"date-fns": "^2.30.0",
+		"dotenv": "^16.3.1",
 		"eslint": "8.39.0",
 		"eslint-config-next": "13.3.1",
 		"firebase": "^10.2.0",
@@ -43,6 +45,7 @@
 	"devDependencies": {
 		"@testing-library/jest-dom": "^5.16.5",
 		"@testing-library/react": "^14.0.0",
+		"@types/cors": "^2.8.14",
 		"@types/he": "^1.2.0",
 		"@types/pdf-parse": "^1.1.1",
 		"@types/string-similarity": "^4.0.0",
