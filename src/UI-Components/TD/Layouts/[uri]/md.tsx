@@ -10,12 +10,11 @@ import {
 	Stack,
 	Typography,
 } from '@mui/material';
-import ProfileCard from '../../Components/ProfileCard';
-import ProfileImage from '../../Components/ProfileImg';
-import Address from '@/UI-TEST/Util/Address';
-import PhoneNumber from '@/UI-TEST/Util/PhoneNumber';
-import SocialIcons from '@/UI-TEST/Util/SocialIcons';
-import Email from '@/UI-TEST/Util/Email';
+import ProfileImage from '../../_utils/ProfileImg';
+import ProfileCard from '../../[uri]/ProfileCard';
+import Address from '@/UI-Components/_utils/Contact/Address';
+import PhoneNumber from '@/UI-Components/_utils/Contact/PhoneNumber';
+import { Email } from '@mui/icons-material';
 
 export default function MediumTDlayout(props: {
 	member: unknown;

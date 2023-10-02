@@ -12,7 +12,7 @@ import {
 	Place,
 	HourglassEmpty,
 } from '@mui/icons-material';
-import HoverableFootnote from '../../../UI-TEST/Util/HoverableFootnote';
+import HoverableFootnote from '../../_utils/HoverableFootnote';
 
 function BasicDetails() {
 	return (

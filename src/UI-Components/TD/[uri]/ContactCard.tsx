@@ -16,7 +16,13 @@ import Address from '@/UI-Components/_utils/Contact/Address';
 import PhoneNumber from '@/UI-Components/_utils/Contact/PhoneNumber';
 import Email from '@/UI-Components/_utils/Contact/Email';
 
-export default function ContactCard() {
+export default function ContactCard(props: {
+	// uri: string;
+	// name: string;
+	// address: string;
+	// phoneNumber: string;
+	// email: string;
+}) {
 	return (
 		<Card sx={{ mt: 2.5 }}>
 			<CardMedia sx={{ mb: 0, width: '100%' }}>
@@ -41,9 +47,7 @@ export default function ContactCard() {
 				</Stack>
 			</CardContent>
 
-			<CardActions>
-				<SocialIcons />
-			</CardActions>
+			<CardActions>{/* <SocialIcons /> */}</CardActions>
 		</Card>
 	);
 }
