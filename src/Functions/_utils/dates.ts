@@ -277,3 +277,8 @@ export function getEndDateStr(end: OirDate | undefined | null) {
 	if (end!) return end;
 	else return null;
 }
+
+export function getCurrentYear(): number {
+	const year = new Date().getFullYear();
+	return year;
+}
