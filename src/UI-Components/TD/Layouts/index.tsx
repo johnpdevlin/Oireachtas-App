@@ -66,10 +66,9 @@ export default function TDIndexLayout(props: {
 	}, [breakpoint]);
 	return (
 		<>
-			<Header />
 			<Grid container>
-				<Grid item xs={12} sm={12} md={12} lg={2.5}>
-					<Box sx={{ ml: '10px', mb: '20px' }}>
+				<Grid item xs={12} sm={12} md={12} lg={2} px={2}>
+					<Box sx={{ mb: '20px' }}>
 						<FormControl component='fieldset' variant='standard'>
 							<FormLabel component='legend'>Filter By</FormLabel>
 							<Stack direction={menuDirection}>
@@ -93,8 +92,8 @@ export default function TDIndexLayout(props: {
 						</FormControl>
 					</Box>
 				</Grid>
-				<Grid item xs={12} sm={12} md={12} lg={9.5}>
-					<Box sx={{ mr: '10px' }}>
+				<Grid item xs={12} sm={12} md={12} lg={10} px={2}>
+					<Box>
 						<Grid
 							container
 							gap={2}
