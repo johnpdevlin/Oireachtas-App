@@ -1,12 +1,12 @@
 /** @format */
-import { FormControl, FormLabel, Grid, Stack } from '@mui/material';
+import { Box, FormControl, FormLabel, Grid, Stack } from '@mui/material';
 import Header from '@/UI-Components/Header';
 import MultipleSelect from '@/UI-Components/_utils/Select/MultiSelect';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { PartyAPI } from '@/models/oireachtasApi/party';
 import { ConstituencyAPI } from '@/models/oireachtasApi/constituency';
 import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
-import TDcard from '../../_utils/TDcard';
+import TDcard from '../_utils/TDcard';
 import { useViewport } from '@/hooks/viewportProvider';
 type Option = {
 	name: string;
@@ -67,44 +67,49 @@ export default function TDIndexLayout(props: {
 	return (
 		<>
 			<Header />
-			<Grid container spacing={0}>
+			<Grid container>
 				<Grid item xs={12} sm={12} md={12} lg={2.5}>
-					<FormControl sx={{ m: 3 }} component='fieldset' variant='standard'>
-						<FormLabel component='legend'>Filter By</FormLabel>
-						<Stack direction={menuDirection}>
-							<Stack>
-								<MultipleSelect
-									label={'Parties'}
-									width={selectWidth}
-									options={parties}
-									setSelectedOptions={setSelectedParties}
-								/>
+					<Box sx={{ ml: '10px', mb: '20px' }}>
+						<FormControl component='fieldset' variant='standard'>
+							<FormLabel component='legend'>Filter By</FormLabel>
+							<Stack direction={menuDirection}>
+								<Stack>
+									<MultipleSelect
+										label={'Parties'}
+										width={selectWidth}
+										options={parties}
+										setSelectedOptions={setSelectedParties}
+									/>
+								</Stack>
+								<Stack>
+									<MultipleSelect
+										label={'Constituencies'}
+										width={selectWidth}
+										options={constits}
+										setSelectedOptions={setSelectedConstits}
+									/>
+								</Stack>
 							</Stack>
-							<Stack>
-								<MultipleSelect
-									label={'Constituencies'}
-									width={selectWidth}
-									options={constits}
-									setSelectedOptions={setSelectedConstits}
-								/>
-							</Stack>
-						</Stack>
-					</FormControl>
+						</FormControl>
+					</Box>
 				</Grid>
-				<Grid item xs={12} sm={12} md={12} lg={9.3} sx={{ m: 1 }}>
-					<Grid
-						container
-						gap={2}
-						justifyContent='space-evenly'
-						alignItems='center'>
-						{filteredMembers?.map((m) => {
-							return (
-								<Grid item xs={3.5} sm={2.8} md={2.1} lg={2.2}>
-									<TDcard member={m} />
-								</Grid>
-							);
-						})}
-					</Grid>
+				<Grid item xs={12} sm={12} md={12} lg={9.5}>
+					<Box sx={{ mr: '10px' }}>
+						<Grid
+							container
+							gap={2}
+							justifyContent='space-evenly'
+							alignItems='center'>
+							{filteredMembers?.map((m) => {
+								if (m.isActiveTD === false) return null;
+								return (
+									<Grid item xs={3.5} sm={2.8} md={2.1} lg={2.2} key={m.uri}>
+										<TDcard member={m} />
+									</Grid>
+								);
+							})}
+						</Grid>
+					</Box>
 				</Grid>
 			</Grid>
 		</>

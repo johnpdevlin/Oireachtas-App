@@ -1,7 +1,7 @@
 /** @format */
 
 import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
-import { Grid, Paper, Typography } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 import Link from 'next/link';
 import ProfileImage from './ProfileImg';
 
@@ -18,19 +18,21 @@ export default function TDcard(props: { member: MemberAPIdetails }) {
 				<Link href={`/td/${props.member.uri}`}>
 					<ProfileImage
 						uri={props.member.uri}
-						size={210}
+						size={230}
 						name={props.member.fullName}
 					/>
 
-					<Typography variant='h5' color='primary' align='center'>
-						{props.member.fullName}
-					</Typography>
-					<Typography variant='body2' color='text.secondary' align='center'>
-						<b>{party?.name}</b>
-					</Typography>
-					<Typography variant='body2' color='text.secondary' align='center'>
-						<b>{constituency?.name}</b>
-					</Typography>
+					<Box>
+						<Typography variant='h5' color='primary' align='center'>
+							{props.member.fullName}
+						</Typography>
+						<Typography variant='body2' color='text.secondary' align='center'>
+							<b>{party?.name}</b>
+						</Typography>
+						<Typography variant='body2' color='text.secondary' align='center'>
+							<b>{constituency?.name}</b>
+						</Typography>
+					</Box>
 				</Link>
 			</Paper>
 		</>
