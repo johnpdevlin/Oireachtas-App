@@ -6,8 +6,14 @@ import {
 	CardContent,
 	Avatar,
 	Typography,
+	Stack,
 } from '@mui/material';
-import { Groups } from '@mui/icons-material';
+import {
+	CropSquare,
+	CropSquareRounded,
+	Groups,
+	Square,
+} from '@mui/icons-material';
 import { green } from '@mui/material/colors';
 
 export default function CommitteesCard() {
@@ -23,10 +29,22 @@ export default function CommitteesCard() {
 					title={<Typography variant='h6'>Committees</Typography>}
 				/>
 
-				<CardContent>
-					<Typography variant='body2' color='text.secondary'>
-						This impresup of frozen peas along with the mussels, if you like.
-					</Typography>
+				<CardContent sx={{ paddingTop: 0 }}>
+					<Stack direction='column'>
+						<Stack direction='row' gap={1}>
+							<CropSquareRounded fontSize='small' />
+							<Typography variant='body2' color='text.secondary'>
+								Irish Language, Gaeltacht and the Irish-speaking Community
+							</Typography>
+						</Stack>
+						<Stack direction='row' gap={1}>
+							<CropSquare fontSize='small' />
+							<Typography variant='body2' color='text.secondary'>
+								Social Protection, Community and Rural Development and the
+								Islands
+							</Typography>
+						</Stack>
+					</Stack>
 				</CardContent>
 			</Card>
 		</>
