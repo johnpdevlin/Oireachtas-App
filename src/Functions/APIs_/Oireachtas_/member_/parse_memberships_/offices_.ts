@@ -41,14 +41,15 @@ export default function parseAndFormatOffices(offices: RawMoffice[]): {
 
 	const isActiveSeniorMinister =
 		parsed[0] &&
-		parsed[0].dateRange.end === undefined &&
+		(parsed[0].dateRange.end === undefined ||
+			parsed[0].dateRange.end === null) &&
 		parsed[0].type === 'senior'
 			? true
 			: false;
 	const isActiveJunior =
 		!isActiveSeniorMinister &&
 		parsed[0] &&
-		parsed[0].dateRange.end === undefined
+		(parsed[0].dateRange.end === undefined || parsed[0].dateRange.end === null)
 			? true
 			: false;
 
