@@ -14,12 +14,12 @@ import {
 } from '@/functions/_utils/strings';
 import { extractDateFromYMDstring } from '@/functions/_utils/dates';
 import { OirDate } from '@/models/dates';
-import { WikiProfileDetails } from '@/models/scraped/wiki/member';
+import { WikiTDProfileDetails } from '@/models/scraped/wiki/td';
 
 // Scrapes the Wikipedia profile of Niamh Smyth.
 export default async function scrapeTDWikiPage(
 	wikiURI: string
-): Promise<WikiProfileDetails> {
+): Promise<WikiTDProfileDetails> {
 	const url = `https://en.wikipedia.org${wikiURI}`;
 
 	try {
@@ -27,6 +27,7 @@ export default async function scrapeTDWikiPage(
 		const $ = cheerio.load(response);
 
 		// Extract the birth information
+		const wikiName = $('h1').text();
 		const bornThElement = $('th:contains("Born")').next().text();
 		const birthdate = extractDateFromYMDstring(bornThElement as OirDate);
 		const birthplace = removeSquareFootnotes(
@@ -59,7 +60,8 @@ export default async function scrapeTDWikiPage(
 		};
 
 		// Construct and return the WikiProfileDetails object
-		const wikiProfileDetails: WikiProfileDetails = {
+		const wikiProfileDetails: WikiTDProfileDetails = {
+			wikiName,
 			wikiURI,
 			birthdate,
 			birthplace,

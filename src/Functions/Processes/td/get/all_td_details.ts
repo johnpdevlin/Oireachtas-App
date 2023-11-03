@@ -3,8 +3,8 @@
 import fetchNames from '@/functions/APIs_/Irish_Names_/fetch_names_';
 import { MemberURI } from '@/models/_utils';
 import getAllMembersAPIdetails from '@/functions/APIs_/Oireachtas_/member_/get_/formatted_/multi_member_details_';
-import getAllMembersOirData from '@/functions/scrape_websites/oireachtas/member/get/all_data/multi_members';
-import { WikiProfileDetails } from '@/models/scraped/wiki/member';
+import getAllMembersOirData from '@/functions/scrape_websites/oireachtas/td/get/all_data/multi_TDs';
+import { WikiTDProfileDetails } from '@/models/scraped/wiki/td';
 import { OirData } from '@/models/scraped/oireachtas/member';
 import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
 import getTDsWikiData from '@/functions/scrape_websites/wikipedia/td/page/multi_td_page';
@@ -15,7 +15,7 @@ import checkGender from '@/functions/APIs_/Irish_Names_';
  * Fetches all member data
  * Merges and returns
  **/
-export default async function getAllMemberDetails() {
+export default async function getAllTDsDetails() {
 	console.info('Process to get all member details begun...');
 
 	// Data directly from Oireachtas API
@@ -37,13 +37,14 @@ export default async function getAllMemberDetails() {
 
 	console.info('Process to get all member details completed.');
 
+	console.log(mergedData);
 	return mergedData;
 }
 
 async function bindAllData(
 	uris: MemberURI[],
 	oirData: OirData[],
-	wikiData: WikiProfileDetails[],
+	wikiData: WikiTDProfileDetails[],
 	apiData: MemberAPIdetails[]
 ) {
 	const boyNames = (await fetchNames('boy')) as Record<number, string>;
@@ -58,9 +59,9 @@ async function bindAllData(
 
 			// Find Wiki Data by name
 			let wiki = wikiData.find(
-				(data: WikiProfileDetails) =>
-					data.wikiURI.toLowerCase().includes(api!.lastName!.toLowerCase()) &&
-					data.wikiURI.toLowerCase().includes(api!.firstName!.toLowerCase())
+				(data: WikiTDProfileDetails) =>
+					data.wikiName.toLowerCase().includes(api!.lastName!.toLowerCase()) &&
+					data.wikiName.toLowerCase().includes(api!.firstName!.toLowerCase())
 			);
 
 			// If no initial wiki data match by name
@@ -68,9 +69,9 @@ async function bindAllData(
 				const fullName = api!.fullName.toLowerCase();
 				const matches = similarity.findBestMatch(
 					fullName,
-					wikiData.map((data) => data.wikiURI.toLowerCase())
+					wikiData.map((data) => data.wikiName.toLowerCase())
 				);
-				wiki = wikiData.find((w) => w.wikiURI === matches.bestMatch.target);
+				wiki = wikiData.find((w) => w.wikiName === matches.bestMatch.target);
 			}
 
 			// Get gender by name match
@@ -88,5 +89,6 @@ async function bindAllData(
 			};
 		})
 	);
+	console.log(bound);
 	return bound;
 }

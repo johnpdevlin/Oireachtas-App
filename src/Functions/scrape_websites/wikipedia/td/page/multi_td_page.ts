@@ -2,7 +2,7 @@
 
 import scrapeDailSessionPage from '@/functions/scrape_websites/wikipedia/dail/dail_session';
 import scrapeTDWikiPage from '@/functions/scrape_websites/wikipedia/td/page/td_page';
-import { WikiProfileDetails } from '@/models/scraped/wiki/member';
+import { WikiTDProfileDetails } from '@/models/scraped/wiki/td';
 import { URIpair } from '@/models/_utils';
 
 export default async function getTDsWikiData(
@@ -28,5 +28,5 @@ export default async function getTDsWikiData(
 		console.error(failures);
 	}
 
-	return successes.map((result) => result.value) as WikiProfileDetails[];
+	return successes.map((result) => result.value) as WikiTDProfileDetails[];
 }

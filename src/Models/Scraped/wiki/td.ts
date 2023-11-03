@@ -1,6 +1,7 @@
 /** @format */
 
-export type WikiProfileDetails = {
+export type WikiTDProfileDetails = {
+	wikiName: string;
 	wikiURI: string;
 	birthdate: Date | undefined;
 	birthplace: string | undefined;
