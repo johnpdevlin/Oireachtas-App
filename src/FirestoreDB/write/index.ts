@@ -23,11 +23,11 @@ export const writeObjToFirestore = async (
 ): Promise<any> => {
 	try {
 		const token = process.env.API_SECRET;
-		console.log('heelo0');
-		console.log(token);
+
 		let url = `/api/firestore?&token=${token}&collection=${collection}&data=${JSON.stringify(
 			data
 		)}`;
+
 		if (id) {
 			url += `&id=${id}`;
 		}

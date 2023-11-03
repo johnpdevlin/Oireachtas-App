@@ -1,6 +1,6 @@
 /** @format */
 
-import { DateRangeObj, DateRangeStr } from '@/models/dates';
+import { DateRangeStr } from '@/models/dates';
 
 export type MemberParty = {
 	name: string;

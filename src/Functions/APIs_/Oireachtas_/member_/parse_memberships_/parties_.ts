@@ -1,7 +1,7 @@
 /** @format */
 import { RawMparty } from '.';
 import { getEndDateStr } from '@/functions/_utils/dates';
-import { MemberParty } from '@/models/members/MemberParty';
+import { MemberParty } from '@/models/scraped/oireachtas/member';
 
 /* Sorts by earliest date
    Parses to find gaps where immediate party is not the same 

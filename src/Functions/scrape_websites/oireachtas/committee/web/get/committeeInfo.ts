@@ -17,7 +17,6 @@ import {
 import getChair from '@/functions/scrape_websites/oireachtas/committee/web/parse/chair';
 import exceptions from '../../url-pattern-exceptions.json';
 import { DateRangeStr, OirDate } from '@/models/dates';
-import { dateToYMDstring } from '@/functions/_utils/dates';
 
 //Scrape committee information from the given URL.
 export async function scrapeCommitteePageInfo(

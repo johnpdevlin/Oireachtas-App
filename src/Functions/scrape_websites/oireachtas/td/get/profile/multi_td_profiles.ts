@@ -1,7 +1,7 @@
 /** @format */
 import { MemberRequest, RawMember } from '@/models/oireachtasApi/member';
 import fetchMembers from '@/functions/APIs_/Oireachtas_/member_/get_/raw_/get';
-import scrapeMemberOirProfile, { MemberOirProfile } from './member_profile';
+import scrapeMemberOirProfile, { MemberOirProfile } from './td_profile';
 import { MemberURI } from '@/models/_utils';
 
 export default async function getMultiMembersOirdetails(

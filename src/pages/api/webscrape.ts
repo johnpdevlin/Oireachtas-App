@@ -14,10 +14,11 @@ export default async function handler(
 
 	// Extract the URL from the query parameter
 	const url = req.query.url as string;
+
 	try {
 		// Get the raw html
 		const response = await axios.get(url);
-
+		console.log(response);
 		// Send a response with a success message and the parsed text from the PDF file
 		res.status(200).json({
 			message: 'Webscrape Success',
