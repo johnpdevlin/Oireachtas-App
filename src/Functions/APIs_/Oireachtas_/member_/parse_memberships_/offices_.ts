@@ -31,13 +31,25 @@ export default function parseAndFormatOffices(offices: RawMoffice[]): {
 		parsed.push(office);
 	});
 
-	parsed = parsed
-		.filter(Boolean)
-		.sort(
-			(a, b) =>
-				new Date(b.dateRange.start).getTime() -
-				new Date(a.dateRange.start).getTime()
+	// Sort so current and most recent offices are at start of array
+	parsed = parsed.filter(Boolean).sort((a, b) => {
+		// Check for undefined or null dateRange.end values
+		if (!a.dateRange.end && !b.dateRange.end) {
+			return 0; // Both are undefined or null, so they are considered equal
+		}
+		if (!a.dateRange.end) {
+			return -1; // a comes first as it has an undefined or null end date
+		}
+		if (!b.dateRange.end) {
+			return 1; // b comes first as it has an undefined or null end date
+		}
+
+		// Compare dateRange.start for all other cases
+		return (
+			new Date(b.dateRange.start).getTime() -
+			new Date(a.dateRange.start).getTime()
 		);
+	});
 
 	const isActiveSeniorMinister =
 		parsed[0] &&
