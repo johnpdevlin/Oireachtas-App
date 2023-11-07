@@ -35,13 +35,12 @@ type MembershipResponse = {
 	Returns above object
 */
 export default function parseMemberships(
-	memberships: RawOuterMembership[],
-	serializable: boolean = false
+	memberships: RawOuterMembership[]
 ): MembershipResponse {
 	const destructured = destructureMemberships(memberships);
 
 	const constits = parseAndFormatConstituencies(destructured.constits);
-	// console.log(constits);
+
 	const { isActiveSenator, isActiveTD } = constits;
 	const constituencies = {
 		dail: constits.dail,
@@ -117,12 +116,11 @@ function destructureMemberships(
 			});
 
 		if (mem.parties?.length > 0)
-			mem.parties.map((party) =>
+			mem.parties.map((p) =>
 				parties.push({
-					...party.party,
+					...p.party,
 					house,
 					chamber: house.houseCode,
-					dateRange: house.dateRange,
 				} as RawMparty)
 			);
 	});
