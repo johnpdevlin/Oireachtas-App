@@ -1,16 +1,16 @@
 /** @format */
 
 export type WikiTDProfileDetails = {
-	wikiName: string;
+	wikiName?: string;
 	wikiURI: string;
-	birthdate: Date | undefined;
-	birthplace: string | undefined;
-	birthCountry: string | undefined;
-	education: string | undefined;
-	educationWikiID: string | undefined;
-	almaMater: string | undefined;
-	almaMaterWikiID: string | undefined;
-	marriageDetails: string | undefined;
-	numOfChildren: number | undefined;
-	websiteUrl: string | undefined;
+	birthdate?: Date | string;
+	birthplace?: string;
+	birthCountry?: string;
+	education?: string;
+	educationWikiID?: string;
+	almaMater?: string;
+	almaMaterWikiID?: string;
+	marriageDetails?: string;
+	numOfChildren?: number;
+	websiteUrl?: string;
 };
