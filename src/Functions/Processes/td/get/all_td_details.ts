@@ -11,6 +11,11 @@ import getTDsWikiData from '@/functions/scrape_websites/wikipedia/td/page/multi_
 import similarity from 'string-similarity';
 import checkGender from '@/functions/APIs_/Irish_Names_';
 
+// Consolidated Member Bio Data
+export type MemberBioData = { gender: string | void } & OirData &
+	WikiTDProfileDetails &
+	MemberAPIdetails;
+
 /**
  * Fetches all member data
  * Merges and returns
@@ -46,7 +51,7 @@ async function bindAllData(
 	oirData: OirData[],
 	wikiData: WikiTDProfileDetails[],
 	apiData: MemberAPIdetails[]
-) {
+): Promise<MemberBioData[]> {
 	const boyNames = (await fetchNames('boy')) as Record<number, string>;
 	const girlNames = (await fetchNames('girl')) as Record<number, string>;
 
@@ -89,6 +94,6 @@ async function bindAllData(
 			};
 		})
 	);
-	console.log(bound);
-	return bound;
+
+	return bound as MemberBioData[];
 }
