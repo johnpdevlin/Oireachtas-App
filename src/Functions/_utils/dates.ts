@@ -282,3 +282,26 @@ export function getCurrentYear(): number {
 	const year = new Date().getFullYear();
 	return year;
 }
+
+export function calculateYearsAndMonthsSinceDate(input: Date | string): {
+	years: number;
+	months: number;
+} {
+	// Convert input to a Date object if it's a string
+	const currentDate = typeof input === 'string' ? new Date(input) : input;
+
+	// Get the current date
+	const now = new Date();
+
+	// Calculate the difference in years and months
+	let yearsDiff = now.getFullYear() - currentDate.getFullYear();
+	let monthsDiff = now.getMonth() - currentDate.getMonth();
+
+	// Adjust for cases where monthsDiff may be negative
+	if (monthsDiff < 0) {
+		yearsDiff--;
+		monthsDiff += 12;
+	}
+
+	return { years: yearsDiff, months: monthsDiff };
+}
