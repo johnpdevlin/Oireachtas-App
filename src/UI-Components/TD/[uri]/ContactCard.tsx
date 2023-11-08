@@ -17,11 +17,11 @@ import PhoneNumber from '@/UI-Components/_utils/Contact/PhoneNumber';
 import Email from '@/UI-Components/_utils/Contact/Email';
 
 export default function ContactCard(props: {
-	// uri: string;
-	// name: string;
-	// address: string;
-	// phoneNumber: string;
-	// email: string;
+	uri: string;
+	name: string;
+	address: string;
+	phoneNumber: string;
+	email: string;
 }) {
 	return (
 		<Card sx={{ mt: 2.5 }}>

@@ -6,37 +6,41 @@ import MemberMenu from '../../[uri]/MemberMenu';
 import ProfileCard from '../../[uri]/ProfileCard';
 import CommitteesCard from '../../[uri]/CommitteesCard';
 import FormerPositions from '../../[uri]/FormerPositions';
+import { MemberBioData } from '@/functions/processes/td/get/all_td_details';
 
-export default function LargeTDlayout(props: { member: unknown }): JSX.Element {
-	// member: unknown
-
+export default function LargeTDlayout(props: {
+	member: MemberBioData;
+}): JSX.Element {
 	return (
 		<>
-			<>
-				{/* <Grid container spacing={2}> */}
-				<Grid container spacing={0}>
-					<Grid item lg={1.5}>
-						<MemberMenu />
-					</Grid>
-					<Grid item md={0} lg={10.5}>
-						<Grid container>
-							{/* <Grid item lg={2.5}>
-								<ContactCard />
-							</Grid> */}
-							<Grid item lg={6.5}>
-								<ProfileCard member={props.member} />
-							</Grid>
+			<Grid container spacing={0}>
+				<Grid item lg={1.5}>
+					<MemberMenu />
+				</Grid>
+				<Grid item md={0} lg={10.5}>
+					<Grid container>
+						<Grid item lg={2.5}>
+							<ContactCard
+								uri={props.member.uri}
+								email={props.member.email}
+								name={props.member.fullName}
+								phoneNumber={props.member.contactNumbers[0]}
+								address={props.member.address}
+							/>
+						</Grid>
+						<Grid item lg={6.5}>
+							<ProfileCard member={props.member} />
+						</Grid>
 
-							<Grid item lg={3}>
-								<Stack direction='column' spacing={1} sx={{ mt: 2, mr: 1 }}>
-									<CommitteesCard />
-									<FormerPositions />
-								</Stack>
-							</Grid>
+						<Grid item lg={3}>
+							<Stack direction='column' spacing={1} sx={{ mt: 2, mr: 1 }}>
+								<CommitteesCard />
+								<FormerPositions />
+							</Stack>
 						</Grid>
 					</Grid>
 				</Grid>
-			</>
+			</Grid>
 		</>
 	);
 }

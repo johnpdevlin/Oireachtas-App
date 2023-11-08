@@ -13,8 +13,81 @@ import {
 	HourglassEmpty,
 } from '@mui/icons-material';
 import HoverableFootnote from '../../_utils/HoverableFootnote';
+import { MemberBioData } from '@/functions/processes/td/get/all_td_details';
+import {
+	calculateYearsAndMonthsSinceDate,
+	formatDateToString,
+} from '@/functions/_utils/dates';
+import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/constituency';
+import { DateRange } from '../../../models/dates';
+import { capitaliseFirstLetters } from '../../../functions/_utils/strings';
+import { MemberParty } from '@/models/scraped/oireachtas/member';
 
-function BasicDetails() {
+function BasicDetails(props: { member: MemberBioData }) {
+	const {
+		birthdate,
+		birthplace,
+		birthCountry,
+		almaMater,
+		parties,
+		constituencies,
+		isActiveTD,
+		isActiveSenator,
+	} = props.member;
+
+	function formatDateToString(date: Date | string): string {
+		if (!(date instanceof Date)) {
+			date = new Date(date);
+		}
+
+		const options = { year: 'numeric', month: 'long', day: 'numeric' };
+		return date.toLocaleDateString(undefined, options as {}).toString();
+	}
+
+	const formattedBirthdate = formatDateToString(birthdate);
+	const age = () => {
+		return calculateYearsAndMonthsSinceDate(birthdate!).years;
+	};
+	const formerDailConstituencies = () => {
+		if (constituencies.dail!.length >= 1) {
+			if (isActiveTD! && constituencies.dail!.length > 1)
+				return constituencies.dail!.slice(1);
+			else if (isActiveSenator!) return constituencies.dail!;
+		} else return undefined;
+	};
+	const formerSeanadConstituencies = () => {
+		if (constituencies.seanad!.length >= 1) {
+			if (isActiveSenator! && constituencies.seanad!.length > 1)
+				return constituencies.seanad!.slice(1);
+			else if (isActiveTD!) return constituencies.seanad!;
+		} else return undefined;
+	};
+
+	const formatFormerMemberships = (
+		memberships: MemberConstituency[] | MemberParty[]
+	): string => {
+		const mapped = memberships.map((m, key) => {
+			return `${capitaliseFirstLetters(m.name)} (${new Date(
+				m.dateRange.start
+			).getFullYear()} - ${new Date(m.dateRange.end!).getFullYear()})`;
+		});
+		return mapped.join(', ');
+	};
+
+	const formerConstituencies = () => {
+		let arr: MemberConstituency[] = [];
+		if (formerDailConstituencies()!)
+			arr.push(...(formerDailConstituencies() as MemberConstituency[]));
+		if (formerSeanadConstituencies()!)
+			arr.push(...(formerSeanadConstituencies() as MemberConstituency[]));
+
+		if (arr.length > 0) return formatFormerMemberships(arr);
+		else return undefined;
+	};
+
+	const formerParties =
+		parties.length > 1 && formatFormerMemberships(parties.slice(1));
+
 	return (
 		<>
 			<Table size='small'>
@@ -33,15 +106,18 @@ function BasicDetails() {
 						</TableCell>
 						<TableCell>
 							<Typography variant='body2' align='left'>
-								<b>18 January 1979</b> (age 44)
+								{formattedBirthdate} (age {age()})
 								<br />
 								<small>
-									<i>Dublin, Ireland</i>
+									<i>
+										{birthplace}, {birthCountry}
+									</i>
 								</small>
 							</Typography>
 						</TableCell>
 					</TableRow>
-					<TableRow>
+					{/** Education Data needs to be researched etc.*/}
+					{/* <TableRow>
 						<TableCell>
 							<Stack direction='row'>
 								<HistoryEdu fontSize='small' />
@@ -62,26 +138,27 @@ function BasicDetails() {
 								</small>
 							</Typography>
 						</TableCell>
-					</TableRow>
-					<TableRow>
-						<TableCell>
-							<Stack direction='row'>
-								<School fontSize='small' />
-								<Typography
-									variant='body2'
-									align='left'
-									sx={{ ml: 0.5, mt: 0.1 }}>
-									Alma Mater:
+					</TableRow> */}
+					{almaMater && (
+						<TableRow>
+							<TableCell>
+								<Stack direction='row'>
+									<School fontSize='small' />
+									<Typography
+										variant='body2'
+										align='left'
+										sx={{ ml: 0.5, mt: 0.1 }}>
+										Alma Mater:
+									</Typography>
+								</Stack>
+							</TableCell>
+							<TableCell>
+								<Typography variant='body2' align='left'>
+									<b> {almaMater}</b>
 								</Typography>
-							</Stack>
-						</TableCell>
-						<TableCell>
-							<Typography variant='body2' align='left'>
-								<b>Trinity College</b>
-							</Typography>
-						</TableCell>
-					</TableRow>
-
+							</TableCell>
+						</TableRow>
+					)}
 					<TableRow>
 						<TableCell>
 							<Stack direction='row'>
@@ -96,8 +173,10 @@ function BasicDetails() {
 						</TableCell>
 						<TableCell>
 							<Typography variant='body2' align='left'>
-								<b>Fine Gael</b>
-								<small>[1]</small>
+								<b>{parties[0].name}</b>
+								{formerParties! && (
+									<HoverableFootnote name=' [note]' text={formerParties} />
+								)}
 							</Typography>
 						</TableCell>
 					</TableRow>
@@ -115,12 +194,16 @@ function BasicDetails() {
 						</TableCell>
 						<TableCell>
 							<Typography variant='body2' align='left'>
-								<b>Dublin West </b>
-
-								<HoverableFootnote
-									name='[1]'
-									text='Formerly Baden-Baden (2020-2022)'
-								/>
+								<b>
+									{isActiveTD! && constituencies!.dail[0]!.name!}
+									{isActiveSenator! && constituencies!.seanad[0]!.name!}
+								</b>
+								{formerConstituencies! && (
+									<HoverableFootnote
+										name={' [note]'}
+										text={formerConstituencies()!}
+									/>
+								)}
 							</Typography>
 						</TableCell>
 					</TableRow>
