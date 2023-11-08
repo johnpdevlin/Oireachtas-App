@@ -33,8 +33,8 @@ function DesktopMenu({ pages }: DesktopMenuProps): JSX.Element {
 						my: 2,
 						mx: marginXvalue,
 					}}>
-					{pages.map((page) => (
-						<Link href={page.path}>
+					{pages.map((page, key) => (
+						<Link href={page.path} key={key}>
 							<Button
 								key={page.path}
 								size='large'
