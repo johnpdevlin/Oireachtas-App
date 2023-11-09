@@ -15,8 +15,40 @@ import {
 	Square,
 } from '@mui/icons-material';
 import { green } from '@mui/material/colors';
+import { MemberCommittee } from '@/models/scraped/oireachtas/member';
 
-export default function CommitteesCard() {
+export default function CommitteesCard(props: {
+	committees: {
+		current?: MemberCommittee[];
+		past?: MemberCommittee[];
+	};
+}) {
+	const committees: MemberCommittee[] = [];
+	props.committees.current! && committees.push(...props.committees.current);
+	props.committees.past! && committees.push(...props.committees.past);
+	const formattedCommittees = committees.map((committee: MemberCommittee) => {
+		return (
+			<>
+				<Stack direction='row' gap={1}>
+					<CropSquareRounded fontSize='small' />
+					<Typography variant='body2' color='text.secondary'>
+						{committee.name}
+						<small>
+							<i>
+								{committee.dateRange.end !== undefined &&
+									committee.dateRange.end !== null &&
+									` (${new Date(
+										committee.dateRange.start
+									).getFullYear()}-${new Date(
+										committee.dateRange.end as unknown as string
+									).getFullYear()})`}
+							</i>
+						</small>
+					</Typography>
+				</Stack>
+			</>
+		);
+	});
 	return (
 		<>
 			<Card sx={{ maxWidth: 345 }}>
@@ -30,21 +62,7 @@ export default function CommitteesCard() {
 				/>
 
 				<CardContent sx={{ paddingTop: 0 }}>
-					<Stack direction='column'>
-						<Stack direction='row' gap={1}>
-							<CropSquareRounded fontSize='small' />
-							<Typography variant='body2' color='text.secondary'>
-								Irish Language, Gaeltacht and the Irish-speaking Community
-							</Typography>
-						</Stack>
-						<Stack direction='row' gap={1}>
-							<CropSquare fontSize='small' />
-							<Typography variant='body2' color='text.secondary'>
-								Social Protection, Community and Rural Development and the
-								Islands
-							</Typography>
-						</Stack>
-					</Stack>
+					<Stack direction='column'>{formattedCommittees}</Stack>
 				</CardContent>
 			</Card>
 		</>
