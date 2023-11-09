@@ -9,9 +9,11 @@ export default function ProfileHeader(props: {
 }): JSX.Element {
 	const formattedOffices = (): string | undefined => {
 		if (props.offices!) {
-			const mapped = props.offices?.map((o, key) => {
-				return capitaliseFirstLetters(o.name);
-			});
+			const mapped = props.offices
+				?.filter((o) => !o.dateRange.end)
+				.map((o, key) => {
+					return capitaliseFirstLetters(o.name);
+				});
 			return mapped.join(', ');
 		}
 		return;
