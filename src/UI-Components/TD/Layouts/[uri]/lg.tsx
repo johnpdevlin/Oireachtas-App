@@ -7,6 +7,7 @@ import ProfileCard from '../../[uri]/ProfileCard';
 import CommitteesCard from '../../[uri]/CommitteesCard';
 import FormerPositions from '../../[uri]/FormerPositions';
 import { MemberBioData } from '@/functions/processes/td/get/all_td_details';
+import CommitteeAttendanceChart from '../../[uri]/CommitteeChart';
 
 export default function LargeTDlayout(props: {
 	member: MemberBioData;
@@ -34,10 +35,17 @@ export default function LargeTDlayout(props: {
 
 						<Grid item lg={3}>
 							<Stack direction='column' spacing={1} sx={{ mt: 2, mr: 1 }}>
-								<CommitteesCard />
-								<FormerPositions />
+								{props.member.committees! && (
+									<CommitteesCard committees={props.member.committees} />
+								)}
+								{props.member.offices! && (
+									<FormerPositions offices={props.member.offices} />
+								)}
 							</Stack>
 						</Grid>
+					</Grid>
+					<Grid item lg={12}>
+						<CommitteeAttendanceChart />
 					</Grid>
 				</Grid>
 			</Grid>
