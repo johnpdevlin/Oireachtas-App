@@ -18,7 +18,7 @@ export default function FormerPositions(props: { offices: MemberOffice[] }) {
 	});
 	return (
 		<>
-			<Card sx={{ maxWidth: 345 }}>
+			<Card>
 				<CardContent sx={{ padding: 0 }}>
 					<Stack direction='column' paddingX={2} paddingY={1}>
 						{formattedOffices}
