@@ -21,6 +21,20 @@ const member: MemberBioData = {
 				houses: [31, 32, 33],
 				chamber: 'dail',
 			},
+			{
+				name: 'Trinity',
+				uri: 'TCD',
+				dateRange: { start: '2006-02-25', end: '2010-01-09' },
+				houses: [],
+				chamber: 'seanad',
+			},
+			{
+				name: 'Galway South',
+				uri: 'GS',
+				dateRange: { start: '2001-02-25', end: '2006-01-09' },
+				houses: [],
+				chamber: 'dail',
+			},
 		],
 		seanad: [],
 	},
@@ -28,16 +42,16 @@ const member: MemberBioData = {
 	isActiveTD: true,
 	parties: [
 		{
-			name: 'Fianna Fáil',
-			uri: 'Fianna Fáil',
-			dateRange: { start: '2015-01-01', end: '2017-01-01' },
-			houses: [32],
-		},
-		{
 			name: 'Social Democrats',
 			uri: 'Social Democrats',
 			dateRange: { start: '2017-01-02', end: undefined },
 			houses: [33],
+		},
+		{
+			name: 'Fianna Fáil',
+			uri: 'Fianna Fáil',
+			dateRange: { start: '2015-01-01', end: '2017-01-01' },
+			houses: [32],
 		},
 	],
 	offices: [
@@ -87,7 +101,15 @@ const member: MemberBioData = {
 				dateRange: { start: '2020-01-01', end: undefined },
 			},
 		],
-		past: [],
+		past: [
+			{
+				name: 'Committee for National Dog Security',
+				uri: 'Committee for Surveillance of Equine Affairs',
+				chamber: 'dail',
+				houseNo: 33,
+				dateRange: { start: '2020-01-01', end: '2021-01-01' },
+			},
+		],
 	},
 	contactNumbers: ['065-682-8341', '086-123-4567'],
 	email: 'joe.bloggs@oireachtas.ie',
