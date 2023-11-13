@@ -88,6 +88,17 @@ function BasicDetails(props: { member: MemberBioData }) {
 	const formerParties =
 		parties.length > 1 && formatFormerMemberships(parties.slice(1));
 
+	const firstElected = () => {
+		if (isActiveTD!)
+			return formatDateToString(
+				constituencies!.dail!.at(-1)?.dateRange.start as string
+			);
+		else if (isActiveSenator!)
+			return formatDateToString(
+				constituencies!.seanad!.at(-1)?.dateRange.start as string
+			);
+	};
+
 	return (
 		<>
 			<Table size='small'>
@@ -106,7 +117,7 @@ function BasicDetails(props: { member: MemberBioData }) {
 						</TableCell>
 						<TableCell>
 							<Typography variant='body2' align='left'>
-								{formattedBirthdate} (age {age()})
+								<b>{formattedBirthdate}</b> (age {age()})
 								<br />
 								<small>
 									<i>
@@ -215,13 +226,13 @@ function BasicDetails(props: { member: MemberBioData }) {
 									variant='body2'
 									align='left'
 									sx={{ ml: 0.5, mt: 0.1 }}>
-									Duration in Oireachtas:
+									First Elected:
 								</Typography>
 							</Stack>
 						</TableCell>
 						<TableCell>
 							<Typography variant='body2' align='left'>
-								<b>1 year, 2 months</b>
+								<b>{firstElected()}</b>
 							</Typography>
 						</TableCell>
 					</TableRow>
