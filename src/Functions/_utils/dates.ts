@@ -286,15 +286,11 @@ export function getCurrentYear(): number {
 export function formatDateToString(date: Date | string): string {
 	if (!(date instanceof Date)) {
 		date = new Date(date);
-		if (isNaN(date.getTime())) {
-			throw new Error('Invalid date string');
-		}
 	}
 
 	const options = { year: 'numeric', month: 'long', day: 'numeric' };
-	return date.toLocaleDateString(undefined, options as {});
+	return date.toLocaleDateString(undefined, options);
 }
-
 export function calculateYearsAndMonthsSinceDate(input: Date | string): {
 	years: number;
 	months: number;

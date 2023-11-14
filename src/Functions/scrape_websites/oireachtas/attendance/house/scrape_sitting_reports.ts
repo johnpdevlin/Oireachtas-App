@@ -3,9 +3,9 @@
 import { BinaryChamber, Chamber } from '@/models/_utils';
 import similarity from 'string-similarity';
 import parseSittingDaysPDF from './parse_sitting_days_pdf';
-import fetchMembers from '@/Functions/APIs/Oireachtas/members';
 import { RawMember } from '@/models/oireachtasApi/member';
 import { SittingDaysReport } from '@/models/scraped/attendanceReport';
+import fetchMembers from '@/functions/APIs_/Oireachtas_/member_/get_/raw_/get';
 
 // Scrape sitting reports for a specific chamber and house number
 export default async function scrapeSittingReportsForChamber(
@@ -33,17 +33,15 @@ export default async function scrapeSittingReportsForChamber(
 		return parseSittingDaysPDF(report); // Parse each report URL
 	});
 
-	const members = (
-		await fetchMembers({
-			house_no: house_no,
-			chamber: chamber,
-		})
-	).map((member: RawMember) => {
+	const members = (await fetchMembers({
+		house_no: house_no,
+		chamber: chamber,
+	}))!.map((member: RawMember) => {
 		const name = `${member.lastName} ${member.firstName}`;
 		return { name: name, uri: member.uri }; // Extract member name and URI
 	});
 
-	const parsedReports = await assignUriToReports(reports, members); // Assign URIs to the reports
+	const parsedReports = await assignUriToReports(reports, members!); // Assign URIs to the reports
 
 	return parsedReports;
 }

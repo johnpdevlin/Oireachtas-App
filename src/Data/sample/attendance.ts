@@ -9,7 +9,7 @@ const data: {
 	data: { year: DailYear; month: number; present: number; absent: number }[];
 }[] = [
 	{
-		name: 'Member Group',
+		name: 'Leo Varadkar',
 		type: 'member',
 
 		data: [
@@ -64,7 +64,7 @@ const data: {
 		],
 	},
 	{
-		name: 'Party Group',
+		name: 'Fine Gael',
 		type: 'party',
 		data: [
 			{ year: 2020, month: 1, present: 50, absent: 20 },
@@ -118,7 +118,7 @@ const data: {
 		],
 	},
 	{
-		name: 'Constituency Group',
+		name: 'Dublin West',
 		type: 'constituency',
 		data: [
 			{ year: 2020, month: 1, present: 350, absent: 20 },
@@ -172,7 +172,7 @@ const data: {
 		],
 	},
 	{
-		name: 'Dail Group',
+		name: '33rd Dáil',
 		type: 'dail',
 		data: [
 			{ year: 2020, month: 1, present: 600, absent: 50 },
