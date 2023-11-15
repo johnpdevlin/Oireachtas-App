@@ -4,11 +4,9 @@ import {
 	capitaliseFirstLetters,
 	getStringAfterFirstTargetPoint,
 } from '@/functions/_utils/strings';
-import {
-	CommitteeDebateRecord,
-	DebateRecord,
-} from '@/models/oireachtasApi/debate';
+import { DebateRecord } from '@/models/oireachtasApi/debate';
 import { CommitteeType } from '@/models/_utils';
+import { CommitteeDebateRecord } from '@/models/oireachtasApi/Formatted/debate';
 export default function formatCommitteeDebates(
 	debates: DebateRecord[]
 ): CommitteeDebateRecord[] {

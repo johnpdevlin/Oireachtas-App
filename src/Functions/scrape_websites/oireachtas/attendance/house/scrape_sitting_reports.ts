@@ -6,15 +6,15 @@ import parseSittingDaysPDF from './parse_sitting_days_pdf';
 import { RawMember } from '@/models/oireachtasApi/member';
 import { SittingDaysReport } from '@/models/scraped/attendanceReport';
 import fetchMembers from '@/functions/APIs_/Oireachtas_/member_/get_/raw_/get';
-import reportURLs from '@/Data/attendanceReportsURLs';
+import reportURLs from '@/Data/attendanceReportsURLs.json';
+
 // Scrape sitting reports for a specific chamber and house number
 export default async function scrapeSittingReportsForChamber(
 	chamber: BinaryChamber,
 	house_no: number
 ): Promise<SittingDaysReport[]> {
-	let urls: string[] = [];
-
-	urls = reportURLs
+	// Get urls from internal data reference point
+	const urls = reportURLs
 		.find((item) => item.chamber === chamber && item.term === house_no)!
 		.reports.map((item) => {
 			return item.url;
@@ -22,19 +22,22 @@ export default async function scrapeSittingReportsForChamber(
 
 	if (urls.length === 0) return [];
 
+	// Parse each report URL
 	const reports = urls.map((report) => {
-		return parseSittingDaysPDF(report); // Parse each report URL
+		return parseSittingDaysPDF(report);
 	});
 
+	// Get members and extract member names and URIs
 	const members = (await fetchMembers({
 		house_no: house_no,
 		chamber: chamber,
 	}))!.map((member: RawMember) => {
 		const name = `${member.lastName} ${member.firstName}`;
-		return { name: name, uri: member.uri }; // Extract member name and URI
+		return { name: name, uri: member.uri };
 	});
 
-	const parsedReports = await assignUriToReports(reports, members!); // Assign URIs to the reports
+	// Assign URIs to the reports
+	const parsedReports = await assignUriToReports(reports, members!);
 
 	return parsedReports;
 }
