@@ -2,7 +2,7 @@
 
 import { removeDuplicateObjects } from '@/functions/_utils/arrays';
 import { assignMemberURIsAndNames } from '@/functions/_utils/memberURIs';
-import { RawFormattedMember } from '@/models/oireachtasApi/member';
+import { RawFormattedMember, RawMember } from '@/models/oireachtasApi/member';
 import {
 	CommitteeType,
 	MemberBaseKeys,
@@ -24,7 +24,7 @@ export function verifyAttendance(
 	type: CommitteeType,
 	present: string[],
 	committee: Committee,
-	allMembers: RawFormattedMember[],
+	allMembers: RawMember[],
 	date: Date,
 	alsoPresent?: string[]
 ): AttendanceResult {
@@ -87,7 +87,7 @@ export function verifyAttendance(
 
 function getMembersAndNonMembers(
 	committee: Committee,
-	allMembers: RawFormattedMember[]
+	allMembers: RawMember[]
 ): {
 	members: MemberBaseKeys[];
 	nonMembers: MemberBaseKeys[];
@@ -116,7 +116,7 @@ function getMembersAndNonMembers(
 		.map(
 			(member) =>
 				({
-					name: member.name,
+					name: member.fullName,
 					uri: member.uri,
 					houseCode: chamber,
 				} as MemberBaseKeys)
@@ -157,8 +157,11 @@ function handlePastMembers(
 			houseCode: member.houseCode,
 		};
 
-		if (date.getTime() > mDateRange.start.getTime()) {
-			if (mDateRange.end && date.getTime() < mDateRange.end.getTime()) {
+		if (date.getTime() > new Date(mDateRange.start).getTime()) {
+			if (
+				new Date(mDateRange.end!).getTime() &&
+				date.getTime() < new Date(mDateRange.end!).getTime()
+			) {
 				members.push(memberObj);
 			} else {
 				nonMembers.push(memberObj);

@@ -1,19 +1,20 @@
 /** @format */
-import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
+
 import { Chamber } from '@/models/_utils';
 import {
 	Committee,
 	CommitteeAttendance,
 } from '@/models/scraped/oireachtas/committee';
-import { RawFormattedMember } from '@/models/oireachtasApi/member';
+import { RawFormattedMember, RawMember } from '@/models/oireachtasApi/member';
 import parseCommitteeReport from './parse_report';
 import similarity from 'string-similarity';
+import { CommitteeDebateRecord } from '@/models/oireachtasApi/Formatted/debate';
 
 // Main function to bind reports to debate records
 export async function bindReportsToDebateRecords(
 	records: CommitteeDebateRecord[],
 	committees: Committee[],
-	members: RawFormattedMember[]
+	members: RawMember[]
 ): Promise<CommitteeAttendance[]> {
 	const parsed: CommitteeAttendance[] = [];
 	const total = records.length;
@@ -54,7 +55,7 @@ export async function bindReportsToDebateRecords(
 async function bindReportToDebateRecord(
 	record: CommitteeDebateRecord,
 	committees: Committee[],
-	members: RawFormattedMember[]
+	members: RawMember[]
 ): Promise<CommitteeAttendance | null> {
 	if (!record.pdf) {
 		console.error('Issue with the following record: ', record);
@@ -131,10 +132,10 @@ export function bindRecordToCommittee(
 		// Compares record against endDate
 		const date = record.date.getTime();
 		const isExpired = matchedCommittees.filter((nm) => {
-			nm.endDate && nm.endDate.getTime() > date;
+			nm.dateRange.end && new Date(nm.dateRange.end).getTime() > date;
 		});
 		const isCurrent = matchedCommittees.filter(
-			(nm) => nm.endDate === undefined
+			(nm) => nm.dateRange.end === undefined
 		);
 		if (matchedCommittees.length === 2) {
 			if (isExpired.length === 1) return isExpired[0].uri;

@@ -1,14 +1,15 @@
 /** @format */
 
 import formatCommitteeDebates from '@/functions/APIs_/Oireachtas_/debate_/Format/committeeDebates';
-import fetchDebates from '@/Functions/APIs/Oireachtas/debates';
-import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
-import { bindReportsToDebateRecords } from './bindReports2DebateRecords';
-import getAllCommitteeInfo from '../web/get/committeeInfo';
-import fetchMembers from '@/Functions/APIs/Oireachtas/members';
-import { RawFormattedMember, RawMember } from '@/models/oireachtasApi/member';
+
+import { RawMember } from '@/models/oireachtasApi/member';
 import { CommitteeAttendance } from '@/models/scraped/oireachtas/committee';
 import { getDateTwoWeeksAgo, dateToYMDstring } from '@/functions/_utils/dates';
+import { CommitteeDebateRecord } from '@/models/oireachtasApi/Formatted/debate';
+import fetchDebates from '@/functions/APIs_/Oireachtas_/debate_/get';
+import fetchMembers from '@/functions/APIs_/Oireachtas_/member_/get_/raw_/get';
+import { bindReportsToDebateRecords } from '../../attendance/commitee/bind_reports2debate_records';
+import processAllCommitteeInfo from '../web/get/all_committeesInfo';
 
 // Fetches from Orieachtas API: debates, members
 // Scrapes base committee info
@@ -41,14 +42,14 @@ export default async function processCommitteeReportsBetweenDates(
 		) as Promise<CommitteeDebateRecord[]>;
 
 	console.log('Fetching base committee details and members . . .');
-	const baseCommittees = (await getAllCommitteeInfo()).map((bc) => {
+	const baseCommittees = (await processAllCommitteeInfo()).map((bc) => {
 		return { ...bc, records: [] };
 	});
 
 	const allMembers = (await fetchMembers({
 		date_start: date_start,
 		date_end: date_end,
-	})) as RawFormattedMember[];
+	})) as RawMember[];
 
 	const processedAttendanceRecords = await bindReportsToDebateRecords(
 		await formattedCommitteeDebates,

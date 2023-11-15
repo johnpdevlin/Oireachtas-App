@@ -6,19 +6,19 @@ import {
 	removeTextBeforeClosingParenthesis,
 	removeTextBetweenParentheses,
 } from '@/functions/_utils/strings';
-import { RawFormattedMember } from '@/models/oireachtasApi/member';
+import { RawFormattedMember, RawMember } from '@/models/oireachtasApi/member';
 
 export function parsePresentLine(
 	presence: string,
-	members?: RawFormattedMember[]
+	members?: RawMember[]
 ): string[] | undefined {
 	// Check for direct matches
 	if (presence! && presence !== '') {
 		if (members) {
 			presence.includes('’') && presence.replace('’', "'").toLowerCase();
 			const matchedMembers = members
-				?.filter((mem) => presence.includes(mem.name.toLowerCase()))
-				.map((mem) => mem.name.toLowerCase());
+				?.filter((mem) => presence.includes(mem.fullName.toLowerCase()))
+				.map((mem) => mem.fullName.toLowerCase());
 			if (matchedMembers && matchedMembers.length > 0) {
 				matchedMembers.forEach((mem) => presence.replace(mem, ''));
 				const present = parsePresentLine(presence);

@@ -1,6 +1,6 @@
 /** @format */
 
-import { RawFormattedMember } from '@/models/oireachtasApi/member';
+import { RawMember } from '@/models/oireachtasApi/member';
 import { CommitteeType, MemberBaseKeys } from '@/models/_utils';
 import { Committee } from '@/models/scraped/oireachtas/committee';
 import axios from 'axios';
@@ -16,7 +16,7 @@ type ParsedReport = {
 export default async function parseCommitteeReport(
 	url: string,
 	committee: Committee,
-	allMembers: RawFormattedMember[],
+	allMembers: RawMember[],
 	date: Date
 ): Promise<ParsedReport | void> {
 	try {

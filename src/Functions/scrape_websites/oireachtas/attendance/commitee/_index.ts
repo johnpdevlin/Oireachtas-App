@@ -1,20 +1,23 @@
 /** @format */
 
 import formatCommitteeDebates from '@/functions/APIs_/Oireachtas_/debate_/Format/committeeDebates';
-import fetchDebates from '@/Functions/APIs/Oireachtas/debates';
-import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
+import fetchDebates from '@/functions/APIs_/Oireachtas_/debate_/get';
+import { CommitteeDebateRecord } from '@/models/oireachtasApi/Formatted/debate';
 import { bindReportsToDebateRecords } from './bind_reports2debate_records';
-import fetchMembers from '@/Functions/APIs/Oireachtas/members';
-import { RawFormattedMember, RawMember } from '@/models/oireachtasApi/member';
+
+import { RawMember } from '@/models/oireachtasApi/member';
 import { CommitteeAttendance } from '@/models/scraped/oireachtas/committee';
 import { getDateTwoWeeksAgo, dateToYMDstring } from '@/functions/_utils/dates';
-import { processAllCommitteeInfo } from '@/functions/scrape_websites/oireachtas/committee/web/get/all_committeesInfo';
+import processAllCommitteeInfo from '../../committee/web/get/all_committeesInfo';
+import fetchMembers from '@/functions/APIs_/Oireachtas_/member_/get_/raw_/get';
 
-// Fetches from Orieachtas API: debates, members
-// Scrapes base committee info
-// Passes above for processing
-// Verifies attendance which cross references against above
-// and with additional scrapes called within called functions
+/** 
+	Fetches from Orieachtas API: debates, members
+	Scrapes base committee info
+	Passes above for processing
+	Verifies attendance which cross references against above
+	and with additional scrapes called within called functions 
+**/
 export default async function processCommitteeReportsBetweenDates(
 	date_start: string,
 	date_end: string
@@ -48,7 +51,7 @@ export default async function processCommitteeReportsBetweenDates(
 	const allMembers = (await fetchMembers({
 		date_start: date_start,
 		date_end: date_end,
-	})) as RawFormattedMember[];
+	})) as RawMember[];
 
 	const processedAttendanceRecords = await bindReportsToDebateRecords(
 		await formattedCommitteeDebates,
