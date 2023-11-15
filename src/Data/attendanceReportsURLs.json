@@ -1,0 +1,25 @@
+[
+	{
+		"chamber": "dail",
+		"term": 33,
+		"reports": [
+			{
+				"year": 2020,
+				"url": "https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2021/2021-02-12_deputies-verification-of-attendance-for-the-payment-of-taa-8-feb-to-30-nov-2020_en.pdf"
+			},
+			{
+				"year": 2021,
+				"url": "https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2021/2021-02-12_deputies-verification-of-attendance-for-the-payment-of-taa-8-feb-to-30-nov-2020_en.pdf"
+			},
+			{
+				"year": 2022,
+				"url": "https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2023/2023-03-13_deputies-verification-of-attendance-for-the-payment-of-taa-01-january-2022-to-31-december-2022_en.pdf"
+			},
+			{
+				"year": 2023,
+				"month": 9,
+				"url": "https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2023/2023-10-27_deputies-verification-of-attendance-for-the-payment-of-taa-01-january-2023-to-30-september-2023_en.pdf"
+			}
+		]
+	}
+]

@@ -9,7 +9,7 @@ import fetchHouses from '@/functions/APIs_/Oireachtas_/house_/get_';
 export default async function prcAttendanceReports(
 	house?: { chamber: Chamber; house_no: number },
 	dates?: { date_start: string; date_end: string }
-): Promise<SittingDaysReport[] | undefined> {
+): Promise<SittingDaysReport[] | void> {
 	// dates in formats 01-january-2023
 	if (house !== undefined) {
 		const houseDetails: House[] = await fetchHouses({

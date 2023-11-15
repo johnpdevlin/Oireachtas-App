@@ -6,30 +6,23 @@ import parseSittingDaysPDF from './parse_sitting_days_pdf';
 import { RawMember } from '@/models/oireachtasApi/member';
 import { SittingDaysReport } from '@/models/scraped/attendanceReport';
 import fetchMembers from '@/functions/APIs_/Oireachtas_/member_/get_/raw_/get';
-
+import reportURLs from '@/Data/attendanceReportsURLs';
 // Scrape sitting reports for a specific chamber and house number
 export default async function scrapeSittingReportsForChamber(
 	chamber: BinaryChamber,
 	house_no: number
 ): Promise<SittingDaysReport[]> {
-	let reportURLs: string[] = [];
+	let urls: string[] = [];
 
-	if (chamber === 'dail') {
-		if (house_no === 33) {
-			// Define report URLs for house number 33
-			let report2020 =
-				'https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2021/2021-02-12_deputies-verification-of-attendance-for-the-payment-of-taa-8-feb-to-30-nov-2020_en.pdf';
-			let report2021 =
-				'https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2022/2022-03-10_deputies-verification-of-attendance-for-the-payment-of-taa-01-jan-2021-to-31-december-2021_en.pdf';
-			let report2022 =
-				'https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2023/2023-03-13_deputies-verification-of-attendance-for-the-payment-of-taa-01-january-2022-to-31-december-2022_en.pdf';
-			reportURLs = [report2020, report2021, report2022];
-		}
-	}
+	urls = reportURLs
+		.find((item) => item.chamber === chamber && item.term === house_no)!
+		.reports.map((item) => {
+			return item.url;
+		}) as string[];
 
-	if (reportURLs.length === 0) return [];
+	if (urls.length === 0) return [];
 
-	const reports = reportURLs.map((report) => {
+	const reports = urls.map((report) => {
 		return parseSittingDaysPDF(report); // Parse each report URL
 	});
 
