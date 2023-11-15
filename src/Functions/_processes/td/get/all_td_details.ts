@@ -9,7 +9,7 @@ import { OirData } from '@/models/scraped/oireachtas/member';
 import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
 import getTDsWikiData from '@/functions/scrape_websites/wikipedia/td/page/multi_td_page';
 import similarity from 'string-similarity';
-import checkGender from '@/functions/APIs_/Irish_Names_';
+import checkGender from '@/functions/APIs_/Irish_Names_/index_';
 
 // Consolidated Member Bio Data
 export type MemberBioData = { gender: string | void } & OirData &
@@ -65,8 +65,8 @@ async function bindAllData(
 			// Find Wiki Data by name
 			let wiki = wikiData.find(
 				(data: WikiTDProfileDetails) =>
-					data.wikiName.toLowerCase().includes(api!.lastName!.toLowerCase()) &&
-					data.wikiName.toLowerCase().includes(api!.firstName!.toLowerCase())
+					data.wikiName!.toLowerCase().includes(api!.lastName!.toLowerCase()) &&
+					data.wikiName!.toLowerCase().includes(api!.firstName!.toLowerCase())
 			);
 
 			// If no initial wiki data match by name
@@ -74,7 +74,7 @@ async function bindAllData(
 				const fullName = api!.fullName.toLowerCase();
 				const matches = similarity.findBestMatch(
 					fullName,
-					wikiData.map((data) => data.wikiName.toLowerCase())
+					wikiData.map((data) => data.wikiName!.toLowerCase())
 				);
 				wiki = wikiData.find((w) => w.wikiName === matches.bestMatch.target);
 			}

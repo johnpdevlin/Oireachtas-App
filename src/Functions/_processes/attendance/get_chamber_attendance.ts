@@ -6,7 +6,7 @@ import { BinaryChamber, Chamber } from '@/models/_utils';
 import { SittingDaysReport } from '@/models/scraped/attendanceReport';
 import fetchHouses from '@/functions/APIs_/Oireachtas_/house_/get_';
 
-export default async function prcAttendanceReports(
+export default async function prcChamberAttendanceReports(
 	house?: { chamber: Chamber; house_no: number },
 	dates?: { date_start: string; date_end: string }
 ): Promise<SittingDaysReport[] | void> {

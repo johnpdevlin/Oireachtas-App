@@ -1,15 +1,15 @@
 /** @format */
-
-import formatCommitteeDebates from '@/functions/APIs_/Oireachtas_/debate_/Format/committeeDebates';
-import fetchDebates from '@/functions/APIs_/Oireachtas_/debate_/get';
 import { CommitteeDebateRecord } from '@/models/oireachtasApi/Formatted/debate';
-import { bindReportsToDebateRecords } from './bind_reports2debate_records';
-
 import { RawMember } from '@/models/oireachtasApi/member';
 import { CommitteeAttendance } from '@/models/scraped/oireachtas/committee';
-import { getDateTwoWeeksAgo, dateToYMDstring } from '@/functions/_utils/dates';
-import processAllCommitteeInfo from '../../committee/web/get/all_committeesInfo';
+
+import fetchDebates from '@/functions/APIs_/Oireachtas_/debate_/get';
 import fetchMembers from '@/functions/APIs_/Oireachtas_/member_/get_/raw_/get';
+import formatCommitteeDebates from '@/functions/APIs_/Oireachtas_/debate_/Format/committeeDebates';
+import processAllCommitteeInfo from '@/functions/scrape_websites/oireachtas/committee/web/get/all_committeesInfo';
+import { bindReportsToDebateRecords } from '@/functions/scrape_websites/oireachtas/attendance/commitee/bind_reports2debate_records';
+
+import { getDateTwoWeeksAgo, dateToYMDstring } from '@/functions/_utils/dates';
 
 /** 
 	Fetches from Orieachtas API: debates, members
@@ -20,7 +20,7 @@ import fetchMembers from '@/functions/APIs_/Oireachtas_/member_/get_/raw_/get';
 **/
 export default async function processCommitteeReportsBetweenDates(
 	date_start: string,
-	date_end: string
+	date_end?: string
 ): Promise<CommitteeAttendance[]> {
 	// variable to allow for time for oir records to be available
 	const twoWeeksPast = getDateTwoWeeksAgo();

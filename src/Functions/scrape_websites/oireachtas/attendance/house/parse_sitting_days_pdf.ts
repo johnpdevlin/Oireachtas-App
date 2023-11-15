@@ -21,7 +21,7 @@ export default async function parseSittingDaysPDF(
 			// split by delimiter
 			const blocks = text.split('Member Sitting Days Report');
 
-			const reports: SittingDaysReport[] = blocks
+			const reports = blocks
 				.map((block: string) => {
 					const parsed = parseBlock(block);
 					if (typeof parsed === 'string') {
@@ -31,7 +31,7 @@ export default async function parseSittingDaysPDF(
 						return { ...parsed, url: url, year: parseInt(year!) };
 					}
 				})
-				.filter(Boolean);
+				.filter(Boolean) as SittingDaysReport[];
 
 			return reports;
 		})
