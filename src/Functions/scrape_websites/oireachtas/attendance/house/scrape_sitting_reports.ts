@@ -6,7 +6,7 @@ import parseSittingDaysPDF from './parse_sitting_days_pdf';
 import { RawMember } from '@/models/oireachtasApi/member';
 import { SittingDaysReport } from '@/models/scraped/attendanceReport';
 import fetchMembers from '@/functions/APIs_/Oireachtas_/member_/get_/raw_/get';
-import reportURLs from '@/Data/attendanceReportsURLs.json';
+import reportURLs from '@/Data/attendance-reports-URLs.json';
 
 // Scrape sitting reports for a specific chamber and house number
 export default async function scrapeSittingReportsForChamber(

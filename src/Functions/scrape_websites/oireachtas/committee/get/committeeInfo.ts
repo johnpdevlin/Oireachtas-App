@@ -13,9 +13,9 @@ import {
 	getMembers,
 	getPastMembers,
 	removePastMembers,
-} from '@/functions/scrape_websites/oireachtas/committee/web/parse/members';
-import getChair from '@/functions/scrape_websites/oireachtas/committee/web/parse/chair';
-import exceptions from '../../url-pattern-exceptions.json';
+} from '@/functions/scrape_websites/oireachtas/committee/parse/members';
+import getChair from '@/functions/scrape_websites/oireachtas/committee/parse/chair';
+import exceptions from '@/Data/committee-url-pattern-exceptions.json';
 import { DateRangeStr, OirDate } from '@/models/dates';
 
 //Scrape committee information from the given URL.

@@ -6,7 +6,7 @@ import { CommitteeAttendance } from '@/models/scraped/oireachtas/committee';
 import fetchDebates from '@/functions/APIs_/Oireachtas_/debate_/get';
 import fetchMembers from '@/functions/APIs_/Oireachtas_/member_/get_/raw_/get';
 import formatCommitteeDebates from '@/functions/APIs_/Oireachtas_/debate_/Format/committeeDebates';
-import processAllCommitteeInfo from '@/functions/scrape_websites/oireachtas/committee/web/get/all_committeesInfo';
+import processAllCommitteeInfo from '@/functions/scrape_websites/oireachtas/committee/get/all_committeesInfo';
 import { bindReportsToDebateRecords } from '@/functions/scrape_websites/oireachtas/attendance/commitee/bind_reports2debate_records';
 
 import { getDateTwoWeeksAgo, dateToYMDstring } from '@/functions/_utils/dates';
