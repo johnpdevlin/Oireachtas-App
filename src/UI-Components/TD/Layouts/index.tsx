@@ -96,13 +96,13 @@ export default function TDIndexLayout(props: {
 					<Box>
 						<Grid
 							container
-							gap={2}
+							gap={1}
 							justifyContent='space-evenly'
 							alignItems='center'>
 							{filteredMembers?.map((m) => {
 								if (m.isActiveTD === false) return null;
 								return (
-									<Grid item xs={3.5} sm={2.8} md={2.1} lg={2.2} key={m.uri}>
+									<Grid item xs={5.5} sm={2.8} md={2.1} lg={2.2} key={m.uri}>
 										<TDcard member={m} />
 									</Grid>
 								);

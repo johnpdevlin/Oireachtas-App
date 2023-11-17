@@ -4,6 +4,7 @@ import { getCurrentYear } from '@/functions/_utils/dates';
 
 type WebsiteDetailProps = {
 	owner: string;
+	name: string;
 	currentYear: number;
 	links: {
 		github?: string;
@@ -13,6 +14,7 @@ type WebsiteDetailProps = {
 
 const details: WebsiteDetailProps = {
 	owner: 'John Devlin',
+	name: 'With Great Power',
 	currentYear: getCurrentYear(),
 	links: {
 		github: 'https://www.github.com/johnpdevlin/oireachtas-app/',

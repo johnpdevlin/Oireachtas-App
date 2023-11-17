@@ -13,7 +13,7 @@ import {
 	HourglassEmpty,
 } from '@mui/icons-material';
 import HoverableFootnote from '../../_utils/HoverableFootnote';
-import { MemberBioData } from '@/functions/processes/td/get/all_td_details';
+import { MemberBioData } from '@/functions/_processes/td/get/all_td_details';
 import {
 	calculateYearsAndMonthsSinceDate,
 	formatDateToString,

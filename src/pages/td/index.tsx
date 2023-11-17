@@ -8,6 +8,7 @@ import { PartyAPI } from '@/models/oireachtasApi/party';
 import { ConstituencyAPI } from '@/models/oireachtasApi/constituency';
 import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
 import TDIndexLayout from '@/UI-Components/TD/Layouts';
+import Layout from '@/UI-Components/_layout';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -28,13 +29,13 @@ export default function Home(props: {
 				<meta name='viewport' content='width=device-width, initial-scale=1' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
-			<main>
+			<Layout>
 				<TDIndexLayout
 					constituencies={constits}
 					parties={parties}
 					members={members}
 				/>
-			</main>
+			</Layout>
 		</>
 	);
 }

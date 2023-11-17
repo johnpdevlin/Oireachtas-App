@@ -1,9 +1,13 @@
 /** @format */
 
 import { Box, Divider, Grid, Stack, Typography } from '@mui/material';
-import ProfileImage from '../../Components/ProfileImg';
-import ProfileHeader from '../../Components/ProfileHeader';
-import BasicDetails from '../../Components/BasicDetails';
+import ProfileHeader from '../../[uri]/ProfileHeader';
+import ProfileImage from '../../_utils/ProfileImg';
+import BasicDetails from '../../[uri]/BasicDetails';
+import Address from '@/UI-Components/_utils/Contact/Address';
+import PhoneNumber from '@/UI-Components/_utils/Contact/PhoneNumber';
+import SocialIcons from '@/UI-Components/_utils/SocialIcons';
+import { Email } from '@mui/icons-material';
 
 export default function SmallTDlayout(props: { member: unknown }): JSX.Element {
 	// member: unknown
@@ -54,7 +58,7 @@ export default function SmallTDlayout(props: { member: unknown }): JSX.Element {
 					<Grid item sm={3.5}>
 						<Typography variant='body1'>Online Presence </Typography>
 						<Divider sx={{ mb: 1 }} />
-						<SocialIcons />
+						<SocialIcons type={''} link={''} />
 					</Grid>
 				</Grid>
 			</Box>

@@ -4,10 +4,10 @@ import LargeTDlayout from './lg';
 import MobileTDlayout from './xs-mobile';
 import SmalllTDlayout from './sm';
 import MediumTDlayout from './md';
-import CommitteeAttendanceChart from '@/UI-Components/Deprecated/Member/test/CommitteeChart';
+import CommitteeAttendanceChart from '@/UI-Components/TD/[uri]/AttendanceChart';
 
 import Layout from '@/UI-Components/_layout';
-import { MemberBioData } from '@/functions/processes/td/get/all_td_details';
+import { MemberBioData } from '@/functions/_processes/td/get/all_td_details';
 export default function TDlayout(props: { member: MemberBioData }) {
 	return (
 		<>

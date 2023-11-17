@@ -27,7 +27,7 @@ export default async function processCommitteeReportsBetweenDates(
 
 	if (!date_start) return [];
 	if (!date_end || new Date(date_end!).getTime() > twoWeeksPast)
-		// To allow time for pdfs to be uploaded
+		// To allow time for pdfs to be uploaded by Oireachtas
 		date_end = dateToYMDstring(new Date(twoWeeksPast));
 
 	console.log(`Records to be processed between ${date_start} and ${date_end}`);

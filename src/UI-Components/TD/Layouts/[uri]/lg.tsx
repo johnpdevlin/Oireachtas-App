@@ -6,8 +6,8 @@ import MemberMenu from '../../[uri]/MemberMenu';
 import ProfileCard from '../../[uri]/ProfileCard';
 import CommitteesCard from '../../[uri]/CommitteesCard';
 import FormerPositions from '../../[uri]/FormerPositions';
-import { MemberBioData } from '@/functions/processes/td/get/all_td_details';
-import CommitteeAttendanceChart from '../../[uri]/CommitteeChart';
+import { MemberBioData } from '@/functions/_processes/td/get/all_td_details';
+import CommitteeAttendanceChart from '../../[uri]/AttendanceChart';
 
 export default function LargeTDlayout(props: {
 	member: MemberBioData;
@@ -45,7 +45,10 @@ export default function LargeTDlayout(props: {
 						</Grid>
 					</Grid>
 					<Grid item lg={12}>
-						<CommitteeAttendanceChart />
+						<Stack direction={'row'} gap={0}>
+							<CommitteeAttendanceChart height={300} width={1100} />
+							<CommitteeAttendanceChart height={300} width={1100} />
+						</Stack>
 					</Grid>
 				</Grid>
 			</Grid>

@@ -1,6 +1,6 @@
 /** @format */
 
-import { MemberBioData } from '@/functions/processes/td/get/all_td_details';
+import { MemberBioData } from '@/functions/_processes/td/get/all_td_details';
 import { MemberURI } from '@/models/_utils';
 
 const member: MemberBioData = {
