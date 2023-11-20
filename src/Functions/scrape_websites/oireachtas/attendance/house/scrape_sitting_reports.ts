@@ -4,7 +4,7 @@ import { BinaryChamber, Chamber } from '@/models/_utils';
 import similarity from 'string-similarity';
 import parseSittingDaysPDF from './parse_sitting_days_pdf';
 import { RawMember } from '@/models/oireachtasApi/member';
-import { SittingDaysReport } from '@/models/scraped/attendanceReport';
+import { SittingDaysReport } from '@/models/scraped/attendance';
 import fetchMembers from '@/functions/APIs_/Oireachtas_/member_/get_/raw_/get';
 import reportURLs from '@/Data/attendance-reports-URLs.json';
 

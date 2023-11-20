@@ -3,7 +3,7 @@
 import scrapeSittingReportsForChamber from '@/functions/scrape_websites/oireachtas/attendance/house/scrape_sitting_reports';
 import { House, HouseRequest } from '@/models/oireachtasApi/house';
 import { BinaryChamber, Chamber } from '@/models/_utils';
-import { SittingDaysReport } from '@/models/scraped/attendanceReport';
+import { SittingDaysReport } from '@/models/scraped/attendance';
 import fetchHouses from '@/functions/APIs_/Oireachtas_/house_/get_';
 
 export default async function prcChamberAttendanceReports(

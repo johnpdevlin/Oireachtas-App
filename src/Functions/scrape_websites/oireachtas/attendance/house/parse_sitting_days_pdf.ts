@@ -1,9 +1,6 @@
 /** @format */
 
-import {
-	SittingDays,
-	SittingDaysReport,
-} from '@/models/scraped/attendanceReport';
+import { SittingDays, SittingDaysReport } from '@/models/scraped/attendance';
 import axios from 'axios';
 import { convertDMYdate2YMD } from '../../../../_utils/dates';
 import he from 'he';

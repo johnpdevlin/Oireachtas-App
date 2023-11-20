@@ -1,6 +1,6 @@
 /** @format */
 
-import { SittingDaysReport } from '@/models/scraped/attendanceReport';
+import { SittingDaysReport } from '@/models/scraped/attendance';
 
 /** @format */
 export type SittingDates = {
