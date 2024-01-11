@@ -1,5 +1,7 @@
 /** @format */
 
+// Removes duplicate objects from an array.
+// Uses JSON.stringify for object comparison, which may not be efficient for large or complex objects.
 export function removeDuplicateObjects<T>(arr: T[]): T[] {
 	const seen = new Set();
 	return arr.filter((obj) => {
@@ -12,15 +14,14 @@ export function removeDuplicateObjects<T>(arr: T[]): T[] {
 	});
 }
 
+// Checks if an array contains only primitive values (non-objects).
+// Uses Array.prototype.every for better performance and readability.
 export function isArrayOnlyValues(arr: []) {
-	for (let i = 0; i < arr.length; i++) {
-		if (typeof arr[i] === 'object' && arr[i] !== null) {
-			return false; // Array contains at least one object
-		}
-	}
-	return true; // Array contains only values
+	return arr.every((item) => !(typeof item === 'object' && item !== null));
 }
 
+// Transforms an array of objects into a record object, using 'uri' as the key.
+// Assumes that 'uri' is unique in each object.
 export function getObjectFromArrayOfObjects<T extends { uri: string }>(
 	arr: T[]
 ): Record<string, T> {
