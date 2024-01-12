@@ -6,7 +6,7 @@ import {
 } from '@/functions/_utils/strings';
 import { DebateRecord } from '@/models/oireachtasApi/debate';
 import { CommitteeType } from '@/models/_utils';
-import { CommitteeDebateRecord } from '@/models/oireachtasApi/Formatted/debate';
+import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
 export default function formatCommitteeDebates(
 	debates: DebateRecord[]
 ): CommitteeDebateRecord[] {

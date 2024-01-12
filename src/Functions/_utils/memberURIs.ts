@@ -1,10 +1,10 @@
 /** @format */
 
 import { BinaryChamber, MemberBaseKeys, URIpair } from '@/models/_utils';
-import fetchMembers from '../APIs_/Oireachtas_/members';
 import similarity, { Rating } from 'string-similarity';
 import { capitaliseFirstLetters } from './strings';
 import { RawMember } from '@/models/oireachtasApi/member';
+import fetchMembers from '../APIs/Oireachtas_/member_/get_/raw_/get';
 
 export async function getMemberUrisAndNames(
 	names: string[],
