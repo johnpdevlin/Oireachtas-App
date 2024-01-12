@@ -1,7 +1,7 @@
 /** @format */
 
 import { writeObjToFirestore } from '.';
-import processAllMemberDetails from '@/functions/_processes/td/get/all_td_details';
+import processAllMemberDetails from '@/functions/processes/td/get_all_td_details';
 
 export default async function writeTdsToFirestore(houseNo: number) {
 	console.info('Getting member data to write to firestore...');
