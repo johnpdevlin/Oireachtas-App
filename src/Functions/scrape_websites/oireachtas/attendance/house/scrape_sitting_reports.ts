@@ -1,83 +1,91 @@
 /** @format */
 
-import { BinaryChamber, Chamber } from '@/models/_utils';
+import { BinaryChamber } from '@/models/_utils';
 import similarity from 'string-similarity';
 import parseSittingDaysPDF from './parse_sitting_days_pdf';
-import { RawMember } from '@/models/oireachtasApi/member';
 import { SittingDaysReport } from '@/models/scraped/attendance';
-import fetchMembers from '@/functions/APIs_/Oireachtas_/member_/get_/raw_/get';
+import fetchMembers from '@/functions/APIs/Oireachtas_/member_/get_/raw_/get';
 import reportURLs from '@/Data/attendance-reports-URLs.json';
 
-// Scrape sitting reports for a specific chamber and house number
+// Function to scrape sitting reports for a specific chamber and legislative term
 export default async function scrapeSittingReportsForChamber(
 	chamber: BinaryChamber,
 	house_no: number
 ): Promise<SittingDaysReport[]> {
-	// Get urls from internal data reference point
-	const urls = reportURLs
-		.find((item) => item.chamber === chamber && item.term === house_no)!
-		.reports.map((item) => {
-			return item.url;
-		}) as string[];
+	// Retrieve URLs for sitting reports based on chamber and house number
+	const reportEntries =
+		reportURLs.find(
+			(item) => item.chamber === chamber && item.term === house_no
+		)?.reports || [];
+	if (!reportEntries.length) return [];
 
-	if (urls.length === 0) return [];
+	// Fetch and parse all report PDFs in parallel
+	const reportArrays = await Promise.all(
+		reportEntries.map((entry) => parseSittingDaysPDF(entry.url))
+	);
+	const reports = reportArrays.flat();
 
-	// Parse each report URL
-	const reports = urls.map((report) => {
-		return parseSittingDaysPDF(report);
-	});
+	let members;
+	try {
+		// Fetch member data and transform it for later use
+		members =
+			(await fetchMembers({ house_no, chamber }))?.map(
+				({ lastName, firstName, memberCode }) => ({
+					name: `${lastName} ${firstName}`.toLowerCase(),
+					uri: memberCode,
+				})
+			) ?? [];
 
-	// Get members and extract member names and URIs
-	const members = (await fetchMembers({
-		house_no: house_no,
-		chamber: chamber,
-	}))!.map((member: RawMember) => {
-		const name = `${member.lastName} ${member.firstName}`;
-		return { name: name, uri: member.uri };
-	});
+		// Throw error if no members are found
+		if (!members.length) throw new Error('No members found.');
+	} catch (error) {
+		console.error('Error fetching members:', error);
+		return [];
+	}
 
-	// Assign URIs to the reports
-	const parsedReports = await assignUriToReports(reports, members!);
-
-	return parsedReports;
+	// Assign member URIs to reports based on name similarity
+	return await assignUriToReports(reports, members);
 }
 
-// Assign URIs to the reports
+// Function to assign member URIs to each report based on the best name match
 async function assignUriToReports(
-	reports: Promise<SittingDaysReport[]>[],
+	reports: SittingDaysReport[],
 	members: { name: string; uri: string }[]
 ): Promise<SittingDaysReport[]> {
-	const resolvedReports = await Promise.all(reports);
-	const mergedReports = resolvedReports.flat();
 	const processedReports: SittingDaysReport[] = [];
 
-	for (const report of mergedReports) {
-		let bestMatch: { name: string; uri: string } | undefined;
-		let maxSimilarity = 0;
-
-		// Find the best match for each report
-		for (const member of members) {
-			const similarityScore = similarity.compareTwoStrings(
-				report.name!.toLowerCase(), // Compare lowercase report name
-				member.name.toLowerCase() // Compare lowercase member name
-			);
-
-			// Keep track of the best match so far
-			if (similarityScore > maxSimilarity) {
-				maxSimilarity = similarityScore;
-				bestMatch = member;
-			}
-		}
-
+	// Process each report to find the best member match based on name similarity
+	for (const report of reports) {
+		const bestMatch = findBestMatchMember(report.name, members);
 		if (bestMatch) {
-			const { name, ...rest } = report;
-			const processedReport = {
-				...rest,
-				uri: bestMatch.uri, // Assign the best match URI to the report
-			};
-			processedReports.push(processedReport);
+			// Append the best match member URI to the report
+			processedReports.push({ ...report, uri: bestMatch.uri });
 		}
 	}
 
 	return processedReports;
+}
+
+// Helper function to find the member with the name most similar to the report name
+function findBestMatchMember(
+	reportName: string | undefined,
+	members: { name: string; uri: string }[]
+) {
+	if (!reportName) return undefined;
+	let bestMatch: { name: string; uri: string } | undefined;
+	let maxSimilarity = 0;
+
+	// Iterate through each member to find the one whose name is most similar to the report name
+	for (const member of members) {
+		const similarityScore = similarity.compareTwoStrings(
+			reportName.toLowerCase(),
+			member.name
+		);
+		if (similarityScore > maxSimilarity) {
+			maxSimilarity = similarityScore;
+			bestMatch = member;
+		}
+	}
+
+	return bestMatch;
 }
