@@ -31,7 +31,7 @@ export default async function scrapeSittingReportsForChamber(
 		members =
 			(await fetchMembers({ house_no, chamber }))?.map(
 				({ lastName, firstName, memberCode }) => ({
-					name: `${lastName} ${firstName}`.toLowerCase(),
+					name: `${lastName} ${firstName}`.toLowerCase(), // To match pattern of name scraped from report
 					uri: memberCode,
 				})
 			) ?? [];
