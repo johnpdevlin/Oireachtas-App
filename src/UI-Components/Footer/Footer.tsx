@@ -1,21 +1,21 @@
 /** @format */
 
 import webdetails from '@/Data/website';
-import React from 'react';
 import { Box, Grid, Link, Stack, Typography } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import TwitterIcon from '@mui/icons-material/Twitter';
 
-export default function Footer() {
+const Footer = () => {
 	return (
 		<footer>
 			<Box
 				component='footer'
 				bgcolor='powderblue'
 				color='white'
-				mt={10}
 				px={10}
-				py={3}>
+				py={3}
+				mt='auto' // This will push the footer to the bottom
+			>
 				<Grid container justifyContent='space-between' alignItems='center'>
 					<Grid item display='flex' justifyContent='flex-start'>
 						<Typography
@@ -50,4 +50,6 @@ export default function Footer() {
 			</Box>
 		</footer>
 	);
-}
+};
+
+export default Footer;

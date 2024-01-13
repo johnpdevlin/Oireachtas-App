@@ -8,8 +8,8 @@
 		'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
 
 	--foreground-rgb: 0, 0, 0;
-	--background-start-rgb: 214, 219, 220;
-	--background-end-rgb: 255, 255, 255;
+	--background-start-rgb: 250, 250, 250; /* Off-white start color */
+	--background-end-rgb: 255, 255, 255; /* Off-white end color */
 
 	--primary-glow: conic-gradient(
 		from 180deg at 50% 50%,
@@ -90,11 +90,14 @@ body {
 body {
 	color: rgb(var(--foreground-rgb));
 	background: linear-gradient(
-			to bottom,
-			transparent,
-			rgb(var(--background-end-rgb))
-		)
-		rgb(var(--background-start-rgb));
+		to bottom,
+		transparent,
+		transparent calc(100vh - 48px),
+		rgb(var(--background-end-rgb)) calc(100vh - 48px),
+		rgb(var(--background-start-rgb))
+	);
+	margin: 0;
+	padding: 0;
 }
 
 a {
@@ -102,8 +105,8 @@ a {
 	text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
 	html {
 		color-scheme: dark;
 	}
-}
+} */
