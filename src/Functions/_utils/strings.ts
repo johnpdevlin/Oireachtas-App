@@ -240,6 +240,15 @@ export function getStringAfterFirstTargetPoint(
 	return str.slice(index + 1);
 }
 
+export function getStringBeforeFirstTargetPoint(
+	str: string,
+	target: string
+): string {
+	const index = str.indexOf(target);
+
+	return str.slice(0, index);
+}
+
 export function extractWebsiteDomainName(
 	url: string,
 	name?: string
