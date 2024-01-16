@@ -14,7 +14,7 @@ export default async function handler(
 	await handleCors(req, res);
 
 	if (req.method === 'POST') {
-		const { data, filename, directory, key } = req.body;
+		const { data, filename, directory } = req.body;
 
 		if (!data || !filename) {
 			return res.status(400).json({ error: 'Data and filename are required' });
