@@ -14,7 +14,9 @@ export default function FormerPositions(props: { offices: MemberOffice[] }) {
 	const formerOffices = props.offices.filter((o) => o.dateRange.end!);
 	console.log(formerOffices);
 	const formattedOffices = formerOffices.map((o, key) => {
-		return <OfficeItem title={o.name} dateRange={o.dateRange} note={''} />;
+		return (
+			<OfficeItem title={o.name} dateRange={o.dateRange} note={''} key={key} />
+		);
 	});
 	return (
 		<>
