@@ -194,6 +194,21 @@ export function capitaliseFirstLetters(input: string): string {
 	return capitalisedWords.join(' ');
 }
 
+export function extractAndRemoveTextBetweenParentheses(str: string): {
+	extracted: string;
+	text: string;
+} {
+	return {
+		extracted: extractTextBetweenParentheses(str),
+		text: removeTextBetweenParentheses(str),
+	};
+}
+
+export function extractTextBetweenParentheses(str: string): string {
+	const match = str.match(/\(([^)]+)\)/);
+	return match ? match[1] : '';
+}
+
 export function removeTextBetweenParentheses(str: string) {
 	if (!str.includes('(')) return str;
 
@@ -221,6 +236,7 @@ export function removeTextBeforeClosingParenthesis(str: string): string {
 		return str;
 	}
 }
+
 export function isAllUpperCase(input: string): boolean {
 	for (let i = 0; i < input.length; i++) {
 		if (input[i] !== input[i].toUpperCase()) {
