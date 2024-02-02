@@ -1,9 +1,9 @@
 /** @format */
 import Head from 'next/head';
 import { Inter } from 'next/font/google';
-import getMultiMembersAPIdetails from '@/functions/APIs_/Oireachtas_/member_/get_/formatted_/multi_member_details_';
-import fetchConstituencies from '@/functions/APIs_/Oireachtas_/constit_/get_';
-import fetchParties from '@/functions/APIs_/Oireachtas_/party_/get_';
+import getMultiMembersAPIdetails from '../../functions/APIs/Oireachtas_/member_/get_/formatted_/multi_member_details_';
+import fetchConstituencies from '../../functions/APIs/Oireachtas_/constit_/get_';
+import fetchParties from '../../functions/APIs/Oireachtas_/party_/get_';
 import { PartyAPI } from '@/models/oireachtasApi/party';
 import { ConstituencyAPI } from '@/models/oireachtasApi/constituency';
 import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
@@ -12,7 +12,7 @@ import Layout from '@/UI-Components/_layout';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export default function Home(props: {
+export default function TDs(props: {
 	constituencies: string;
 	parties: string;
 	members: string;

@@ -2,8 +2,8 @@
 export type DateRange = DateRangeStr | DateRangeObj;
 
 export type DateRangeStr = {
-	start: OirDate;
-	end: OirDate | null | undefined;
+	start: string;
+	end: string | null | undefined;
 };
 
 export type DateRangeObj = {

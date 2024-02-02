@@ -3,18 +3,18 @@ import { DebateRecord, DebateRequest } from '@/models/oireachtasApi/debate';
 
 import { removeOuterObjects } from '@/functions/_utils/objects';
 import axios from 'axios';
-import { CommitteeDebateRecord } from '@/models/oireachtasApi/Formatted/debate';
+import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
+import formatCommitteeDebates from './Format/committeeDebates';
 
 export default async function fetchDebates(
-	props: DebateRequest,
-	formatter?: (dbRecords: DebateRecord[]) => CommitteeDebateRecord[]
+	props: DebateRequest
 ): Promise<DebateRecord[] | CommitteeDebateRecord[] | undefined> {
-	// converts date type to string
+	// Create query string for API request
 	const url: string = `https://api.oireachtas.ie/v1/debates?${
 		props.chamber_type ? `chamber_type=${props.chamber_type}` : ''
 	}${props.chamber_id ? `&chamber=${props.chamber_id}` : ''}
 	&date_start=${props.date_start ? props.date_start : '1900-01-01'}&date_end=${
-		props.date_end ? props.date_end : '2099-01-01'
+		props.date_end! ? props.date_end : '2099-01-01'
 	}
 	&limit=${props.limit ? props.limit : 5000}
 	${
@@ -29,9 +29,11 @@ export default async function fetchDebates(
 		const output = response.data.results.map((debate: { [x: string]: any }) => {
 			return removeOuterObjects(debate.debateRecord);
 		});
-		if (formatter!) {
-			return formatter(output);
+
+		if (props.chamber_type === 'committee') {
+			return formatCommitteeDebates(output);
 		}
+
 		return output;
 	} catch (error) {
 		console.error(`Error fetching data from URL: ${url}`, error);

@@ -2,7 +2,7 @@
 
 import { Committee } from '@/models/scraped/oireachtas/committee';
 import { scrapeCommitteePageInfo } from './committeeInfo';
-import fetchMembers from '@/functions/APIs/Oireachtas_/member_/get_/raw_/get';
+import fetchMembers from '../../../../APIs/Oireachtas_/member_/get_/raw_/get';
 import { RawMember } from '@/models/oireachtasApi/member';
 import scrapeCommitteesBaseDetails, { BaseCommittee } from './base_info';
 

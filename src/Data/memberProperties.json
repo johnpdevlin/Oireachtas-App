@@ -1,0 +1,1586 @@
+[
+  {
+    "name": "BROWNE, James",
+    "properties": [
+      [
+        {
+          "lines": [
+            "lower church street"
+          ],
+          "town": "enniscorthy",
+          "county": "wexford",
+          "exception": false,
+          "description": " constituency office"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "BRUTON, Richard",
+    "properties": [
+      [
+        {
+          "text": "Land declared at Part 1",
+          "address": "",
+          "exception": true
+        },
+        {
+          "lines": [
+            "36 longmeadow",
+            "conyngham rd."
+          ],
+          "town": "dublin",
+          "county": "dublin",
+          "dublinCode": "8",
+          "exception": false,
+          "description": " residence of family member"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "BURKE, Colm",
+    "properties": [
+      [
+        {
+          "lines": [
+            "washington house",
+            "33 washington st."
+          ],
+          "town": "cork",
+          "county": "cork",
+          "otherInfo": "Rent is received from these tenants.",
+          "exception": false,
+          "description": " let to Cork City Sheriff, Colm Burke & Co. Solicitors, Byran Wade BL, Kate Brosnan BL"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "BURKE, Peter",
+    "properties": [
+      [
+        {
+          "lines": [
+            "slanestown"
+          ],
+          "town": "mullingar",
+          "county": "westmeath",
+          "otherInfo": "Secured by mortgage from Bank of Ireland.",
+          "exception": false,
+          "description": " farmland"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "BYRNE, Thomas",
+    "properties": [
+      [
+        {
+          "lines": [
+            "ardeelan"
+          ],
+          "town": "rossnowlagh",
+          "county": "donegal",
+          "exception": false,
+          "description": " rental property"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "CAHILL, Jackie",
+    "properties": [
+      [
+        {
+          "lines": [
+            "killinan"
+          ],
+          "town": "thurles",
+          "county": "tipperary",
+          "exception": false,
+          "description": " farmland"
+        },
+        {
+          "lines": [
+            "ballinahow"
+          ],
+          "town": "thurles",
+          "county": "tipperary",
+          "exception": false,
+          "description": " farmland"
+        },
+        {
+          "lines": [
+            "ballycahill"
+          ],
+          "town": "thurles",
+          "county": "tipperary",
+          "exception": false,
+          "description": " farmland"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "CANNEY, Seán",
+    "properties": [
+      [
+        {
+          "lines": [
+            "16 the village",
+            "wellpark"
+          ],
+          "town": "galway",
+          "county": "galway",
+          "otherInfo": "50% shareholding",
+          "exception": false,
+          "description": " letting"
+        },
+        {
+          "lines": [
+            "st. jarlath’s place",
+            "bishop street"
+          ],
+          "town": "tuam",
+          "county": "galway",
+          "otherInfo": "3 apartments, 50% shareholding",
+          "exception": false,
+          "description": " letting"
+        },
+        {
+          "lines": [
+            "13  yew tree",
+            "the mall"
+          ],
+          "town": "tuam",
+          "county": "galway",
+          "otherInfo": "50% shareholding",
+          "exception": false,
+          "description": " letting"
+        },
+        {
+          "lines": [
+            "no .1",
+            "the mall"
+          ],
+          "town": "tuam",
+          "county": "galway",
+          "otherInfo": "50% shareholding.",
+          "exception": false,
+          "description": " letting"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "CARTHY, Matt",
+    "properties": [
+      [
+        {
+          "lines": [],
+          "town": "dublin",
+          "county": "dublin",
+          "dublinCode": "52",
+          "exception": false,
+          "description": " former family home, moved address in 2021, 52 Foxfield sold in 202"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "COLLINS, Michael",
+    "properties": [
+      [
+        {
+          "lines": [
+            "ardravinna",
+            "lowertown"
+          ],
+          "town": "schull",
+          "county": "cork",
+          "exception": false,
+          "description": " farmhouse & farming"
+        },
+        {
+          "lines": [
+            "lissacha"
+          ],
+          "town": "schull",
+          "county": "cork",
+          "exception": false,
+          "description": " farming"
+        },
+        {
+          "lines": [
+            "knock"
+          ],
+          "town": "schull",
+          "county": "cork",
+          "exception": false,
+          "description": " farming"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "CONWAY-WALSH, Rose",
+    "properties": [
+      [
+        {
+          "lines": [
+            "drum",
+            "clogher"
+          ],
+          "town": "ballina",
+          "county": "mayo",
+          "exception": false,
+          "description": " farmland"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "COWEN, Barry",
+    "properties": [
+      [
+        {
+          "lines": [
+            "lahinch"
+          ],
+          "town": "clara",
+          "county": "offaly",
+          "additionalText": "residence & lands",
+          "exception": false
+        }
+      ]
+    ]
+  },
+  {
+    "name": "CREED, Michael",
+    "properties": [
+      [
+        {
+          "lines": [
+            "57 main st."
+          ],
+          "town": "macroom",
+          "otherInfo": "3 apartments and ground floor commercial unit",
+          "exception": false,
+          "description": " letting"
+        },
+        {
+          "lines": [
+            "95 railway view"
+          ],
+          "town": "macroom",
+          "otherInfo": "apartment",
+          "exception": false,
+          "description": " letting"
+        },
+        {
+          "lines": [
+            "95 railway view"
+          ],
+          "town": "macroom",
+          "exception": false,
+          "description": " constituency office"
+        },
+        {
+          "lines": [
+            "the lodge",
+            "codrum"
+          ],
+          "town": "macroom",
+          "exception": false,
+          "description": " letting"
+        },
+        {
+          "lines": [
+            "1 emir court"
+          ],
+          "town": "glenbeigh",
+          "county": "kerry",
+          "otherInfo": "personal use.",
+          "exception": false,
+          "description": " holiday home"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "CROWE, Cathal",
+    "properties": [
+      [
+        {
+          "lines": [],
+          "town": "meelick/cratloe",
+          "county": "clare",
+          "exception": false,
+          "description": " farmland"
+        },
+        {
+          "lines": [],
+          "town": "meelick",
+          "county": "clare",
+          "exception": false,
+          "description": " house lived in by relative "
+        }
+      ]
+    ]
+  },
+  {
+    "name": "DALY, Patrick",
+    "properties": [
+      [
+        {
+          "lines": [
+            "23/24 rock street"
+          ],
+          "town": "tralee",
+          "exception": false,
+          "description": " Solicitors office, let property"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "DILLON, Alan",
+    "properties": [
+      [
+        {
+          "lines": [
+            "carrabeag",
+            "newport rd."
+          ],
+          "town": "castlebar",
+          "county": "mayo",
+          "exception": false,
+          "description": " letting"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "DOHERTY, Pearse",
+    "properties": [
+      [
+        {
+          "lines": [
+            "machaire clochair"
+          ],
+          "town": "na doirí beaga",
+          "county": "donegal",
+          "exception": false,
+          "description": " primary residence of family for most of 2022, vacated end of 202"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "DONNELLY, Stephen",
+    "properties": [
+      [
+        {
+          "lines": [
+            "apartment"
+          ],
+          "town": "sandyford",
+          "county": "dublin",
+          "exception": false,
+          "description": " letting"
+        },
+        {
+          "lines": [
+            "house"
+          ],
+          "town": "clara",
+          "county": "offaly",
+          "exception": false,
+          "description": " letting"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "DONOHOE, Paschal",
+    "properties": [
+      [
+        {
+          "lines": [
+            "24 clonsilla park",
+            "blanchardstown"
+          ],
+          "town": "dublin",
+          "county": "dublin",
+          "dublinCode": "15",
+          "otherInfo": "Property is currently in probate.  Planned sale of property to be processed shortly.",
+          "exception": false,
+          "description": " home of deceased mother"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "DURKAN, Bernard",
+    "properties": [
+      [
+        {
+          "lines": [
+            "timard"
+          ],
+          "town": "maynooth",
+          "county": "kildare",
+          "exception": false,
+          "description": " farmland and family home"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "ENGLISH, Damien",
+    "properties": [
+      [
+        {
+          "lines": [
+            "cookstown"
+          ],
+          "town": "kells",
+          "county": "meath",
+          "exception": false,
+          "description": " family use"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "FITZMAURICE, Michael",
+    "properties": [
+      [
+        {
+          "lines": [
+            "strangefort"
+          ],
+          "town": "williamstown",
+          "county": "galway",
+          "exception": false
+        },
+        {
+          "lines": [
+            "keelogues"
+          ],
+          "town": "williamstown",
+          "county": "galway",
+          "exception": false,
+          "description": " all lands are rural farmlands"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "FLAHERTY, Joe",
+    "properties": [
+      [
+        {
+          "lines": [
+            "coolshaughtena schoolhouse"
+          ],
+          "town": "lanesboro",
+          "county": "roscommon",
+          "exception": false,
+          "description": " derelict former school house"
+        },
+        {
+          "lines": [
+            "hillcrest",
+            "battery rd."
+          ],
+          "town": "longford",
+          "county": "longford",
+          "exception": false,
+          "description": " site with planning for one house"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "FLANAGAN, Charles",
+    "properties": [
+      [
+        {
+          "lines": [
+            "lismard court"
+          ],
+          "town": "law office",
+          "county": "laois",
+          "exception": false,
+          "description": " legal practice"
+        },
+        {
+          "lines": [
+            "o'moore st.",
+            "mountmellick"
+          ],
+          "town": "laois: constituency office: constituency office",
+          "exception": false
+        },
+        {
+          "lines": [
+            "irishtown",
+            "mountmellick"
+          ],
+          "town": "laois",
+          "county": "laois",
+          "exception": false,
+          "description": " no letting"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "FLEMING, Seán",
+    "properties": [
+      [
+        {
+          "lines": [
+            "constituency office"
+          ],
+          "town": "castletown",
+          "county": "laois",
+          "exception": false,
+          "description": " constituency office"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "FOLEY , Norma",
+    "properties": [
+      [
+        {
+          "lines": [
+            "ballyard"
+          ],
+          "town": "tralee",
+          "exception": false,
+          "description": " family home"
+        },
+        {
+          "lines": [
+            "apt. 38",
+            "highfield court",
+            "rathgar",
+            "dublin 6"
+          ],
+          "town": "dublin",
+          "county": "dublin",
+          "dublinCode": "6",
+          "exception": false,
+          "description": " residential letting"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "GREALISH, Noel",
+    "properties": [
+      [
+        {
+          "lines": [],
+          "town": "claregalway",
+          "county": "galway",
+          "additionalText": "house",
+          "exception": false,
+          "description": " letting"
+        },
+        {
+          "exception": false,
+          "description": " personal use.   38"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "GUIRKE, Johnny",
+    "properties": [
+      [
+        {
+          "exception": false,
+          "description": " rental letting"
+        },
+        {
+          "exception": false,
+          "description": " rental letting"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "HAUGHEY, Seán",
+    "properties": [
+      [
+        {
+          "lines": [
+            "st. olaves"
+          ],
+          "town": "kinsealy",
+          "county": "dublin",
+          "exception": false,
+          "description": " rental property"
+        },
+        {
+          "lines": [
+            "the kilns"
+          ],
+          "town": "portmarnock",
+          "county": "dublin",
+          "exception": false,
+          "description": " rental property"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "HEALY-RAE, Danny",
+    "properties": [
+      [
+        {
+          "lines": [
+            "fossa"
+          ],
+          "town": "kilgarvan",
+          "additionalText": "approx. 50 acres ",
+          "exception": false
+        },
+        {
+          "lines": [
+            "gortnaboul"
+          ],
+          "town": "kilgarvan",
+          "additionalText": "3 acres ",
+          "exception": false
+        },
+        {
+          "lines": [
+            "gullaba"
+          ],
+          "town": "kilgarvan",
+          "additionalText": "38 acres ",
+          "exception": false,
+          "description": " farmland"
+        },
+        {
+          "lines": [
+            "ardtully"
+          ],
+          "town": "kilgarvan",
+          "additionalText": "house ",
+          "exception": false
+        }
+      ]
+    ]
+  },
+  {
+    "name": "HEALY-RAE, Michael",
+    "properties": [
+      [
+        {
+          "lines": [
+            "sandymount"
+          ],
+          "town": "kilgarvan",
+          "county": "kerry",
+          "exception": false,
+          "description": " private house"
+        },
+        {
+          "lines": [],
+          "town": "kilgarvan",
+          "county": "kerry",
+          "exception": false,
+          "description": " 4 acres of farmland"
+        },
+        {
+          "lines": [],
+          "town": "kilgarvan",
+          "county": "kerry",
+          "exception": false,
+          "description": " service station & yard"
+        },
+        {
+          "lines": [],
+          "town": "kilgarvan",
+          "county": "kerry",
+          "exception": false,
+          "description": " rear of store"
+        },
+        {
+          "lines": [],
+          "town": "kilgarvan",
+          "county": "kerry",
+          "exception": false,
+          "description": " 100 acres of farmland & forestry"
+        },
+        {
+          "lines": [],
+          "town": "kilgarvan",
+          "county": "kerry",
+          "exception": false,
+          "description": " 2 farm houses for letting"
+        },
+        {
+          "lines": [
+            "top of cross"
+          ],
+          "town": "kilgarvan",
+          "exception": false,
+          "description": " house for letting"
+        },
+        {
+          "lines": [
+            "pinewood estate"
+          ],
+          "town": "killarney",
+          "county": "kerry",
+          "exception": false,
+          "description": " house for letting"
+        },
+        {
+          "lines": [
+            "the courtyard"
+          ],
+          "town": "killarney",
+          "county": "kerry",
+          "exception": false,
+          "description": " apartment for letting"
+        },
+        {
+          "lines": [
+            "bridgefield"
+          ],
+          "town": "killarney",
+          "county": "kerry",
+          "exception": false,
+          "description": " house for letting"
+        },
+        {
+          "lines": [
+            "kilmurry"
+          ],
+          "town": "kenmare",
+          "county": "kerry",
+          "exception": false,
+          "description": " house for letting"
+        },
+        {
+          "lines": [
+            "castlelough",
+            "muckross"
+          ],
+          "town": "killarney",
+          "county": "kerry",
+          "exception": false,
+          "description": " house for letting"
+        },
+        {
+          "lines": [
+            "grove island"
+          ],
+          "town": "limerick",
+          "county": "limerick",
+          "exception": false,
+          "description": " student accommodation for letting"
+        },
+        {
+          "lines": [
+            "pound road"
+          ],
+          "town": "castleisland",
+          "county": "kerry",
+          "exception": false,
+          "description": " house for letting"
+        },
+        {
+          "lines": [
+            "castle street"
+          ],
+          "town": "tralee",
+          "county": "kerry",
+          "exception": false,
+          "description": " house for letting"
+        },
+        {
+          "lines": [
+            "14 ballymullen"
+          ],
+          "town": "tralee",
+          "county": "kerry",
+          "exception": false,
+          "description": " house for letting"
+        },
+        {
+          "lines": [
+            "15 ballymullen"
+          ],
+          "town": "tralee",
+          "county": "kerry",
+          "exception": false,
+          "description": " rooms for letting"
+        },
+        {
+          "lines": [],
+          "town": "barraduff",
+          "county": "kerry",
+          "exception": false,
+          "description": " house for letting"
+        },
+        {
+          "lines": [
+            "clonkeen"
+          ],
+          "town": "killarney",
+          "county": "kerry",
+          "exception": false,
+          "description": " house for letting"
+        },
+        {
+          "lines": [
+            "sunville"
+          ],
+          "town": "kilgarvan",
+          "county": "kerry",
+          "exception": false,
+          "description": " apartments for letting"
+        },
+        {
+          "lines": [
+            "oakpark"
+          ],
+          "town": "tralee",
+          "county": "kerry",
+          "exception": false,
+          "description": " B & B guesthouse"
+        },
+        {
+          "lines": [
+            "teach mhuire",
+            "sunville"
+          ],
+          "town": "kilgarvan",
+          "county": "kerry",
+          "exception": false,
+          "description": " house for letting"
+        },
+        {
+          "lines": [
+            "rock street"
+          ],
+          "town": "tralee",
+          "county": "kerry",
+          "exception": false,
+          "description": " vacant premises"
+        },
+        {
+          "lines": [
+            "pound road"
+          ],
+          "town": "castleisland",
+          "county": "kerry",
+          "exception": false,
+          "description": " vacant premises"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "HEYDON, Martin",
+    "properties": [
+      [
+        {
+          "lines": [
+            "blackrath"
+          ],
+          "town": "colbinstown",
+          "county": "kildare",
+          "exception": false,
+          "description": " farmland"
+        },
+        {
+          "lines": [
+            "aghcross"
+          ],
+          "town": "ballickmoyler",
+          "county": "laois",
+          "exception": false,
+          "description": " farmland"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "HUMPHREYS, Heather",
+    "properties": [
+      [
+        {
+          "lines": [
+            "drumate"
+          ],
+          "town": "newbliss",
+          "county": "monaghan",
+          "additionalText": "25.24 hectares",
+          "exception": false,
+          "description": " farmland"
+        },
+        {
+          "lines": [
+            "79 market street"
+          ],
+          "town": "cootehill",
+          "county": "cavan",
+          "exception": false,
+          "description": " constituency office"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "KEHOE, Paul",
+    "properties": [
+      [
+        {
+          "lines": [
+            "7 weafer st.",
+            "enniscorthy"
+          ],
+          "town": "appt no. 1 & no. 2",
+          "county": "wexford",
+          "exception": false,
+          "description": " 2 x apartments rented"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "KELLY, Alan",
+    "properties": [
+      [
+        {
+          "lines": [
+            "co-owner dwelling",
+            "no. 2 cois tra"
+          ],
+          "town": "ballinskelligs",
+          "county": "kerry",
+          "exception": false,
+          "description": " holiday home/occasional letting"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "KERRANE, Claire",
+    "properties": [
+      [
+        {
+          "lines": [
+            "lissacurkia",
+            "tibohine"
+          ],
+          "town": "castlerea",
+          "county": "roscommon",
+          "exception": false,
+          "description": " O.26 hectare site for building own home"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "LAHART, John",
+    "properties": [
+      [
+        {
+          "lines": [
+            "6 orlagh grange",
+            "knocklyon"
+          ],
+          "town": "dublin",
+          "county": "dublin",
+          "dublinCode": "16",
+          "exception": false,
+          "description": " home - principal private residence"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "LAWLESS, James",
+    "properties": [
+      [
+        {
+          "lines": [
+            "32 sallins pier"
+          ],
+          "town": "sallins",
+          "county": "kildare",
+          "exception": false,
+          "description": " letting"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "LEDDIN, Brian",
+    "properties": [
+      [
+        {
+          "lines": [
+            "20 fernhill",
+            "north circular road"
+          ],
+          "town": "limerick",
+          "county": "limerick",
+          "exception": false,
+          "description": " letting"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "LOWRY, Michael",
+    "properties": [
+      [
+        {
+          "lines": [
+            "glenreigh",
+            "holycross"
+          ],
+          "town": "thurles",
+          "county": "tipperary",
+          "exception": false,
+          "description": " residence on 35 acres"
+        },
+        {
+          "lines": [
+            "ashton",
+            "marketfield"
+          ],
+          "town": "wigan",
+          "additionalText": "20 acres of land, joint ownership,  10% ownership of property site",
+          "exception": false,
+          "description": " development land"
+        },
+        {
+          "lines": [
+            "2.5 acres"
+          ],
+          "town": "mansfield",
+          "exception": false,
+          "description": " vacant"
+        },
+        {
+          "lines": [
+            "3.75 acres abbey road"
+          ],
+          "town": "thurles",
+          "county": "tipperary",
+          "exception": false,
+          "description": " vacant"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "MADIGAN, Josepha",
+    "properties": [
+      [
+        {
+          "lines": [
+            "167 lower kimmage rd."
+          ],
+          "town": "dublin",
+          "county": "dublin",
+          "dublinCode": "6w",
+          "otherInfo": "Quarter share.",
+          "exception": false
+        }
+      ]
+    ]
+  },
+  {
+    "name": "MARTIN, Micheál",
+    "properties": [
+      [
+        {
+          "lines": [
+            "137 evergreen road",
+            "turners cross"
+          ],
+          "town": "cork",
+          "county": "cork",
+          "otherInfo": "Purchased with mortgage from AIB.",
+          "exception": false,
+          "description": " administrative office for constituency staff"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "MCCONALOGUE, Charlie",
+    "properties": [
+      [
+        {
+          "lines": [
+            "constituency office",
+            "market square"
+          ],
+          "town": "letterkenny",
+          "county": "donegal",
+          "exception": false,
+          "description": " constituency office"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "MCGRATH, Mattie",
+    "properties": [
+      [
+        {
+          "otherInfo": "Farmed by family member.",
+          "exception": false,
+          "description": " mountain farmland"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "MCNAMARA, Michael",
+    "properties": [
+      [
+        {
+          "lines": [],
+          "town": "teeroneer",
+          "county": "clare",
+          "exception": false,
+          "description": " farmland"
+        },
+        {
+          "lines": [],
+          "town": "toonagh",
+          "county": "clare",
+          "exception": false,
+          "description": " farmland"
+        },
+        {
+          "lines": [],
+          "town": "coolanoran",
+          "county": "limerick",
+          "exception": false,
+          "description": " farmland"
+        },
+        {
+          "lines": [],
+          "town": "tubbernagoth",
+          "county": "clare",
+          "exception": false,
+          "description": " farmland"
+        },
+        {
+          "lines": [],
+          "town": "moynoe",
+          "county": "clare",
+          "exception": false,
+          "description": " farmland"
+        },
+        {
+          "lines": [],
+          "town": "fossabeg",
+          "county": "clare",
+          "exception": false,
+          "description": " farmland"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "MOYNIHAN, Aindrias",
+    "properties": [
+      [
+        {
+          "lines": [
+            "8 woburn drive",
+            "melbourn rd.",
+            "bishopstown"
+          ],
+          "town": "cork",
+          "county": "cork",
+          "exception": false,
+          "description": " renovate in '22 for letting from '2"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "MOYNIHAN, Michael",
+    "properties": [
+      [
+        {
+          "lines": [
+            "meens",
+            "kiskeam"
+          ],
+          "town": "mallow",
+          "county": "cork",
+          "exception": false,
+          "description": " farmland"
+        },
+        {
+          "lines": [
+            "reanagoshil"
+          ],
+          "town": "newmarket",
+          "county": "cork",
+          "exception": false,
+          "description": " farmland"
+        },
+        {
+          "lines": [
+            "dromscarra",
+            "kiskeam"
+          ],
+          "town": "mallow",
+          "county": "cork",
+          "exception": false,
+          "description": " farmland"
+        },
+        {
+          "lines": [
+            "dromscarra",
+            "kiskeam",
+            "mallow"
+          ],
+          "town": "co. cork p51 de03",
+          "exception": false,
+          "description": " house - rented"
+        },
+        {
+          "lines": [
+            "percival street",
+            "kanturk"
+          ],
+          "town": "co. cork p51 k2t4",
+          "exception": false,
+          "description": " 1/3 share in house - rented"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "MUNSTER, Imelda",
+    "properties": [
+      [
+        {
+          "lines": [
+            "383 ballsgrove"
+          ],
+          "town": "drogheda",
+          "county": "louth",
+          "otherInfo": "1/4 share.",
+          "exception": false,
+          "description": " mother's home"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "NAUGHTEN, Denis",
+    "properties": [
+      [
+        {
+          "lines": [
+            "drum"
+          ],
+          "town": "athlone",
+          "county": "roscommon",
+          "additionalText": "1 acre farmland",
+          "exception": false,
+          "description": " farmland"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "NOLAN, Carol",
+    "properties": [
+      [
+        {
+          "lines": [
+            "lackaroe",
+            "cadamstown"
+          ],
+          "town": "birr",
+          "county": "offaly",
+          "otherInfo": "2 bed cottage (rented) jointly owned with husband.",
+          "exception": false,
+          "description": " letting - 2 bed cottage (rented)"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "O'DEA, Willie",
+    "properties": [
+      [
+        {
+          "lines": [
+            "2 glenview gardens",
+            "farranshone"
+          ],
+          "town": "limerick",
+          "county": "limerick",
+          "exception": false,
+          "description": " constituency office"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "O'DONOGHUE, Richard",
+    "properties": [
+      [
+        {
+          "lines": [
+            "coolruss"
+          ],
+          "town": "bruree",
+          "county": "limerick",
+          "folio": "lk25739f",
+          "exception": false,
+          "description": " 1.08 hectares of agricultural land (approximately 2.5 acres) cut for fodder annually"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Ó FEARGHÁIL, Seán",
+    "properties": [
+      [
+        {
+          "exception": false,
+          "description": " farming"
+        },
+        {
+          "exception": false,
+          "description": " rental"
+        },
+        {
+          "lines": [
+            "4 offaly st.",
+            "athy"
+          ],
+          "town": "house",
+          "exception": false,
+          "description": " constituency office"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "O'SULLIVAN, Pádraig",
+    "properties": [
+      [
+        {
+          "lines": [
+            "- clash road"
+          ],
+          "town": "little island",
+          "county": "cork",
+          "additionalText": "a site",
+          "otherInfo": "The site is 0.24 of an acre. It is being purchased for €140,000 subject to planning. A deposit of €10,000 has been paid.",
+          "exception": false,
+          "description": " the purpose of the site is to construct a dwelling house at that address and use it as our family home"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "PHELAN, John Paul",
+    "properties": [
+      [
+        {
+          "lines": [
+            "2 highfield mews"
+          ],
+          "town": "dublin",
+          "county": "dublin",
+          "dublinCode": "6",
+          "additionalText": "50% share of house",
+          "exception": false,
+          "description": " letting"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "PRINGLE, Thomas",
+    "properties": [
+      [
+        {
+          "lines": [
+            "connolly house",
+            "bridge street"
+          ],
+          "town": "killybegs",
+          "county": "donegal",
+          "exception": false,
+          "description": " constituency office"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "SHANAHAN, Matt",
+    "properties": [
+      [
+        {
+          "lines": [
+            "84 ballybeg park"
+          ],
+          "town": "waterford",
+          "county": "waterford",
+          "exception": false,
+          "description": " letting"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "SMITH, Brendan",
+    "properties": [
+      [
+        {
+          "lines": [
+            "st. david’s court"
+          ],
+          "town": "dublin",
+          "county": "dublin",
+          "dublinCode": "3",
+          "exception": false,
+          "description": " apartment rented"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "STANLEY, Brian",
+    "properties": [
+      [
+        {
+          "lines": [],
+          "town": "5 church street",
+          "county": "laois",
+          "otherInfo": "Office.",
+          "exception": false,
+          "description": " constituency office"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "STANTON, David",
+    "properties": [
+      [
+        {
+          "lines": [
+            "29 st. mary’s road"
+          ],
+          "town": "midleton",
+          "county": "cork",
+          "exception": false,
+          "description": " constituency office"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "TROY, Robert",
+    "properties": [
+      [
+        {
+          "lines": [
+            "main st."
+          ],
+          "town": "ballynacargy",
+          "county": "westmeath",
+          "otherInfo": "100% owner",
+          "exception": false,
+          "description": " PO - retail unit & residence"
+        },
+        {
+          "lines": [
+            "39 cathedral view"
+          ],
+          "town": "mullingar",
+          "county": "westmeath",
+          "otherInfo": "50% owner  sale agreed",
+          "exception": false,
+          "description": " residence rented"
+        },
+        {
+          "lines": [
+            "4 mary street"
+          ],
+          "town": "mullingar",
+          "county": "westmeath",
+          "otherInfo": "100% owner",
+          "exception": false,
+          "description": " residence rented"
+        },
+        {
+          "lines": [
+            "20 lynn road"
+          ],
+          "town": "mullingar",
+          "county": "westmeath",
+          "otherInfo": "50% owner",
+          "exception": false,
+          "description": " PDH"
+        },
+        {
+          "lines": [
+            "25a rathdown road"
+          ],
+          "town": "dublin",
+          "county": "dublin",
+          "dublinCode": "7",
+          "otherInfo": "50% owner",
+          "exception": false,
+          "description": " residence rented"
+        },
+        {
+          "lines": [
+            "austin friar st."
+          ],
+          "town": "mullingar",
+          "county": "westmeath",
+          "otherInfo": "100% owner .",
+          "exception": false,
+          "description": " constituency office"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "VARADKAR, Leo",
+    "properties": [
+      [
+        {
+          "text": "Rental property declared in Part",
+          "address": "",
+          "exception": true
+        }
+      ]
+    ]
+  }
+]

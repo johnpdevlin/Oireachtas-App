@@ -3,6 +3,7 @@ import { parseMemberSections } from './members';
 import { parseIndividualCategory } from './category';
 import axios from 'axios';
 import he from 'he';
+import { parseAndFormatProperties } from './property';
 
 type RawMemberInterests = {
 	name: string;
@@ -24,6 +25,28 @@ type RawInterest = {
 	genericInfo: string;
 };
 
+const interestKeys: {
+	[key: string]: {
+		value: string;
+		processFunction?: (
+			properties: {
+				text: string;
+				otherInfo?: string;
+			}[]
+		) => {};
+	};
+} = {
+	'1': { value: 'occupations' },
+	'2': { value: 'shares' },
+	'3': { value: 'directorships' },
+	'4': { value: 'property', processFunction: parseAndFormatProperties },
+	'5': { value: 'gifts' },
+	'6': { value: 'travel' },
+	'7': { value: 'benefitsReceived' },
+	'8': { value: 'renumeratedPositions' },
+	'9': { value: 'contracts' },
+};
+
 export default async function parseInterestsReport(
 	url: string
 ): Promise<RawMemberInterests[]> {
@@ -37,7 +60,6 @@ export default async function parseInterestsReport(
 			.map(({ name, memberLines }) => {
 				const interests = parseLines(memberLines);
 				const formattedInterests = formatInterests(interests);
-
 				return { name, ...formattedInterests };
 			})
 			.filter((member) => Object.keys(member).length > 1); // Filter out members with no interests declared
@@ -79,24 +101,21 @@ function parseLines(lines: string[]): { index: number; text: string }[] {
 
 function formatInterests(interests: { index: number; text: string }[]) {
 	// :  { 	[key: string]: RawInterest[];}
-	const searchKeys: { [key: string]: { value: string } } = {
-		'1': { value: 'occupations' },
-		'2': { value: 'shares' },
-		'3': { value: 'directorships' },
-		'4': { value: 'property' },
-		'5': { value: 'gifts' },
-		'6': { value: 'travel' },
-		'7': { value: 'benefitsReceived' },
-		'8': { value: 'renumeratedPositions' },
-		'9': { value: 'contracts' },
-	};
 
-	const formattedInterests = {};
+	const formattedInterests: { [key: string]: unknown[] } = {};
 
 	interests.forEach((intr) => {
-		const key = searchKeys[intr.index]?.value;
+		const key = interestKeys[intr.index]?.value;
+
 		if (key) {
-			formattedInterests[key] = parseIndividualCategory(intr.text);
+			const processFunction = interestKeys[intr.index].processFunction;
+			const parsedCategory = parseIndividualCategory(intr.text);
+			if (processFunction!) {
+				const processedInterests = processFunction(parsedCategory);
+				if (processedInterests!) {
+					formattedInterests[key] = processedInterests as unknown[];
+				}
+			} else formattedInterests[key] = parsedCategory;
 		}
 	});
 

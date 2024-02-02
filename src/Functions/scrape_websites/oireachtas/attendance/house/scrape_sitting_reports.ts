@@ -4,7 +4,7 @@ import { BinaryChamber } from '@/models/_utils';
 import similarity from 'string-similarity';
 import parseSittingDaysPDF from './parse_sitting_days_pdf';
 import { SittingDaysReport } from '@/models/scraped/attendance';
-import fetchMembers from '@/functions/APIs/Oireachtas_/member_/get_/raw_/get';
+import fetchMembers from '../../../../APIs/Oireachtas_/member_/get_/raw_/get';
 import reportURLs from '@/Data/attendance-reports-URLs.json';
 
 // Function to scrape sitting reports for a specific chamber and legislative term

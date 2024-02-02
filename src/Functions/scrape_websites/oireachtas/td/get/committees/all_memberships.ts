@@ -7,11 +7,12 @@ import {
 	CommitteeMembers,
 } from '@/models/scraped/oireachtas/committee';
 import processAllCommitteeInfo from '@/functions/scrape_websites/oireachtas/committee/get/all_committeesInfo';
-/** @format */
+
 export type MemberCommitteeDetail = {
 	uri: MemberURI;
 	committee: MemberCommittee;
 };
+
 export default async function getAllMembersFromCommittees(): Promise<{
 	current: MemberCommitteeDetail[];
 	past: MemberCommitteeDetail[];
@@ -60,7 +61,6 @@ function parseMemberCommitteeDetails(
 					chamber,
 					houseNo: dail_no,
 					dateRange: committee.dateRange,
-					dateRangeStr: committee.dateRangeStr,
 				},
 			};
 			return memberCommittee;
@@ -77,7 +77,6 @@ function parseMemberCommitteeDetails(
 					chamber: chamber,
 					houseNo: dail_no,
 					dateRange: member.dateRange,
-					dateRangeStr: member.dateRangeStr,
 				} as MemberCommittee,
 			} as MemberCommitteeDetail;
 			return memberCommittee;

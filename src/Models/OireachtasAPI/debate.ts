@@ -1,13 +1,19 @@
 /** @format */
 
-import { BinaryChamber, Chamber, ChamberType } from '@/models/_utils';
+import {
+	BinaryChamber,
+	Chamber,
+	ChamberType,
+	CommitteeType,
+} from '@/models/_utils';
+import { OirDate } from '@/models/dates';
 
 export type DebateRequest = {
 	member?: string;
 	chamber_type?: ChamberType;
 	chamber_id?: Chamber;
-	date_start?: string | Date;
-	date_end?: string | Date;
+	date_start?: string;
+	date_end?: string;
 	debate_id?: string;
 	limit?: number;
 };
@@ -59,4 +65,24 @@ export type DebateRecord = {
 		formats: Record<string, any>;
 	};
 	date: string;
+};
+
+export type CommitteeDebateRecord = {
+	date: Date;
+	dateStr: string;
+	rootName: string;
+	rootURI: string;
+	name: string;
+	type: CommitteeType;
+	chamber: BinaryChamber;
+	houseNo: number;
+	uri: string; // to differentiate for joint, select etc.
+	pdf: string;
+	xml: string;
+};
+
+export type MemberDebateParticipationRecord = {
+	uri: string;
+	date: Date;
+	contributions: number;
 };

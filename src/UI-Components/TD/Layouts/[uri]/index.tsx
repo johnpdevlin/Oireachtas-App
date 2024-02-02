@@ -7,7 +7,7 @@ import MediumTDlayout from './md';
 import CommitteeAttendanceChart from '@/UI-Components/TD/[uri]/AttendanceChart';
 
 import Layout from '@/UI-Components/_layout';
-import { MemberBioData } from '@/functions/_processes/td/get/all_td_details';
+import { MemberBioData } from '@/functions/processes/td/get_all_td_details';
 export default function TDlayout(props: { member: MemberBioData }) {
 	return (
 		<>
@@ -48,10 +48,8 @@ export default function TDlayout(props: { member: MemberBioData }) {
 				}}>
 				<MediumTDlayout member={member} />
 			</Box> */}
-			<Box
-				sx={{ display: { xs: 'none', sm: 'none', md: 'none', lg: 'block' } }}>
-				<LargeTDlayout member={props.member} />
-			</Box>
+
+			<LargeTDlayout member={props.member} />
 		</>
 	);
 }

@@ -13,13 +13,12 @@ import {
 	HourglassEmpty,
 } from '@mui/icons-material';
 import HoverableFootnote from '../../_utils/HoverableFootnote';
-import { MemberBioData } from '@/functions/_processes/td/get/all_td_details';
+import { MemberBioData } from '@/functions/processes/td/get_all_td_details';
 import {
 	calculateYearsAndMonthsSinceDate,
 	formatDateToString,
 } from '@/functions/_utils/dates';
 import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/constituency';
-import { DateRange } from '../../../models/dates';
 import { capitaliseFirstLetters } from '../../../functions/_utils/strings';
 import { MemberParty } from '@/models/scraped/oireachtas/member';
 
@@ -35,16 +34,10 @@ function BasicDetails(props: { member: MemberBioData }) {
 		isActiveSenator,
 	} = props.member;
 
-	function formatDateToString(date: Date | string): string {
-		if (!(date instanceof Date)) {
-			date = new Date(date);
-		}
+	const formattedBirthdate = birthdate
+		? formatDateToString(birthdate)
+		: undefined;
 
-		const options = { year: 'numeric', month: 'long', day: 'numeric' };
-		return date.toLocaleDateString(undefined, options as {}).toString();
-	}
-
-	const formattedBirthdate = formatDateToString(birthdate);
 	const age = () => {
 		return calculateYearsAndMonthsSinceDate(birthdate!).years;
 	};

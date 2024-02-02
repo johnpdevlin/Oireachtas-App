@@ -1,15 +1,15 @@
 /** @format */
 
-import fetchNames from '@/functions/APIs_/Irish_Names_/fetch_names_';
+import fetchNames from '../../APIs/Irish_Names_/fetch_names_';
 import { MemberURI } from '@/models/_utils';
-import getAllMembersAPIdetails from '@/functions/APIs_/Oireachtas_/member_/get_/formatted_/multi_member_details_';
+import getAllMembersAPIdetails from '../../APIs/Oireachtas_/member_/get_/formatted_/multi_member_details_';
 import getAllMembersOirData from '@/functions/scrape_websites/oireachtas/td/get/all_data/multi_TDs';
 import { WikiTDProfileDetails } from '@/models/scraped/wiki/td';
 import { OirData } from '@/models/scraped/oireachtas/member';
 import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
 import getTDsWikiData from '@/functions/scrape_websites/wikipedia/td/page/multi_td_page';
 import similarity from 'string-similarity';
-import checkGender from '@/functions/APIs_/Irish_Names_/index_';
+import checkGender from '../../APIs/Irish_Names_/index_';
 
 // Consolidated Member Bio Data
 export type MemberBioData = { gender: string | void } & OirData &

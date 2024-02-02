@@ -7,7 +7,7 @@ import {
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { Cheerio } from 'cheerio';
-import fetchMembers from '@/functions/APIs/Oireachtas_/member_/get_/raw_/get';
+import fetchMembers from '../../../../APIs/Oireachtas_/member_/get_/raw_/get';
 import { RawMember } from '@/models/oireachtasApi/member';
 import {
 	getMembers,

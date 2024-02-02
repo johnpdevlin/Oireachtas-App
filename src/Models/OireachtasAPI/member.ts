@@ -66,8 +66,7 @@ export type RawMember = {
 	firstName: string;
 	gender: string;
 	memberships: RawOuterMembership[];
-	uri: MemberURI;
-	wikiTitle: string;
+	uri: string;
 	fullName: string;
 	dateOfDeath: null;
 	memberCode: MemberURI;

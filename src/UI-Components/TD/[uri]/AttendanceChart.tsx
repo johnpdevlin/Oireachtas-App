@@ -8,65 +8,13 @@ import { GroupType } from '@/models/_utils';
 import { getUniqueYears } from '@/functions/_utils/objects';
 import { DailYear, MonthChar } from '@/models/dates';
 import { getMonthStrFromNumber } from '@/functions/_utils/dates';
-import SelectSmall from './_smallSelect_';
-import { LineChart } from '@mui/x-charts/LineChart/index.js';
+import data from '@/Data/sample/attendance';
+import SimpleMultiLineChart from '@/UI-Components/_utils/Chart/Line/MultiLineChart';
 
-export default function CommitteeAttendanceChart() {
-	// data: {
-	// 	name: string;
-	// 	type: GroupType;
-	// 	data: { year: DailYear; month: number; present: number; absent: number }[];
-	// }[]
-	const data: {
-		name: string;
-		type: GroupType;
-		data: { year: DailYear; month: number; present: number; absent: number }[];
-	}[] = [
-		{
-			name: 'Member Group',
-			type: 'member',
-			data: [
-				{ year: 2020, month: 1, present: 100, absent: 10 },
-				{ year: 2020, month: 2, present: 110, absent: 15 },
-				{ year: 2021, month: 1, present: 120, absent: 5 },
-				{ year: 2021, month: 2, present: 130, absent: 8 },
-				// ... more data entries
-			],
-		},
-		{
-			name: 'Party Group',
-			type: 'party',
-			data: [
-				{ year: 2020, month: 1, present: 500, absent: 30 },
-				{ year: 2020, month: 2, present: 510, absent: 25 },
-				{ year: 2021, month: 1, present: 520, absent: 20 },
-				{ year: 2021, month: 2, present: 530, absent: 18 },
-				// ... more data entries
-			],
-		},
-		{
-			name: 'Constituency Group',
-			type: 'constituency',
-			data: [
-				{ year: 2020, month: 1, present: 200, absent: 20 },
-				{ year: 2020, month: 2, present: 210, absent: 22 },
-				{ year: 2021, month: 1, present: 220, absent: 18 },
-				{ year: 2021, month: 2, present: 230, absent: 15 },
-				// ... more data entries
-			],
-		},
-		{
-			name: 'Dail Group',
-			type: 'dail',
-			data: [
-				{ year: 2020, month: 1, present: 800, absent: 50 },
-				{ year: 2020, month: 2, present: 810, absent: 55 },
-				{ year: 2021, month: 1, present: 820, absent: 40 },
-				{ year: 2021, month: 2, present: 830, absent: 45 },
-				// ... more data entries
-			],
-		},
-	];
+export default function AttendanceChart(props: {
+	width: number;
+	height: number;
+}) {
 	const member = data.filter((d) => d.type === 'member')[0];
 	const party = data.filter((d) => d.type === 'party')[0];
 	const constituency = data.filter((d) => d.type === 'constituency')[0];
@@ -125,16 +73,24 @@ export default function CommitteeAttendanceChart() {
 		setConstituencyData(overallConstituency);
 		setLabels(years);
 	}
+
+	const groupings = [
+		{
+			category: '33rd Dáil',
+			groups: [
+				{
+					label: '2023',
+					value: 2023,
+				},
+				{ label: '2022', value: 2022 },
+			],
+		},
+		{ category: 'Terms', groups: [{ label: '33rd Dáil', value: 33 }] },
+	];
 	return (
 		<>
-			{/* <SelectSmall
-				labels={selectLabels}
-				label='Period'
-				state={year}
-				setState={setYear}
-			/>  */}
-			<LineChart
-				width={500}
+			<SimpleMultiLineChart
+				width={1100}
 				height={300}
 				series={[
 					{ data: memberData, label: member.name },
@@ -142,10 +98,7 @@ export default function CommitteeAttendanceChart() {
 					{ data: constituencyData, label: constituency.name },
 					{ data: partyData, label: party.name },
 				]}
-				sx={{
-					'--ChartsLegend-itemWidth': '200px',
-				}}
-				xAxis={[{ scaleType: 'point', data: labels }]}
+				labels={labels as string[]}
 			/>
 		</>
 	);

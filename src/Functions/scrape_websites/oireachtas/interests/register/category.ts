@@ -5,34 +5,31 @@ import { extractAndRemoveTextBetweenParentheses } from '@/functions/_utils/strin
 // Parses individual categories from raw text and returns structured data
 export function parseIndividualCategory(
 	rawText: string
-): { index: number; text: string; additionalInfo: string }[] {
-	const { additionalInfo, text } = checkForAdditionalInfoStatement(rawText);
+): { text: string; otherInfo: string }[] {
+	const { otherInfo, text } = checkForOtherInfoStatement(rawText);
 	const rawInterests = splitInterests(text);
-	const rawAdditionalInfos = splitInterests(additionalInfo);
+	const rawOtherInfo = splitInterests(otherInfo);
 
 	return rawInterests.map((interest) => {
-		const foundAdditionalInfo = rawAdditionalInfos.find(
+		const foundotherInfo = rawOtherInfo.find(
 			(info) => info.index === interest.index
 		);
 		return {
-			index: interest.index,
 			text: interest.text.trim(),
-			additionalInfo: foundAdditionalInfo
-				? foundAdditionalInfo.text.trim()
-				: '',
+			otherInfo: foundotherInfo ? foundotherInfo.text.trim() : '',
 		};
 	});
 }
 
 // Splits the text to separate the main content from the additional information
-function checkForAdditionalInfoStatement(text: string): {
-	additionalInfo: string;
+function checkForOtherInfoStatement(text: string): {
+	otherInfo: string;
 	text: string;
 } {
 	const splitText = text.split(/\s*Other Information Provided:\s*/);
 	return splitText.length > 1
-		? { text: splitText[0].trim(), additionalInfo: splitText[1].trim() }
-		: { additionalInfo: '', text: text.trim() };
+		? { text: splitText[0].trim(), otherInfo: splitText[1].trim() }
+		: { otherInfo: '', text: text.trim() };
 }
 
 // Splits interests from a text block and structures them

@@ -1,18 +1,28 @@
 /** @format */
 
 import Head from 'next/head';
-
+import Image from 'next/image';
 import { Inter } from 'next/font/google';
-
-import TDIndexLayout from '@/UI-Components/TD/Layouts/Index';
-import getMultiMembersAPIdetails from '@/functions/APIs_/Oireachtas_/member_/get_/formatted_/multi_member_details_';
-
-import fetchConstituencies from '@/functions/APIs_/Oireachtas_/constit_/get_';
-
-import fetchParties from '@/functions/APIs_/Oireachtas_/party_/get_';
-
+import styles from '@/styles/Home.module.css';
+// import prcAttendanceReports from '@/Functions/Processes/Attendance/prcAttendanceReports';
+// import { prcParticipation } from '@/Functions/Processes/Participation/prcParticipation';
+import processAllMemberDetails from '@/functions/processes/td/get_all_td_details';
+import { writeObjToFirestore } from '@/FirestoreDB/write';
+import axios from 'axios';
+import getMultiMembersAPIdetails from '../functions/APIs/Oireachtas_/member_/get_/formatted_/multi_member_details_';
+import writeTds from '@/FirestoreDB/write/td';
+import writeTdsToFirestore from '@/FirestoreDB/write/td';
+import firestore from '@/FirestoreDB';
+import getActiveTDs from '@/FirestoreDB/read/activeTDs';
+import fetchConstituencies from '../functions/APIs/Oireachtas_/constit_/get_';
+import { serialize } from 'v8';
+import fetchParties from '../functions/APIs/Oireachtas_/party_/get_';
+import fetchMembers from '../functions/APIs/Oireachtas_/member_/get_/raw_/get';
+import { RawMember } from '@/models/oireachtasApi/member';
 import { PartyAPI } from '@/models/oireachtasApi/party';
 import { ConstituencyAPI } from '../models/oireachtasApi/constituency';
+import getMemberAPIdetails from '../functions/APIs/Oireachtas_/member_/get_/formatted_/member_details_';
+import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,10 +31,55 @@ export default function Home(props: {
 	parties: string;
 	members: string;
 }) {
+	// const constits = fetchConstituencies({ chamber: 'dail', house_no: 33 });
 	const constits: ConstituencyAPI[] = JSON.parse(props.constituencies);
 	const parties: PartyAPI[] = JSON.parse(props.parties);
-	const members = JSON.parse(props.members);
+	const members: MemberAPIdetails[] = JSON.parse(props.members);
 
+	// const members = JSON.parse(props.members);
+	// console.log(members);
+	// const a = writeTdsToFirestore(33);
+	// const a = writeObjToFirestore('test1', { test: 'test11111' });
+	// const ff = 'Fianna_Fáil';
+	// const sf = 'Sinn_Féin';
+	// const sd = 'Social_Democrats_(Ireland)';
+	// const fg = 'Fine_Gael';
+	// const lp = 'Labour_Party_(Ireland)';
+	// const pbp = 'People_Before_Profit–Solidarity';
+	// const au = 'Aontú';
+	// const gp = 'Green_Party_(Ireland)';
+	// const r2c = 'Right_to_Change';
+
+	// sf elections, seanad leaders
+
+	// console.log(scrapePartyPage(`/wiki/${ff}`));
+	// console.log(scrapePartyPage(`/wiki/${sf}`));
+	// console.log(scrapePartyPage(`/wiki/${sd}`));
+	// console.log(scrapePartyPage(`/wiki/${fg}`));
+	// console.log(scrapePartyPage(`/wiki/${lp}`));
+	// console.log(scrapePartyPage(`/wiki/${gp}`));
+	// console.log(scrapePartyPage(`/wiki/${au}`));
+	// console.log(scrapePartyPage(`/wiki/${pbp}`));
+	// console.log(scrapePartyPage(`/wiki/${r2c}`));
+	// console.log(parseCommitteeReport());
+
+	// console.log(
+	// 	scrapeOneWikiConstituency('/wiki/Carlow–Kilkenny_(Dáil_constituency)')
+	// );
+
+	// console.log(scrapeAllWikiConstituencies());
+	// let uri = ''.replaceAll
+	// 	console.log(parseCommitteeReport(uri: 'irish-language-gaeltacht-and-the-irish-speaking-community', date: '2023-06-01'));
+	// console.log(prcCommittee());
+	// c
+	//
+
+	// prcParticipation('dail', 33);
+	// console.log(prcAttendanceReports({ chamber: 'dail', house_no: 33 }));
+	// console.log(scrapeCommitteesBaseDetails());
+	const details = processAllMemberDetails();
+	writeTdsToFirestore(33);
+	console.log(details);
 	return (
 		<>
 			<Head>
@@ -33,18 +88,13 @@ export default function Home(props: {
 				<meta name='viewport' content='width=device-width, initial-scale=1' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
-			<main>
-				<TDIndexLayout
-					constituencies={constits}
-					parties={parties}
-					members={members}
-				/>
-			</main>
+			<main></main>
 		</>
 	);
 }
 
 export async function getStaticProps() {
+	// const members = await getActiveTDs();
 	const constits = await fetchConstituencies({ chamber: 'dail', house_no: 33 });
 	const parties = await fetchParties({ chamber: 'dail', house_no: 33 });
 	const members = await getMultiMembersAPIdetails(undefined, {
