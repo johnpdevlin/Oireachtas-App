@@ -1,8 +1,9 @@
 /** @format */
 
 import { countiesWithIrish } from '@/Data/counties';
+import similarity from 'string-similarity';
 
-type ProcessedAddress = {
+export type ProcessedAddress = {
 	lines: string[];
 	town?: string;
 	county?: string;
@@ -20,47 +21,62 @@ export function processAddress(str: string): ProcessedAddress | null {
 	let additionalText: string;
 	let folio: string;
 
+	str = str.toLowerCase().trim();
+
 	// Handle exceptional bad formatting
-	if (str.includes('at')) [additionalText, str] = str.split('at');
-	else if (str.includes('@')) [additionalText, str] = str.split('@');
+	if (str.includes(' at ')) {
+		[additionalText, str] = str.split(' at ');
+	} else if (str.includes('@')) {
+		[additionalText, str] = str.split('@');
+	}
 
 	const split = str.toLowerCase().split(',');
 	if (split.filter((s) => s.includes('co.')).length > 1) return null;
 
 	// Extract Eircode and deal with other exceptional formatting
-	split
-		.map((x) => {
-			if (x.includes('%')) {
-				additionalText = additionalText ? `${additionalText}, ${x}` : x;
-			} else if (x.includes('folio')) {
-				folio = x.replace(/folio|no|number|#|\./gi, '').trim();
-				folio = x;
-			} else if (containsEircode(x)) {
-				const extracted = extractEircode(x);
-				eirCode = extracted.eircode!;
-				return extracted.remainingText?.trim();
-			} else return x.trim();
+	// Process each part for eirCode, folio, or additional text
+	const cleanedSplit = split
+		.map((part) => {
+			if (part.includes('%')) {
+				additionalText += additionalText ? `, ${part}` : part;
+				return;
+			} else if (part.includes('folio')) {
+				folio = part.replace(/folio|no|number|#|\./gi, '').trim();
+				return;
+			} else if (containsEircode(part)) {
+				const { eircode, remainingText } = extractEircode(part);
+				if (eircode) eirCode = eircode;
+				if (remainingText) return remainingText;
+				return;
+			}
+			return part;
 		})
 		.filter(Boolean);
 
-	if (split.length < 2) return null;
+	if (cleanedSplit.length < 2) return null;
 
 	// Reverse order to itrate from county etc. upwards
-	const reversedArray = split.toReversed();
+	const reversedArray = cleanedSplit.toReversed();
 
 	let lines: string[] = [];
 
 	// Assign lines, town, county etc.
-	reversedArray.map((x) => {
-		x.trim();
-		if (county === '') {
+	reversedArray.forEach((x) => {
+		if (x!) {
 			const checkCounty = checkForCountyInAddress(x, true);
-			if (checkCounty.county!) county = checkCounty.county;
-			if (checkCounty.town!) town = checkCounty.town;
-			if (checkCounty.dublinCode!) dublinCode = checkCounty.dublinCode;
-		} else if (town === '') town = x;
-		else {
-			lines.push(x);
+			if (!county && checkCounty.county) {
+				if (checkCounty.county) county = checkCounty.county.trim();
+				if (checkCounty.town) town = checkCounty.town.trim();
+				if (checkCounty.dublinCode) dublinCode = checkCounty.dublinCode.trim();
+				if (checkCounty.additionalText)
+					additionalText += additionalText
+						? `, ${checkCounty.additionalText}`
+						: checkCounty.additionalText;
+			} else if (!town) {
+				town = x.trim();
+			} else {
+				lines.push(x.trim());
+			}
 		}
 	});
 
@@ -82,7 +98,14 @@ export function processAddress(str: string): ProcessedAddress | null {
 export function checkForCountyInAddress(
 	str: string,
 	checkForTown: boolean
-): { county?: string; town?: string; dublinCode?: string } {
+): {
+	county?: string;
+	town?: string;
+	dublinCode?: string;
+	additionalText?: string;
+} {
+	str = str.trim();
+
 	const countiesArray = countiesWithIrish.map((c) => {
 		return {
 			english: c.english.toLowerCase(),
@@ -90,27 +113,49 @@ export function checkForCountyInAddress(
 		};
 	});
 
-	if (checkForTown!) {
-		// Handle cities or county towns
-		if (str.includes('city')) str.replace('city', '').trim();
-		else if (str.includes('cathair na')) str.replace('cathair na', '').trim();
+	if (
+		str.includes('private') ||
+		str.includes('office') ||
+		str.includes('house') ||
+		str.includes('constituency')
+	)
+		return { additionalText: str };
+
+	// Handle cities or county towns
+	{
+		if (str.includes('city')) str = str.replace('city', '').trim();
+		else if (str.includes('cathair na'))
+			str = str.replace('cathair na', '').trim();
 
 		let found = countiesArray.find(
 			(c) => c.english === str || c.gaeilge === str
 		);
 		if (found!) return { county: found.english, town: found.english };
+
+		if (str.includes('co.')) str = str.replace('co.', '').trim();
+		else if (str.includes('co ')) str = str.replace('co', '').trim();
+		else if (str.includes('county')) str = str.replace('county', '').trim();
+		else if (str.includes('contae')) str = str.replace('contae', '').trim();
 	}
 
-	if (str.includes('co.')) str.replace('co.', '').trim();
-	else if (str.includes('co ')) str.replace('co', '').trim();
-	else if (str.includes('county')) str.replace('county', '').trim();
-	else if (str.includes('contae')) str.replace('contae', '').trim();
+	// Check for Dublin
+	let dublinCity = checkForDublinCity(str);
+	if (dublinCity!) {
+		return { county: 'dublin', town: 'dublin', dublinCode: dublinCity };
+	}
 
 	let found = countiesArray.find((c) => c.english === str || c.gaeilge === str);
 	if (found!) return { county: found.english };
-	let dublinCity = checkForDublinCity(str);
-	if (dublinCity!)
-		return { county: 'dublin', town: 'dublin', dublinCode: dublinCity };
+	else {
+		const gaeilgeCounties = countiesArray.map((c) => c.gaeilge);
+		const bestMatch = similarity.findBestMatch(str, gaeilgeCounties);
+		if (bestMatch.bestMatch.rating > 0.6) {
+			const county = countiesArray.find(
+				(c) => c.gaeilge === bestMatch.bestMatch.target
+			);
+			return { county: county?.english };
+		}
+	}
 
 	return { town: str };
 }
@@ -119,13 +164,12 @@ export function checkForCountyInAddress(
 function checkForDublinCity(str: string): string | null {
 	str = str.toLowerCase().trim();
 
-	if (str.includes('dublin') || str.includes('d'))
+	if (str.includes('dublin') || str.includes('d')) {
 		str = str.replace('dublin', '').replace('d', '').trim();
-
-	if (parseInt(str))
-		if (str.includes('6w') || str.includes('06w')) return '6w';
-		else return parseInt(str).toString();
-
+		if (parseInt(str))
+			if (str.includes('6w') || str.includes('06w')) return '6w';
+			else return parseInt(str).toString();
+	}
 	return null;
 }
 
