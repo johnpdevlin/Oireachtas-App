@@ -4,7 +4,7 @@ import { RawMember } from '@/models/oireachtasApi/member';
 import { CommitteeAttendance } from '@/models/scraped/oireachtas/committee';
 import fetchDebates from '../../APIs/Oireachtas_/debate_/get';
 import fetchMembers from '../../APIs/Oireachtas_/member_/get_/raw_/get';
-import processAllCommitteeInfo from '@/functions/scrape_websites/oireachtas/committee/get/all_committeesInfo';
+import processAllCommitteeInfo from '@/functions/oireachtas_pages/committee/get/all_committeesInfo';
 import { bindReportsToDebateRecords } from '@/functions/processes/participation/committee/bind_reports2debate_records';
 import { getDateTwoWeeksAgo, dateToYMDstring } from '@/functions/_utils/dates';
 import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';

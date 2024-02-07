@@ -7,14 +7,14 @@ import {
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { Cheerio } from 'cheerio';
-import fetchMembers from '../../../../APIs/Oireachtas_/member_/get_/raw_/get';
+import fetchMembers from '../../../APIs/Oireachtas_/member_/get_/raw_/get';
 import { RawMember } from '@/models/oireachtasApi/member';
 import {
 	getMembers,
 	getPastMembers,
 	removePastMembers,
-} from '@/functions/scrape_websites/oireachtas/committee/parse/members';
-import getChair from '@/functions/scrape_websites/oireachtas/committee/parse/chair';
+} from '@/functions/oireachtas_pages/committee/parse/members';
+import getChair from '@/functions/oireachtas_pages/committee/parse/chair';
 import exceptions from '@/Data/committee-url-pattern-exceptions.json';
 import { DateRangeStr, OirDate } from '@/models/dates';
 

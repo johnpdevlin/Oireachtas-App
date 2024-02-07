@@ -1,7 +1,7 @@
 /** @format */
 import { getStringBeforeFirstTargetPoint } from '@/functions/_utils/strings';
 import axios from 'axios';
-import { removeTextBeforeClosingParenthesis } from '../../../_utils/strings';
+import { removeTextBeforeClosingParenthesis } from '../../_utils/strings';
 
 type RawMemberInterests = {
 	name: string;

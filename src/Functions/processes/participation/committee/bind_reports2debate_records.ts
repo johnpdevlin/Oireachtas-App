@@ -7,7 +7,7 @@ import {
 } from '@/models/scraped/oireachtas/committee';
 import { RawMember } from '@/models/oireachtasApi/member';
 import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
-import parseCommitteeReport from '@/functions/scrape_websites/oireachtas/attendance/commitee/parse_report';
+import parseCommitteeReport from '@/functions/documents/attendance/commitee/_parse_report';
 import similarity from 'string-similarity';
 
 /**

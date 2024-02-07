@@ -1,6 +1,6 @@
 /** @format */
 import { MemberRequest, RawMember } from '@/models/oireachtasApi/member';
-import fetchMembers from '../../../../../APIs/Oireachtas_/member_/get_/raw_/get';
+import fetchMembers from '../../../../APIs/Oireachtas_/member_/get_/raw_/get';
 import scrapeMemberOirProfile, { MemberOirProfile } from './td_profile';
 import { MemberURI } from '@/models/_utils';
 

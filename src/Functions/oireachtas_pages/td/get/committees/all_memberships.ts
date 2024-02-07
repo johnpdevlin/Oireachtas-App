@@ -6,7 +6,7 @@ import {
 	Committee,
 	CommitteeMembers,
 } from '@/models/scraped/oireachtas/committee';
-import processAllCommitteeInfo from '@/functions/scrape_websites/oireachtas/committee/get/all_committeesInfo';
+import processAllCommitteeInfo from '@/functions/oireachtas_pages/committee/get/all_committeesInfo';
 
 export type MemberCommitteeDetail = {
 	uri: MemberURI;

@@ -1,8 +1,9 @@
 /** @format */
 
-import { SittingDays, SittingDaysReport } from '@/models/scraped/attendance';
+import { convertDMYdate2YMD } from '@/functions/_utils/dates';
+import { SittingDays, SittingDaysReport } from '@/models/documents/attendance';
 import axios from 'axios';
-import { convertDMYdate2YMD } from '../../../../_utils/dates';
+
 import he from 'he';
 
 export default async function parseSittingDaysPDF(
@@ -119,26 +120,16 @@ function parseBlock(block: string): SittingDays | string {
 								// where errors of total not being picked up
 								report.total = report.sittingTotal + report.otherTotal;
 							} else {
-								console.warn(
-									report.name,
-									' should be checked that all dates are correct for period',
-									report.dateRange,
-									'total: ',
-									report.total,
-									'other total: ',
-									report.otherTotal,
-									'sitting total: ',
-									report.sittingTotal,
-									'otherDates: ',
-									report.otherDates.length,
-									'sittingDates: ',
-									report.sittingDates.length
-								);
-
 								// corrects for next iterations
-								if (report.sittingTotal > report.otherTotal) {
+								if (
+									report.sittingTotal > report.otherTotal ||
+									!Number(report.otherTotal)
+								) {
 									report.otherTotal = report.total - report.sittingTotal;
-								} else if (report.sittingTotal < report.otherTotal) {
+								} else if (
+									report.sittingTotal < report.otherTotal ||
+									!Number(report.sittingTotal)
+								) {
 									report.sittingTotal = report.total - report.otherTotal;
 								}
 
@@ -149,8 +140,6 @@ function parseBlock(block: string): SittingDays | string {
 								searchingDates = true; // allows to search for dates
 							}
 						}
-						// END OF ITERATIONS
-						break;
 					}
 				}
 			} else if (searchingDates === true) {
@@ -178,5 +167,26 @@ function parseBlock(block: string): SittingDays | string {
 		}
 	}
 
-	return report;
+	if (
+		report.sittingDates.length === report.sittingTotal &&
+		report.otherDates.length === report.otherTotal
+	) {
+		return report;
+	} else {
+		console.warn(
+			report.name,
+			'Has not been parsed correctly : ',
+			report.dateRange,
+			' ... total: ',
+			report.total,
+			' ... other Dates: ',
+			report.otherDates.length,
+			' ... other total: ',
+			report.otherTotal,
+			' .... sittingDates: ',
+			report.sittingDates.length,
+			' ... sitting total: ',
+			report.sittingTotal
+		);
+	}
 }

@@ -26,12 +26,13 @@ import Layout from '@/UI-Components/_layout';
 import { Button, Stack, TextField, Typography } from '@mui/material';
 import processChamberAttendanceReports from '@/functions/processes/participation/house/get_chamber_attendance_report';
 import processCommitteeReportsBetweenDates from '@/functions/processes/participation/get_committee_attendance_report';
-import scrapeAllWikiConstituencies from '@/functions/scrape_websites/wikipedia/constit/all_constits';
-import processAllCommitteeInfo from '@/functions/scrape_websites/oireachtas/committee/get/all_committeesInfo';
-import scrapeCommitteesBaseDetails from '@/functions/scrape_websites/oireachtas/committee/get/base_info';
+import scrapeAllWikiConstituencies from '@/functions/wikipedia/constit/all_constits';
+import processAllCommitteeInfo from '@/functions/oireachtas_pages/committee/get/all_committeesInfo';
+import scrapeCommitteesBaseDetails from '@/functions/oireachtas_pages/committee/get/base_info';
 import { SetStateAction, useState } from 'react';
-import parseInterestsReport from '@/functions/scrape_websites/oireachtas/interests/register/_parse_interests_pdf';
+import parseInterestsReport from '@/functions/documents/interests/register/_parse_interests_pdf';
 import urls from '@/Data/member-interests/register-urls';
+import processSittingReportsByTerm from '@/functions/documents/attendance/house/_attendance_reports';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -163,6 +164,14 @@ export default function Tests() {
 						<Typography variant='h4' textAlign='center'>
 							Fetching & Parsing
 						</Typography>
+
+						<Button
+							variant='contained'
+							onClick={() =>
+								console.log(processSittingReportsByTerm('dail', 33))
+							}>
+							Attendance Report for Dáil Term
+						</Button>
 						<Button
 							variant='contained'
 							onClick={() =>

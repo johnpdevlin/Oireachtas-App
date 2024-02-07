@@ -3,7 +3,7 @@ import { parseMemberSections } from './members';
 import { parseIndividualCategory } from './category';
 import axios from 'axios';
 import he from 'he';
-import { parseAndFormatProperties } from './property';
+import { parseAndFormatProperties } from './property/_property';
 
 type RawMemberInterests = {
 	name: string;

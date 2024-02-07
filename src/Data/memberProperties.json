@@ -594,10 +594,7 @@
           "exception": false,
           "description": " letting"
         },
-        {
-          "exception": false,
-          "description": " personal use.   38"
-        }
+        null
       ]
     ]
   },
@@ -605,14 +602,8 @@
     "name": "GUIRKE, Johnny",
     "properties": [
       [
-        {
-          "exception": false,
-          "description": " rental letting"
-        },
-        {
-          "exception": false,
-          "description": " rental letting"
-        }
+        null,
+        null
       ]
     ]
   },
@@ -1146,11 +1137,7 @@
     "name": "MCGRATH, Mattie",
     "properties": [
       [
-        {
-          "otherInfo": "Farmed by family member.",
-          "exception": false,
-          "description": " mountain farmland"
-        }
+        null
       ]
     ]
   },
@@ -1366,14 +1353,8 @@
     "name": "Ó FEARGHÁIL, Seán",
     "properties": [
       [
-        {
-          "exception": false,
-          "description": " farming"
-        },
-        {
-          "exception": false,
-          "description": " rental"
-        },
+        null,
+        null,
         {
           "lines": [
             "4 offaly st.",

@@ -1,5 +1,5 @@
 /** @format */
-import { processAddress } from '@/functions/_utils/address';
+import { processAddress } from '@/functions/documents/interests/register/property/address';
 
 /** @format */
 
@@ -25,12 +25,13 @@ function processIndividualProperty(text: string, otherInfo?: string) {
 	if (split.length === 2) {
 		let [address, description] = split;
 		const processedAddress = processAddress(address);
-		return {
-			...processedAddress,
-			otherInfo: otherInfo,
-			exception: false,
-			description: description,
-		};
+		if (processedAddress!)
+			return {
+				...processedAddress,
+				otherInfo: otherInfo,
+				exception: false,
+				description: description,
+			};
 	} else {
 		const processedAddress = processAddress(text);
 

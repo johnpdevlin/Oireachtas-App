@@ -1,9 +1,9 @@
 /** @format */
 
-import scrapeSittingReportsForChamber from '@/functions/scrape_websites/oireachtas/attendance/house/scrape_sitting_reports';
+import scrapeSittingReportsForChamber from '@/functions/documents/attendance/house/_attendance_reports';
 import { HouseRequest } from '@/models/oireachtasApi/house';
 import { BinaryChamber, Chamber } from '@/models/_utils';
-import { SittingDaysReport } from '@/models/scraped/attendance';
+import { SittingDaysReport } from '@/models/documents/attendance';
 import fetchHouses from '../../../APIs/Oireachtas_/house_/get_';
 
 // Processes attendance reports for a specified chamber and term based on house details and date range
