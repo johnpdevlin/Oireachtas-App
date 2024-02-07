@@ -21,5 +21,57 @@
 				"url": "https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2023/2023-12-01_deputies-verification-of-attendance-for-the-payment-of-taa-01-january-2023-to-31-october-2023_en.pdf"
 			}
 		]
+	},
+	{
+		"chamber": "dail",
+		"term": 32,
+		"reports": [
+			{
+				"year": 2020,
+				"url": "https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2020/2020-03-01_deputies-verification-of-attendance-for-the-payment-of-taa-1-jan-to-14-jan-2020_en.pdf"
+			},
+			{
+				"year": 2019,
+				"url": "https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2020/2020-02-01_deputies-verification-of-attendance-for-the-payment-of-taa-1-jan-to-31-dec-2019_en.pdf"
+			},
+			{
+				"year": 2018,
+				"url": "https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2019/2019-02-01_deputies-verification-of-attendance-for-the-payment-of-taa-1-jan-to-31-dec-2018_en.pdf"
+			},
+			{
+				"year": 2017,
+				"url": "https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2018/2018-02-01_deputies-verification-of-attendance-for-the-payment-of-taa-1-jan-to-31-dec-2017_en.pdf"
+			},
+			{
+				"year": 2016,
+				"url": "https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2017/2017-02-01_deputies-attendance-end-of-year-2016_en.pdf"
+			}
+		]
+	},
+	{
+		"chamber": "dail",
+		"term": 31,
+		"reports": [
+			{
+				"year": 2015,
+				"url": "https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2015/2015-03-01_deputies-verification-of-attendance-for-the-payment-of-taa-1-jan-to-31-dec-2015_en.pdf"
+			},
+			{
+				"year": 2014,
+				"url": "hhttps://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2014/2014-12-31_deputies-verification-of-attendance-for-the-payment-of-taa-1-jan-to-31-dec-2014_en.pdf"
+			},
+			{
+				"year": 2013,
+				"url": "https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2013/2013-12-31_deputies-verification-of-attendance-for-the-payment-of-taa-1-jan-to-31-dec-2013_en.pdf"
+			},
+			{
+				"year": 2012,
+				"url": "https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2012/2012-12-31_deputies-verification-of-attendance-for-the-payment-of-taa-1-jan-to-31-dec-2012_en.pdf"
+			},
+			{
+				"year": 2011,
+				"url": "https://data.oireachtas.ie/ie/oireachtas/members/recordAttendanceForTaa/2011/2011-12-31_deputies-verification-of-attendance-for-the-payment-of-taa-25-feb-to-31-dec-2011_en.pdf"
+			}
+		]
 	}
 ]
