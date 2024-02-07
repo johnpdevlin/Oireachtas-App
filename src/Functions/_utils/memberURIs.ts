@@ -1,8 +1,7 @@
 /** @format */
 
 import { BinaryChamber, MemberBaseKeys, URIpair } from '@/models/_utils';
-import similarity, { Rating } from 'string-similarity';
-import { capitaliseFirstLetters } from './strings';
+import similarity, { BestMatch, Rating } from 'string-similarity';
 import { RawMember } from '@/models/oireachtasApi/member';
 import fetchMembers from '../APIs/Oireachtas_/member_/get_/raw_/get';
 
@@ -24,71 +23,77 @@ export async function getMemberUrisAndNames(
 		};
 	});
 
-	const matchedMembers: MemberBaseKeys[] = assignMemberURIsAndNames(
-		names,
-		memberURIs
-	).matches;
+	const matchedMembers: { name: string; uri: string }[] =
+		assignMemberURIsAndNames(names, memberURIs).matches;
 
 	return matchedMembers;
 }
 
-// Uses similarity to match standard URI pairs to input string names
+// Uses similarity to match standard URI pairs to input string names, improved version
 export function assignMemberURIsAndNames(
 	names: string[],
-	members: MemberBaseKeys[]
-): { matches: MemberBaseKeys[]; unMatchedURIs?: string[] } {
-	names = names.map((name) => {
-		return capitaliseFirstLetters(name);
-	});
-	const matchedPairs: { name: string; member: MemberBaseKeys }[] = [];
-	let unSortedMatches: { name: string; bestMatch: Rating }[] = [];
-	const uriNames = members.map((member) => {
-		return member.name;
-	});
+	members: URIpair[]
+): { matches: URIpair[]; unMatchedURIs?: string[] } {
+	names = names.map((name) => name.toLowerCase());
 
-	for (const name of names) {
-		const bestMatch = similarity.findBestMatch(name, uriNames);
-		if (bestMatch.bestMatch.rating > 0.4) {
-			const matchedPair = {
-				name: name,
-				member: members.find((m) => m.name === bestMatch.bestMatch.target)!,
-			};
-			matchedPairs.push(matchedPair);
-		} else {
-			unSortedMatches.push({ name: name, bestMatch: bestMatch.bestMatch });
-		}
-	}
+	let matches: URIpair[] = [];
+	let unSortedMatches: { name: string; bestMatch: BestMatch }[] = [];
+	const uriNames = members.map((member) => member.name.toLowerCase());
 
-	if (unSortedMatches.length > 0) {
-		unSortedMatches.forEach((match) => {
-			if (
-				matchedPairs.filter((mp) => mp.member.name === match.bestMatch.target)
-					.length === 0 &&
-				match.bestMatch.rating > 0.3
-			) {
-				// If unsorted match's most likely match has not already been found
-				matchedPairs.push({
-					name: match.name,
-					member: members.find((m) => m.name === match.bestMatch.target)!,
-				});
-				unSortedMatches = unSortedMatches.filter(
-					(m) => m.name === match.bestMatch.target
-				);
+	names.forEach((name) => {
+		const bestMatchResult = similarity.findBestMatch(name, uriNames);
+		const bestMatch = bestMatchResult.bestMatch;
+
+		if (bestMatch.rating > 0.3) {
+			// Find the member with the exact name match from the original list
+			const matchedMember = members.find(
+				(member) => member.name.toLowerCase() === bestMatch.target
+			);
+
+			if (matchedMember) {
+				// Ensure we do not add duplicates
+				if (!matches.some((match) => match.uri === matchedMember.uri)) {
+					matches.push({
+						name: name,
+						uri: matchedMember.uri,
+					});
+				}
 			}
-		});
-	}
-
-	const matches = matchedPairs.map((match) => {
-		return {
-			name: match.member.name,
-			uri: match.member.uri,
-			houseCode: match.member.houseCode,
-		};
+		} else {
+			unSortedMatches.push({ name, bestMatch });
+		}
 	});
+
+	// Handling similar but not exact matches
+	unSortedMatches.forEach((unMatch) => {
+		const potentialMatches = similarity.findBestMatch(unMatch.name, uriNames);
+		potentialMatches.ratings
+			.filter((rating) => rating.rating > 0.3)
+			.sort((a, b) => b.rating - a.rating) // Sort by descending rating
+			.forEach((rating) => {
+				const matchedMember = members.find(
+					(member) => member.name.toLowerCase() === rating.target
+				);
+				if (
+					matchedMember &&
+					!matches.some((match) => match.uri === matchedMember.uri)
+				) {
+					matches.push({
+						name: unMatch.name,
+						uri: matchedMember.uri,
+					});
+					// Once a match is found and added, remove it from the unsorted list
+					unSortedMatches = unSortedMatches.filter(
+						(unsorted) => unsorted.name !== unMatch.name
+					);
+				}
+			});
+	});
+
+	const unmatchedURIs = unSortedMatches.map((unMatch) => unMatch.name);
+
 	return {
-		matches: matches,
-		...(unSortedMatches && {
-			unMatchedURIs: unSortedMatches.map((us) => us.name),
-		}),
+		matches,
+		...(unmatchedURIs.length > 0 && { unMatchedURIs: unmatchedURIs }),
 	};
 }
