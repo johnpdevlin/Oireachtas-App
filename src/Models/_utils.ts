@@ -16,11 +16,7 @@ export type QuestionType = 'oral' | 'written';
 export type MemberBaseKeys = { houseCode: BinaryChamber } & URIpair;
 export type URIpair = {
 	name: string;
-	uri: MemberURI;
+	uri: string;
 };
 
 export type GroupType = 'dail' | 'seanad' | 'party' | 'constituency' | 'member';
-
-export type MemberURI = `${string}.${
-	| 'D'
-	| 'S'}.${number}-${ValidMonthStr}-${DailYear}`;
