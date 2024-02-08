@@ -1,7 +1,7 @@
 /** @format */
 
 import { BinaryChamber, MemberBaseKeys, URIpair } from '@/models/_utils';
-import similarity, { BestMatch, Rating } from 'string-similarity';
+import similarity, { BestMatch } from 'string-similarity';
 import { RawMember } from '@/models/oireachtasApi/member';
 import fetchMembers from '../APIs/Oireachtas_/member_/get_/raw_/get';
 

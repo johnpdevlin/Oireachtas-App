@@ -2,17 +2,16 @@
 
 import { BinaryChamber } from '@/models/_utils';
 import parseSittingDaysPDF from './parse_attendance_report';
-import { SittingDaysReport } from '@/models/documents/attendance';
+import { SittingDaysRecord } from '@/models/documents/attendance';
 import fetchMembers from '../../../APIs/Oireachtas_/member_/get_/raw_/get';
 import reportURLs from '@/Data/attendance-reports-URLs.json';
-import { capitaliseFirstLetters } from '@/functions/_utils/strings';
 import { assignMemberURIsAndNames } from '@/functions/_utils/memberURIs';
 
 // Function to scrape sitting reports for a specific chamber and legislative term
 async function processSittingReportsByTerm(
 	chamber: BinaryChamber,
 	termNumber: number
-): Promise<SittingDaysReport[]> {
+): Promise<SittingDaysRecord[]> {
 	const reportsConfig =
 		reportURLs.find(
 			(config) => config.chamber === chamber && config.term === termNumber
@@ -26,7 +25,7 @@ async function processSittingReportsByTerm(
 	)
 		.filter((result) => result.status === 'fulfilled')
 		.map(
-			(result) => (result as PromiseFulfilledResult<SittingDaysReport[]>).value
+			(result) => (result as PromiseFulfilledResult<SittingDaysRecord[]>).value
 		)
 		.flat();
 
@@ -49,9 +48,9 @@ async function processSittingReportsByTerm(
 
 // Function to assign member URIs to each report based on the best name match
 async function assignMemberURIsToReports(
-	reports: SittingDaysReport[],
+	reports: SittingDaysRecord[],
 	memberData: { name: string; uri: string }[]
-): Promise<SittingDaysReport[]> {
+): Promise<SittingDaysRecord[]> {
 	const reportNames = reports.map((report) => report.name!).filter(Boolean);
 
 	const { matches, unMatchedURIs } = assignMemberURIsAndNames(

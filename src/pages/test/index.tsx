@@ -32,7 +32,7 @@ import scrapeCommitteesBaseDetails from '@/functions/oireachtas_pages/committee/
 import { SetStateAction, useState } from 'react';
 import parseInterestsReport from '@/functions/documents/interests/register/_parse_interests_pdf';
 import urls from '@/Data/member-interests/register-urls';
-import processSittingReportsByTerm from '@/functions/documents/attendance/house/_attendance_reports';
+import processSittingReportsByTerm from '@/functions/documents/attendance/report/_attendance_reports';
 
 const inter = Inter({ subsets: ['latin'] });
 

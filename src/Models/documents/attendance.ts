@@ -19,7 +19,7 @@ export type SittingDays = {
 	percentage: number;
 };
 
-export type SittingDaysReport = {
+export type SittingDaysRecord = {
 	url: string;
 	year: number;
 } & SittingDays;
