@@ -281,3 +281,10 @@ export function extractWebsiteDomainName(
 
 	return undefined;
 }
+
+// Splits into lines and removes empty lines
+export function splitStringIntoLines(block: string): string[] {
+	return block
+		.split('\n')
+		.filter((line) => line !== undefined && line.length > 0);
+}
