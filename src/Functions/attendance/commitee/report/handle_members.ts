@@ -1,8 +1,8 @@
 /** @format */
 
 import { MemberBaseKeys, BinaryChamber } from '@/models/_utils';
-import { RawMember } from '@/models/oireachtasApi/member';
 import { Committee, CommitteeMember } from '@/models/committee';
+import { RawMember } from '@/models/oireachtasApi/member';
 
 function getMembersAndNonMembers(
 	committee: Committee,
@@ -37,7 +37,7 @@ function getMembersAndNonMembers(
 				({
 					name: member.fullName,
 					uri: member.uri,
-					houseCode: chamber,
+					house_code: chamber,
 				} as MemberBaseKeys)
 		);
 
@@ -73,7 +73,7 @@ function handlePastMembers(
 		const memberObj: MemberBaseKeys = {
 			uri: member.uri,
 			name: member.name,
-			houseCode: member.houseCode,
+			house_code: member.house_code,
 		};
 
 		if (date.getTime() > new Date(mDateRange.start).getTime()) {

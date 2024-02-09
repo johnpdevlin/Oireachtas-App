@@ -5,7 +5,7 @@ import { Committee, CommitteeAttendance } from '@/models/committee';
 import { RawMember } from '@/models/oireachtasApi/member';
 import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
 import similarity from 'string-similarity';
-import parseCommitteeReport from './report/_parse_committee_attendance';
+import parseCommitteeReport from './parse_committee_attendance';
 
 // Binds committee reports to debate records.
 export async function bindReportsToDebateRecords(
@@ -18,7 +18,7 @@ export async function bindReportsToDebateRecords(
 
 	console.log(`Binding ${totalRecords} reports to records...`);
 
-	for (let count = 0; count < totalRecords && count < 500; count++) {
+	for (let count = 0; count < totalRecords; count++) {
 		const record = records[count];
 
 		if (!record.pdf) {
@@ -68,8 +68,8 @@ export async function bindReportsToDebateRecords(
 
 		parsedRecords.push(parsedRecord);
 
-		if (count % 50 === 0) {
-			console.log(`${count} bound...`);
+		if (count % 100 === 0 && count !== 0) {
+			console.info(`${count} bound...`);
 		}
 	}
 

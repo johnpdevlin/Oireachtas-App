@@ -60,7 +60,10 @@ function parseLine(
 			const processedNames = parsePresentLine(line, allMembers);
 			if (processedNames) {
 				present.push(...processedNames);
-			} else console.log(`'${line}' not processed for: `, url);
+			} else {
+				line = line.trim();
+				if (line !== '') console.log(`'${line}' not processed for: `, url);
+			}
 		}
 		return { present, alsoPresent, line, newIndex: i };
 	}

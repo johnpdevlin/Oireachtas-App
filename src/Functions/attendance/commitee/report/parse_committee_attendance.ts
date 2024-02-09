@@ -7,6 +7,7 @@ import axios from 'axios';
 import he from 'he';
 import { verifyAttendance } from './verify_attendance';
 import { parseLine } from './parse_line';
+import { splitStringIntoLines } from '../../../_utils/strings';
 
 type ParsedReport = {
 	type: string;
@@ -23,7 +24,7 @@ export default async function parseCommitteeReport(
 	try {
 		if (!url) return;
 		const text = await fetchRawTextFromUrl(url);
-		const lines = text.split('\n');
+		const lines = splitStringIntoLines(text);
 
 		let searching = false;
 		let present: string[] = [];
@@ -76,7 +77,6 @@ export default async function parseCommitteeReport(
 		return verifiedAttendance;
 	} catch (error) {
 		console.log(url, error);
-		return;
 	}
 }
 
