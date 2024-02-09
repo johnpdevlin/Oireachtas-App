@@ -28,7 +28,8 @@ export default async function fetchMembers(
 	try {
 		const response = await axios.get(url);
 		return response.data.results.map((member: RawOuterMember) => {
-			return member.member;
+			const uri = member.member.memberCode;
+			return { ...member.member, uri };
 		});
 	} catch (error) {
 		console.error(`Error fetching data from URL: ${url}`, error);
