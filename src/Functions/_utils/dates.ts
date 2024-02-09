@@ -273,11 +273,11 @@ export function getMonthStrFromNumber(months: number[]): MonthChar[] | void {
 	else console.warn('Error with months: ', output);
 }
 
-export function getEndDateObj(end: OirDate | undefined | null) {
+export function getEndDateObj(end: string) {
 	if (end!) return new Date(end);
 	else return null;
 }
-export function getEndDateStr(end: OirDate | undefined | null) {
+export function getEndDateStr(end: string) {
 	if (end!) return end;
 	else return null;
 }
