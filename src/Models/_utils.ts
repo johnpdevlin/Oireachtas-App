@@ -13,7 +13,7 @@ export type RepresentType = 'constituency' | 'panel';
 export type Outcome = 'carried' | 'lost';
 export type QuestionType = 'oral' | 'written';
 
-export type MemberBaseKeys = { houseCode: BinaryChamber } & URIpair;
+export type MemberBaseKeys = { house_code: BinaryChamber } & URIpair;
 export type URIpair = {
 	name: string;
 	uri: string;

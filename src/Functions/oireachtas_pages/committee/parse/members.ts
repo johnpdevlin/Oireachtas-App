@@ -3,10 +3,7 @@
 import { removeDuplicateObjects } from '@/functions/_utils/arrays';
 import { RawMember } from '@/models/oireachtasApi/member';
 import { MemberBaseKeys, BinaryChamber, MemberURI } from '@/models/_utils';
-import {
-	CommitteeMember,
-	CommitteeMembers,
-} from '@/models/scraped/oireachtas/committee';
+import { CommitteeMember, CommitteeMembers } from '@/models/committee';
 import { CheerioAPI } from 'cheerio';
 import { getHouseCode } from './house_code';
 

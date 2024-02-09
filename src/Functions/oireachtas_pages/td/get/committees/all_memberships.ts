@@ -1,12 +1,9 @@
 /** @format */
 
-import { MemberCommittee } from '@/models/scraped/oireachtas/member';
+import { MemberCommittee } from '@/models/member';
 import { MemberURI, BinaryChamber, MemberBaseKeys } from '@/models/_utils';
-import {
-	Committee,
-	CommitteeMembers,
-} from '@/models/scraped/oireachtas/committee';
-import processAllCommitteeInfo from '@/functions/oireachtas_pages/committee/get/all_committeesInfo';
+import { Committee, CommitteeMembers } from '@/models/committee';
+import processAllCommitteeInfo from '@/functions/oireachtas_pages/committee/_all_committeesInfo';
 
 export type MemberCommitteeDetail = {
 	uri: MemberURI;

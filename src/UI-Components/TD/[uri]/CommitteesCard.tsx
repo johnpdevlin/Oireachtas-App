@@ -15,7 +15,7 @@ import {
 	Square,
 } from '@mui/icons-material';
 import { green } from '@mui/material/colors';
-import { MemberCommittee } from '@/models/scraped/oireachtas/member';
+import { MemberCommittee } from '@/models/member';
 
 export default function CommitteesCard(props: {
 	committees: {

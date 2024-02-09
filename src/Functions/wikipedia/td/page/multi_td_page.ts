@@ -2,7 +2,7 @@
 
 import scrapeDailSessionPage from '@/functions/wikipedia/dail/dail_session';
 import scrapeTDWikiPage from '@/functions/wikipedia/td/page/td_page';
-import { WikiTDProfileDetails } from '@/models/scraped/wiki/td';
+import { WikiTDProfileDetails } from '@/models/wiki_td';
 import { URIpair } from '@/models/_utils';
 
 export default async function getTDsWikiData(

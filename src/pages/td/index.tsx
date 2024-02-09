@@ -1,9 +1,9 @@
 /** @format */
 import Head from 'next/head';
 import { Inter } from 'next/font/google';
-import getMultiMembersAPIdetails from '../../functions/APIs/Oireachtas_/member_/get_/formatted_/multi_member_details_';
-import fetchConstituencies from '../../functions/APIs/Oireachtas_/constit_/get_';
-import fetchParties from '../../functions/APIs/Oireachtas_/party_/get_';
+import getMultiMembersAPIdetails from '../../functions/APIs/Oireachtas/member/formatted/_multi_member_details';
+import fetchConstituencies from '../../functions/APIs/Oireachtas/constit/_index';
+import fetchParties from '../../functions/APIs/Oireachtas/party/_index';
 import { PartyAPI } from '@/models/oireachtasApi/party';
 import { ConstituencyAPI } from '@/models/oireachtasApi/constituency';
 import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';

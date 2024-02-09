@@ -13,14 +13,14 @@ import {
 	HourglassEmpty,
 } from '@mui/icons-material';
 import HoverableFootnote from '../../_utils/HoverableFootnote';
-import { MemberBioData } from '@/functions/processes/td/get_all_td_details';
+import { MemberBioData } from '@/functions/processes/td/_all_current_agg_td_details';
 import {
 	calculateYearsAndMonthsSinceDate,
 	formatDateToString,
 } from '@/functions/_utils/dates';
 import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/constituency';
 import { capitaliseFirstLetters } from '../../../functions/_utils/strings';
-import { MemberParty } from '@/models/scraped/oireachtas/member';
+import { MemberParty } from '@/models/member';
 
 function BasicDetails(props: { member: MemberBioData }) {
 	const {

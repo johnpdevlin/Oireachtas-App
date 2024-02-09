@@ -7,7 +7,7 @@ import MediumTDlayout from './md';
 import CommitteeAttendanceChart from '@/UI-Components/TD/[uri]/AttendanceChart';
 
 import Layout from '@/UI-Components/_layout';
-import { MemberBioData } from '@/functions/processes/td/get_all_td_details';
+import { MemberBioData } from '@/functions/processes/td/_all_current_agg_td_details';
 export default function TDlayout(props: { member: MemberBioData }) {
 	return (
 		<>

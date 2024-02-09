@@ -5,34 +5,39 @@ import Image from 'next/image';
 import { Inter } from 'next/font/google';
 import styles from '@/styles/Home.module.css';
 
-import processAllMemberDetails from '@/functions/processes/td/get_all_td_details';
+import processAllMemberDetails from '@/functions/processes/td/_all_current_agg_td_details';
 import { writeObjToFirestore } from '@/FirestoreDB/write';
 import axios from 'axios';
-import getMultiMembersAPIdetails from '../../functions/APIs/Oireachtas_/member_/get_/formatted_/multi_member_details_';
+import getMultiMembersAPIdetails from '../../functions/APIs/Oireachtas/member/formatted/_multi_member_details';
 import writeTds from '@/FirestoreDB/write/td';
 import writeTdsToFirestore from '@/FirestoreDB/write/td';
 import firestore from '@/FirestoreDB';
 import getActiveTDs from '@/FirestoreDB/read/activeTDs';
-import fetchConstituencies from '../../functions/APIs/Oireachtas_/constit_/get_';
+import fetchConstituencies from '../../functions/APIs/Oireachtas/constit/_index';
 import { serialize } from 'v8';
-import fetchParties from '../../functions/APIs/Oireachtas_/party_/get_';
-import fetchMembers from '../../functions/APIs/Oireachtas_/member_/get_/raw_/get';
+import fetchParties from '../../functions/APIs/Oireachtas/party/_index';
+import fetchMembers from '../../functions/APIs/Oireachtas/member/raw/_member_details';
 import { RawMember } from '@/models/oireachtasApi/member';
 import { PartyAPI } from '@/models/oireachtasApi/party';
 import { ConstituencyAPI } from '../models/oireachtasApi/constituency';
-import getMemberAPIdetails from '../../functions/APIs/Oireachtas_/member_/get_/formatted_/member_details_';
+import getMemberAPIdetails from '../../functions/APIs/Oireachtas/member/formatted/_member_details';
 import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
 import Layout from '@/UI-Components/_layout';
 import { Button, Stack, TextField, Typography } from '@mui/material';
-import processChamberAttendanceReports from '@/functions/processes/participation/house/get_chamber_attendance_report';
-import processCommitteeReportsBetweenDates from '@/functions/processes/participation/get_committee_attendance_report';
+import processChamberAttendanceReports from '@/functions/attendance/deprecated/get_chamber_attendance_report';
+import processCommitteeReportsBetweenDates from '@/functions/attendance/commitee/report/_committee_attendance';
 import scrapeAllWikiConstituencies from '@/functions/wikipedia/constit/all_constits';
-import processAllCommitteeInfo from '@/functions/oireachtas_pages/committee/get/all_committeesInfo';
-import scrapeCommitteesBaseDetails from '@/functions/oireachtas_pages/committee/get/base_info';
+import processAllCommitteeInfo from '@/functions/oireachtas_pages/committee/_all_committeesInfo';
+import scrapeCommitteesBaseDetails from '@/functions/oireachtas_pages/committee/base_info';
 import { SetStateAction, useState } from 'react';
-import parseInterestsReport from '@/functions/documents/interests/register/_parse_interests_pdf';
+import parseInterestsReport from '@/functions/interests/register/_parse_interests_pdf';
 import urls from '@/Data/member-interests/register-urls';
-import processSittingReportsByTerm from '@/functions/documents/attendance/report/_attendance_reports';
+import processSittingReportsByTerm from '@/functions/attendance/member_report/_attendance_reports';
+import {
+	getMemberAttendanceRecords,
+	getMemberCommitteeAttendanceRecords,
+	idx,
+} from '@/functions/attendance/commitee/member_records/_member_attendance_records';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -187,14 +192,26 @@ export default function Tests() {
 						<Button
 							variant='contained'
 							onClick={() =>
-								console.log(
+								console.info(
 									processCommitteeReportsBetweenDates(
 										'01/01/2020',
-										'01/01/2024'
+										'01/12/2021'
 									)
 								)
 							}>
-							Committee Attendance Reports (2020-2023)
+							Committee Attendance Reports (2020-2021)
+						</Button>
+						<Button
+							variant='contained'
+							onClick={() =>
+								console.info(
+									getMemberCommitteeAttendanceRecords(
+										'01/01/2020',
+										'01/01/2023'
+									)
+								)
+							}>
+							Member Commitee Attendance Records (2020-2022)
 						</Button>
 						<Button
 							variant='contained'

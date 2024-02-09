@@ -14,7 +14,7 @@ import {
 } from '@/functions/_utils/strings';
 import { extractDateFromYMDstring } from '@/functions/_utils/dates';
 import { OirDate } from '@/models/dates';
-import { WikiTDProfileDetails } from '@/models/scraped/wiki/td';
+import { WikiTDProfileDetails } from '@/models/wiki_td';
 
 // Scrapes the Wikipedia profile of Niamh Smyth.
 export default async function scrapeTDWikiPage(

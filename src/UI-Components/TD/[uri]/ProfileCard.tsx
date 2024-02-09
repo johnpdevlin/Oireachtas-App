@@ -2,7 +2,7 @@
 import { Stack } from '@mui/material';
 import ProfileHeader from './ProfileHeader';
 import BasicDetails from './BasicDetails';
-import { MemberBioData } from '@/functions/processes/td/get_all_td_details';
+import { MemberBioData } from '@/functions/processes/td/_all_current_agg_td_details';
 
 function ProfileCard(props: { member: MemberBioData }) {
 	console.log(props.member.offices);

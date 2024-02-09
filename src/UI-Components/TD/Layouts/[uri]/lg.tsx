@@ -6,7 +6,7 @@ import MemberMenu from '../../[uri]/MemberMenu';
 import ProfileCard from '../../[uri]/ProfileCard';
 import CommitteesCard from '../../[uri]/CommitteesCard';
 import FormerPositions from '../../[uri]/FormerPositions';
-import { MemberBioData } from '@/functions/processes/td/get_all_td_details';
+import { MemberBioData } from '@/functions/processes/td/_all_current_agg_td_details';
 import CommitteeAttendanceChart from '../../[uri]/AttendanceChart';
 
 export default function LargeTDlayout(props: {
