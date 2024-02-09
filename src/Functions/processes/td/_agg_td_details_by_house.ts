@@ -1,15 +1,15 @@
 /** @format */
 
-import fetchNames from '../../APIs/Irish_Names_/fetch_names_';
-import { MemberURI } from '@/models/_utils';
-import getAllMembersAPIdetails from '../../APIs/Oireachtas_/member_/get_/formatted_/multi_member_details_';
+import fetchNames from '../../APIs/Irish_Names/fetch_names_';
+
+import getAllMembersAPIdetails from '../../APIs/Oireachtas/member/formatted/_multi_member_details';
 import getAllMembersOirData from '@/functions/oireachtas_pages/td/get/all_data/multi_TDs';
-import { WikiTDProfileDetails } from '@/models/scraped/wiki/td';
-import { OirData } from '@/models/scraped/oireachtas/member';
+import { WikiTDProfileDetails } from '@/models/wiki_td';
+import { OirData } from '@/models/member';
 import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
 import getTDsWikiData from '@/functions/wikipedia/td/page/multi_td_page';
 import similarity from 'string-similarity';
-import checkGender from '../../APIs/Irish_Names_/index_';
+import checkGender from '../../APIs/Irish_Names/index_';
 
 // Consolidated Member Bio Data
 export type MemberBioData = { gender: string | void } & OirData &
@@ -20,16 +20,16 @@ export type MemberBioData = { gender: string | void } & OirData &
  * Fetches all member data
  * Merges and returns
  **/
-export default async function getAllTDsDetails() {
+async function getAggregatedTDsDetailsByHouse(house_no: number) {
 	console.info('Process to get all member details begun...');
 
 	// Data directly from Oireachtas API
 	const apiData = (await getAllMembersAPIdetails(undefined, {
-		house_no: 33,
+		house_no: house_no,
 	})) as MemberAPIdetails[];
 
 	// Gets all URIs
-	const uris = apiData!.map((member: { uri: MemberURI }) => member.uri);
+	const uris = apiData!.map((member: { uri: string }) => member.uri);
 
 	// Gets Data from Oireachtas Website profiles
 	const oirData = await getAllMembersOirData(uris!);
@@ -47,7 +47,7 @@ export default async function getAllTDsDetails() {
 }
 
 async function bindAllData(
-	uris: MemberURI[],
+	uris: string[],
 	oirData: OirData[],
 	wikiData: WikiTDProfileDetails[],
 	apiData: MemberAPIdetails[]
@@ -57,7 +57,7 @@ async function bindAllData(
 
 	const bound = await Promise.all(
 		// Iterate over each URI
-		uris.map(async (uri: MemberURI) => {
+		uris.map(async (uri: string) => {
 			// Find TD API and OIR data by URI
 			const api = apiData.find((data) => data.uri === uri);
 			const oir = oirData.find((data: OirData) => data.uri === uri);
@@ -97,3 +97,5 @@ async function bindAllData(
 
 	return bound as MemberBioData[];
 }
+
+export default getAggregatedTDsDetailsByHouse;
