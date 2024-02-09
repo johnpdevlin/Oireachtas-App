@@ -9,7 +9,7 @@ export async function getMemberUrisAndNames(
 	names: string[],
 	chamber: BinaryChamber,
 	houseNo: number
-): Promise<URIpair[]> {
+): Promise<MemberBaseKeys[]> {
 	const memberObjs = (await fetchMembers({
 		chamber: chamber,
 		house_no: houseNo,
@@ -23,8 +23,10 @@ export async function getMemberUrisAndNames(
 		};
 	});
 
-	const matchedMembers: { name: string; uri: string }[] =
-		assignMemberURIsAndNames(names, memberURIs).matches;
+	const matchedMembers: MemberBaseKeys[] = assignMemberURIsAndNames(
+		names,
+		memberURIs
+	).matches;
 
 	return matchedMembers;
 }
@@ -32,11 +34,11 @@ export async function getMemberUrisAndNames(
 // Uses similarity to match standard URI pairs to input string names, improved version
 export function assignMemberURIsAndNames(
 	names: string[],
-	members: URIpair[]
-): { matches: URIpair[]; unMatchedURIs?: string[] } {
+	members: URIpair[] | MemberBaseKeys[]
+): { matches: URIpair[] | MemberBaseKeys[]; unMatchedURIs?: string[] } {
 	names = names.map((name) => name.toLowerCase());
 
-	let matches: URIpair[] = [];
+	let matches: URIpair[] | MemberBaseKeys[] = [];
 	let unSortedMatches: { name: string; bestMatch: BestMatch }[] = [];
 	const uriNames = members.map((member) => member.name.toLowerCase());
 
@@ -56,6 +58,9 @@ export function assignMemberURIsAndNames(
 					matches.push({
 						name: name,
 						uri: matchedMember.uri,
+						...(matchedMember.houseCode! && {
+							houseCode: matchedMember.houseCode!,
+						}),
 					});
 				}
 			}
@@ -81,6 +86,9 @@ export function assignMemberURIsAndNames(
 					matches.push({
 						name: unMatch.name,
 						uri: matchedMember.uri,
+						...(matchedMember.houseCode! && {
+							houseCode: matchedMember.houseCode!,
+						}),
 					});
 					// Once a match is found and added, remove it from the unsorted list
 					unSortedMatches = unSortedMatches.filter(
