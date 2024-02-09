@@ -72,3 +72,41 @@ export function groupObjectsByProperty<T>(arr: T[], property: keyof T): T[][] {
 
 	return Array.from(groups.values());
 }
+
+export function groupByKey<T, K extends keyof unknown>(
+	array: T[],
+	getKey: (item: T) => K
+): Record<K, T[]> {
+	return array.reduce((accumulator, item) => {
+		const key = getKey(item);
+		if (!accumulator[key]) accumulator[key] = [];
+		accumulator[key].push(item);
+		return accumulator;
+	}, {} as Record<K, T[]>);
+}
+
+type GroupResult<T> = {
+	[key: string]: GroupResult<T> | T[];
+};
+
+export function groupByNested<T>(
+	array: T[],
+	getKeys: (item: T) => string[]
+): GroupResult<T> {
+	return array.reduce<GroupResult<T>>((accumulator, item) => {
+		const keys = getKeys(item);
+		keys.reduce((acc, key, index) => {
+			// Check if it's the last key and handle accordingly
+			if (index === keys.length - 1) {
+				if (!acc[key]) acc[key] = [];
+				// TypeScript knows acc[key] is an array of T here, thanks to the type assertion
+				(acc[key] as T[]).push(item);
+			} else {
+				if (!acc[key]) acc[key] = {};
+				// No assertion needed here, as acc[key] is used as an accumulator again
+			}
+			return acc[key] as GroupResult<T>;
+		}, accumulator);
+		return accumulator;
+	}, {});
+}
