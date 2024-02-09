@@ -1,23 +1,13 @@
 /** @format */
 
 import { Chamber } from '@/models/_utils';
-import {
-	Committee,
-	CommitteeAttendance,
-} from '@/models/scraped/oireachtas/committee';
+import { Committee, CommitteeAttendance } from '@/models/committee';
 import { RawMember } from '@/models/oireachtasApi/member';
 import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
-import parseCommitteeReport from '@/functions/documents/attendance/commitee/_parse_report';
 import similarity from 'string-similarity';
+import parseCommitteeReport from './report/_parse_committee_attendance';
 
-/**
- * Binds committee reports to debate records.
- *
- * @param {CommitteeDebateRecord[]} records - List of debate records.
- * @param {Committee[]} committees - List of committees.
- * @param {RawMember[]} members - List of members.
- * @returns {Promise<CommitteeAttendance[]>} List of committee attendance records.
- */
+// Binds committee reports to debate records.
 export async function bindReportsToDebateRecords(
 	records: CommitteeDebateRecord[],
 	committees: Committee[],
@@ -65,6 +55,7 @@ export async function bindReportsToDebateRecords(
 			name: record.name,
 			rootURI: record.rootURI,
 			uri: record.uri!,
+			committeeType: report.type,
 			type: record.type!,
 			houseNo: record.houseNo,
 			chamber: record.chamber as Exclude<Chamber, 'dail & seanad'>,
