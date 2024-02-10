@@ -19,4 +19,10 @@ export type URIpair = {
 	uri: string;
 };
 
-export type GroupType = 'dail' | 'seanad' | 'party' | 'constituency' | 'member';
+export type GroupType =
+	| 'dail'
+	| 'seanad'
+	| 'party'
+	| 'constituency'
+	| 'member'
+	| 'committee';
