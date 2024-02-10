@@ -1,27 +1,15 @@
 /** @format */
 
 import { MemberBaseKeys } from '@/models/_utils';
-import { CommitteeAttendance } from '@/models/committee';
-
-type MemberCommitteeAttendance = {
-	uri: string;
-	member_uri: string;
-	type: string;
-	committee_uri: string;
-	committee_name: string;
-	committee_root_uri: string;
-	committee_root_name: string;
-	year: number;
-	present: Date[][];
-	absent: Date[][];
-	also_present: Date[][];
-	percentage_present: number;
-};
+import {
+	CommitteeAttendance,
+	MemberIndCommAttendanceRecord,
+} from '@/models/committee';
 
 function aggregateMemberAttendance(
 	records: CommitteeAttendance[]
-): MemberCommitteeAttendance[] {
-	const summaries: Record<string, MemberCommitteeAttendance> = {};
+): MemberIndCommAttendanceRecord[] {
+	const summaries: Record<string, MemberIndCommAttendanceRecord> = {};
 
 	records.forEach((record) => {
 		const year = record.date.getFullYear();
@@ -64,11 +52,12 @@ function initializeAttendanceSummary(
 	member: MemberBaseKeys,
 	record: CommitteeAttendance,
 	year: number
-): MemberCommitteeAttendance {
+): MemberIndCommAttendanceRecord {
 	return {
-		uri: `${member.uri}-${record.uri}-${year}`,
-		member_uri: member.uri,
-		type: record.type,
+		record_uri: `${member.uri}-${record.uri}-${year}`,
+		group_type: 'member',
+		uri: member.uri,
+		committee_type: record.type,
 		committee_uri: record.uri,
 		committee_name: record.name,
 		committee_root_uri: record.rootURI,
@@ -83,7 +72,7 @@ function initializeAttendanceSummary(
 
 // Calculate the percentage of present days.
 function calculatePercentagePresent(
-	summary: MemberCommitteeAttendance
+	summary: MemberIndCommAttendanceRecord
 ): number {
 	const totalPresentDays = summary.present.flat().length;
 	const totalMeetingDays =

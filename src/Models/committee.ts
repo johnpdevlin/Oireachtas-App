@@ -1,6 +1,11 @@
 /** @format */
 
-import { BinaryChamber, CommitteeType, MemberBaseKeys } from './_utils';
+import {
+	BinaryChamber,
+	CommitteeType,
+	GroupType,
+	MemberBaseKeys,
+} from './_utils';
 import { DateRangeStr } from './dates';
 import { CommitteeDebateRecord } from './oireachtasApi/debate';
 
@@ -37,3 +42,29 @@ export type CommitteeAttendance = CommitteeDebateRecord & {
 	absent?: MemberBaseKeys[];
 	alsoPresent?: MemberBaseKeys[];
 };
+
+export type CommitteeAttedanceRecord = {
+	record_uri: string;
+	uri: string;
+	group_type: GroupType;
+	date_start?: Date;
+	date_end?: Date;
+	year?: number;
+	present: Date[][];
+	absent: Date[][];
+	also_present: Date[][];
+	percentage_present: number;
+};
+
+export type GroupCommitteeAttendanceRecord = CommitteeAttedanceRecord;
+
+export type IndCommiteeAttendanceRecord = {
+	committee_type: CommitteeType;
+	committee_uri: string;
+	committee_name: string;
+	committee_root_uri: string;
+	committee_root_name: string;
+};
+
+export type MemberIndCommAttendanceRecord = IndCommiteeAttendanceRecord &
+	CommitteeAttedanceRecord;
