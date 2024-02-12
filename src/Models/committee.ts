@@ -6,11 +6,11 @@ import {
 	GroupType,
 	MemberBaseKeys,
 } from './_utils';
-import { DateRangeStr } from './dates';
+import { DateRange, DateRangeObj, DateRangeStr } from './dates';
 import { CommitteeDebateRecord } from './oireachtasApi/debate';
 
 export type CommitteeMember = {
-	dateRange: DateRangeStr;
+	dateRange: DateRangeObj;
 } & MemberBaseKeys;
 
 export type CommitteeMembers = {
@@ -28,7 +28,7 @@ export type Committee = {
 	chair: MemberBaseKeys;
 	members?: CommitteeMembers;
 	pastMembers?: CommitteeMembers;
-	dateRange: DateRangeStr;
+	dateRange: DateRangeObj;
 } & Partial<ExpiredDetails>;
 
 export type ExpiredDetails = {
@@ -53,7 +53,6 @@ export type CommitteeAttedanceRecord = {
 	present: Date[][];
 	absent: Date[][];
 	also_present: Date[][];
-	percentage_present: number;
 };
 
 export type GroupCommitteeAttendanceRecord = CommitteeAttedanceRecord;

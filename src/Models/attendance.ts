@@ -16,7 +16,6 @@ export type SittingDays = {
 	sittingTotal: number;
 	otherTotal: number;
 	total: number;
-	percentage: number;
 };
 
 export type SittingDaysRecord = {
