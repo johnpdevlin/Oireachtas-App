@@ -166,16 +166,16 @@ export function extractDateFromDmonthYstring(
 	}
 
 	const day = parseInt(dateParts[0]);
-	const month = getMonthNumber(dateParts[1]);
+	const month = strMonthToNumber(dateParts[1]);
 	const year = parseInt(dateParts[2]);
 
-	if (isNaN(day) || isNaN(month) || isNaN(year)) {
+	if (isNaN(day) || isNaN(month!) || isNaN(year)) {
 		// Invalid date parts
 		return undefined;
 	}
 
 	// Note: Months in JavaScript's Date object are zero-based (0 - 11)
-	const date = new Date(year, month - 1, day);
+	const date = new Date(year, month! - 1, day);
 
 	if (isNaN(date.getTime())) {
 		// Invalid date
@@ -185,23 +185,48 @@ export function extractDateFromDmonthYstring(
 	return date;
 }
 
-function getMonthNumber(month: string): number {
+export function strMonthToNumber(month: string): number | undefined {
+	month = month.toLowerCase();
+
+	if (month.length === 3) return monthAbbreviationToNumber(month);
+
 	const monthNames: { [key: string]: number } = {
-		January: 0,
-		February: 1,
-		March: 2,
-		April: 3,
-		May: 4,
-		June: 5,
-		July: 6,
-		August: 7,
-		September: 8,
-		October: 9,
-		November: 10,
-		December: 11,
+		january: 0,
+		february: 1,
+		march: 2,
+		april: 3,
+		may: 4,
+		june: 5,
+		july: 6,
+		august: 7,
+		september: 8,
+		october: 9,
+		november: 10,
+		december: 11,
 	};
 
 	return monthNames[month];
+}
+
+function monthAbbreviationToNumber(
+	monthAbbreviation: string
+): number | undefined {
+	const months: { [key: string]: number } = {
+		jan: 0,
+		feb: 1,
+		mar: 2,
+		apr: 3,
+		may: 4,
+		jun: 5,
+		jul: 6,
+		aug: 7,
+		sep: 8,
+		oct: 9,
+		nov: 10,
+		dec: 11,
+	};
+
+	return months[monthAbbreviation];
 }
 
 export function dateToYMDstring(date: Date): string {
