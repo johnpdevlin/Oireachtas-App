@@ -2,7 +2,6 @@
 import { getEndDateStr } from '@/functions/_utils/dates';
 import { groupObjectsByProperty } from '@/functions/_utils/objects';
 import { RawMemberConstituency } from './_index';
-import { OirDate } from '@/models/dates';
 import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/constituency';
 import { BinaryChamber } from '@/models/_utils';
 
@@ -83,8 +82,8 @@ function parseIndividualConstituency(
 	);
 
 	const results: MemberConstituency[] = [];
-	let start: OirDate | '' = '';
-	let end: OirDate | undefined | null = null;
+	let start: string;
+	let end: string;
 	let houseNo = 0;
 	let houses: number[] = [];
 
@@ -93,7 +92,7 @@ function parseIndividualConstituency(
 		if (start === '') {
 			// If first iteration of loop, assign values
 			start = con.house.dateRange.start;
-			end = getEndDateStr(con.house.dateRange.end);
+			end = getEndDateStr(con.house.dateRange.end!)!;
 			houseNo = tempHouseNo;
 			houses.push(houseNo);
 		} else if (tempHouseNo - houseNo !== 1) {
@@ -105,14 +104,14 @@ function parseIndividualConstituency(
 				dateRange: { start: start, end: end },
 				houses: houses,
 			});
-			start = con.house.dateRange.start as OirDate;
-			end = getEndDateStr(con.house.dateRange.end);
+			start = con.house.dateRange.start;
+			end = getEndDateStr(con.house.dateRange.end!)!;
 			houseNo = tempHouseNo;
 			houses = [tempHouseNo];
 		} else {
 			houses.push(tempHouseNo);
 			houseNo = tempHouseNo;
-			end = getEndDateStr(con.house.dateRange.end);
+			end = getEndDateStr(con.house.dateRange.end!)!;
 		}
 	});
 
@@ -121,7 +120,7 @@ function parseIndividualConstituency(
 		name: constits.at(-1)!.showAs,
 		chamber: type,
 		uri: constits.at(-1)!.representCode,
-		dateRange: { start: start as OirDate, end },
+		dateRange: { start: start!, end: end! },
 		houses: houses,
 	});
 

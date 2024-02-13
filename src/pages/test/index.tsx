@@ -27,17 +27,13 @@ import { Button, Stack, TextField, Typography } from '@mui/material';
 import processChamberAttendanceReports from '@/functions/attendance/deprecated/get_chamber_attendance_report';
 import processCommitteeReportsBetweenDates from '@/functions/attendance/commitee/report/_committee_attendance';
 import scrapeAllWikiConstituencies from '@/functions/wikipedia/constit/all_constits';
-import processAllCommitteeInfo from '@/functions/oireachtas_pages/committee/_all_committeesInfo';
+import processAllCommitteeInfo from '@/functions/oireachtas_pages/committee/_all_committees_info';
 import scrapeCommitteesBaseDetails from '@/functions/oireachtas_pages/committee/base_info';
 import { SetStateAction, useState } from 'react';
 import parseInterestsReport from '@/functions/interests/register/_parse_interests_pdf';
 import urls from '@/Data/member-interests/register-urls';
 import processSittingReportsByTerm from '@/functions/attendance/member_report/_attendance_reports';
-import {
-	getMemberAttendanceRecords,
-	getMemberCommitteeAttendanceRecords,
-	idx,
-} from '@/functions/attendance/commitee/member_records/_member_attendance_records';
+import { getMemberCommitteeAttendanceRecords } from '@/functions/attendance/commitee/member_records/_member_attendance_records';
 
 const inter = Inter({ subsets: ['latin'] });
 

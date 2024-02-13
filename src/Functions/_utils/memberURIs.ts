@@ -19,7 +19,7 @@ export async function getMemberUrisAndNames(
 		return {
 			name: member.fullName,
 			uri: member.memberCode,
-			houseCode: chamber,
+			house_code: chamber,
 		};
 	});
 
@@ -58,8 +58,8 @@ export function assignMemberURIsAndNames(
 					matches.push({
 						name: name,
 						uri: matchedMember.uri,
-						...(matchedMember.houseCode! && {
-							houseCode: matchedMember.houseCode!,
+						...(matchedMember.house_code! && {
+							house_code: matchedMember.house_code!,
 						}),
 					});
 				}
@@ -86,8 +86,8 @@ export function assignMemberURIsAndNames(
 					matches.push({
 						name: unMatch.name,
 						uri: matchedMember.uri,
-						...(matchedMember.houseCode! && {
-							houseCode: matchedMember.houseCode!,
+						...(matchedMember.house_code! && {
+							house_code: matchedMember.house_code!,
 						}),
 					});
 					// Once a match is found and added, remove it from the unsorted list

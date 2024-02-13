@@ -1,8 +1,7 @@
 /** @format */
-
-import { getEndDateObj, getEndDateStr } from '@/functions/_utils/dates';
+import { getEndDateStr } from '@/functions/_utils/dates';
 import { BinaryChamber } from '@/models/_utils';
-import { DateRangeStr, OirDate } from '@/models/dates';
+import { DateRangeStr } from '@/models/dates';
 import { RawMoffice } from './_index';
 
 import {
@@ -25,7 +24,7 @@ export default function parseAndFormatOffices(offices: RawMoffice[]): {
 			chamberStr: off.house.showAs,
 			dateRange: {
 				start: off.dateRange.start,
-				end: getEndDateStr(off.dateRange.end as OirDate | undefined | null),
+				end: getEndDateStr(off.dateRange.end!),
 			} as DateRangeStr,
 		};
 		parsed.push(office);
