@@ -1,9 +1,9 @@
 /** @format */
 
 import { RawMember } from '@/models/oireachtasApi/member';
-import { MemberBaseKeys, BinaryChamber, MemberURI } from '@/models/_utils';
+import { MemberBaseKeys, BinaryChamber } from '@/models/_utils';
 import { CheerioAPI } from 'cheerio';
-import { getHouseCode } from './house_code';
+import { getHouseCode } from '../house_code';
 
 // Extract the chair
 export default function getChair(
@@ -19,15 +19,15 @@ export default function getChair(
 				.find('.committee_member_link')
 				.attr('href')
 				?.split('r/')[1]
-				?.replace('/', '') as MemberURI;
+				?.replace('/', '')!;
 			const memberDetails = allMembers.find(
 				(member) => member.memberCode === uri
 			);
-			const houseCode = getHouseCode(
+			const house_code = getHouseCode(
 				memberDetails!.memberships,
 				excpDate ? excpDate : undefined
 			) as BinaryChamber;
-			chair = { houseCode, uri, name };
+			chair = { house_code, uri, name };
 		}
 	});
 	return chair;

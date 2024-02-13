@@ -1,20 +1,13 @@
 /** @format */
-import { CommitteeType, MemberBaseKeys } from '@/models/_utils';
-import { Committee, CommitteeMembers } from '@/models/committee';
+import { Committee } from '@/models/committee';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { Cheerio } from 'cheerio';
-
 import { RawMember } from '@/models/oireachtasApi/member';
-import {
-	getMembers,
-	getPastMembers,
-	removePastMembers,
-} from '@/functions/oireachtas_pages/committee/parse/members';
-import getChair from '@/functions/oireachtas_pages/committee/parse/chair';
 import exceptions from '@/Data/committee-url-pattern-exceptions.json';
-import { DateRangeStr, OirDate } from '@/models/dates';
-import fetchMembers from '../../APIs/Oireachtas/member/raw/_member_details';
+import { getCommitteeTypes } from './parse/committee_types';
+import { getDateRange } from './parse/date_range';
+import { handleMembers } from './parse/members/_handle_members';
 
 //Scrape committee information from the given URL.
 export async function scrapeCommitteePageInfo(
@@ -42,29 +35,7 @@ export async function scrapeCommitteePageInfo(
 		return undefined;
 	}
 
-	let dateRange: DateRangeStr = {
-		start: '2099-12-01',
-		end: undefined,
-	};
-
-	const dateDetails = $('.c-committee-summary__meta-item').each(
-		(_index, element) => {
-			const text = $(element).text().trim();
-			if (text.includes('established')) {
-				dateRange.start = text.split(':')[1].trim() as OirDate;
-			} else if (text.includes('dissolved')) {
-				dateRange.end = text.split(':')[1].trim() as OirDate;
-			} else if (text.includes('House')) {
-				// if (text.includes('Dáil')) chamber = 'dail';
-				// if (text.includes('Seanad')) chamber = 'seanad';
-			}
-		}
-	);
-
-	dateRange = {
-		start: dateRange.start,
-		end: dateRange.end ? dateRange.end : undefined,
-	};
+	const dateRange = getDateRange($)!;
 
 	// Gets successor url / expiry details
 	const historic: Cheerio<cheerio.Element> | undefined = $(
@@ -100,35 +71,12 @@ export async function scrapeCommitteePageInfo(
 		? 'seanad'
 		: 'dail';
 
-	const committeeTypes = (): CommitteeType[] => {
-		const types: CommitteeType[] = [];
-		if ($('#joint').length > 0) types.push('joint');
-		if ($('#select').length > 0) types.push('select');
-		if ($('#standing').length > 0)
-			if (uri.includes('dáil') || uri.includes('seanad')) types.push('select');
-			else types.push('standing');
-		return types;
-	};
+	const committeeTypes = getCommitteeTypes($, uri);
 
-	let excpDate;
-
-	const allMembers = rawMembers
-		? rawMembers
-		: ((await fetchMembers({ formatted: false })) as RawMember[]); // For parsing purposes
-
-	const members = getMembers($, allMembers, excpDate ? excpDate : undefined);
-	const chair = getChair(
+	const { members, pastMembers, chair } = await handleMembers(
 		$,
-		allMembers,
-		excpDate ? excpDate : undefined
-	) as MemberBaseKeys;
-
-	const pastMembers = getPastMembers($, allMembers);
-
-	// Remove past members from the array of current members
-	const filteredMembers = removePastMembers(
-		members as CommitteeMembers,
-		pastMembers
+		dateRange,
+		rawMembers
 	);
 
 	// Create the Committee object with the extracted information
@@ -137,14 +85,14 @@ export async function scrapeCommitteePageInfo(
 		uri,
 		url,
 		chamber,
-		types: committeeTypes(),
+		types: committeeTypes,
 		dail_no: house_no,
 		chair,
-		members: filteredMembers,
+		members: members,
 		dateRange,
 		...(pastMembers && { pastMembers }),
 		...(historicText && { historicText }),
-		...(successorUrl && { successorUrl }),
+		...(successorUrl && historicText?.includes('renamed')! && { successorUrl }),
 	};
 
 	return committee;

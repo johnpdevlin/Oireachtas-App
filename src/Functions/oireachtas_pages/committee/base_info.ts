@@ -30,7 +30,7 @@ async function scrapeCommitteesBaseDetails(): Promise<BaseCommittee[]> {
 }
 
 function parseCommitteeBaseDetails($: cheerio.CheerioAPI): BaseCommittee[] {
-	const committees: BaseCommittee[] = [];
+	let committees: BaseCommittee[] = [];
 	const houses: House[] = [];
 	const oirUrl = 'https://www.oireachtas.ie';
 
@@ -49,7 +49,7 @@ function parseCommitteeBaseDetails($: cheerio.CheerioAPI): BaseCommittee[] {
 		}
 	});
 
-	matchCommitteesWithHouses(committees, houses);
+	committees = matchCommitteesWithHouses(committees, houses);
 	return committees;
 }
 
@@ -96,6 +96,7 @@ function matchCommitteesWithHouses(
 			}
 		});
 	});
+	return committees;
 }
 
 export default scrapeCommitteesBaseDetails;

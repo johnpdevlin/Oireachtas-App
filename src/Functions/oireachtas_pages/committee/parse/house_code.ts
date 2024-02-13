@@ -16,6 +16,8 @@ export function getHouseCode(
 	const ms = memberships.map((mem: RawOuterMembership) => {
 		return mem.membership;
 	});
+
+	// Checks tds periods to match within dates to find relevant
 	ms?.forEach((membership) => {
 		if (ms.length === 1) {
 			relevantMembership = {

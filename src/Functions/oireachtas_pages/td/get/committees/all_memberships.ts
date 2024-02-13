@@ -3,7 +3,7 @@
 import { MemberCommittee } from '@/models/member';
 import { MemberURI, BinaryChamber, MemberBaseKeys } from '@/models/_utils';
 import { Committee, CommitteeMembers } from '@/models/committee';
-import processAllCommitteeInfo from '@/functions/oireachtas_pages/committee/_all_committeesInfo';
+import processAllCommitteeInfo from '@/functions/oireachtas_pages/committee/_all_committees_info';
 
 export type MemberCommitteeDetail = {
 	uri: MemberURI;
