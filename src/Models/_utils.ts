@@ -1,7 +1,4 @@
 /** @format */
-
-import { DailYear, ValidMonthStr } from '@/models/dates';
-
 export type Gender = 'male' | 'female';
 
 export type ChamberType = 'house' | 'committee';

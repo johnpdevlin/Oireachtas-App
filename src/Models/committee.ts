@@ -14,8 +14,8 @@ export type CommitteeMember = {
 } & MemberBaseKeys;
 
 export type CommitteeMembers = {
-	dail?: CommitteeMember[];
-	seanad?: CommitteeMember[];
+	dail: CommitteeMember[];
+	seanad: CommitteeMember[];
 };
 
 export type Committee = {
@@ -26,8 +26,8 @@ export type Committee = {
 	types: CommitteeType[];
 	dail_no: number;
 	chair: MemberBaseKeys;
-	members?: CommitteeMembers;
-	pastMembers?: CommitteeMembers;
+	members: CommitteeMembers;
+	pastMembers: CommitteeMembers;
 	dateRange: DateRangeObj;
 } & Partial<ExpiredDetails>;
 
