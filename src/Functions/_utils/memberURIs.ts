@@ -32,17 +32,18 @@ export async function getMemberUrisAndNames(
 }
 
 // Uses similarity to match standard URI pairs to input string names, improved version
-export function assignMemberURIsAndNames(
-	names: string[],
-	members: URIpair[] | MemberBaseKeys[]
-): { matches: URIpair[] | MemberBaseKeys[]; unMatchedURIs?: string[] } {
+export function assignMemberURIsAndNames<
+	T extends { name: string; uri: string }
+>(names: string[], members: T[]): { matches: T[]; unMatched: string[] } {
 	names = names.map((name) => name.toLowerCase());
 
-	let matches: URIpair[] | MemberBaseKeys[] = [];
+	let matches: T[] = [];
 	let unSortedMatches: { name: string; bestMatch: BestMatch }[] = [];
 	const uriNames = members.map((member) => member.name.toLowerCase());
 
 	names.forEach((name) => {
+		if (typeof name !== 'string') console.info(name);
+
 		const bestMatchResult = similarity.findBestMatch(name, uriNames);
 		const bestMatch = bestMatchResult.bestMatch;
 
@@ -55,17 +56,11 @@ export function assignMemberURIsAndNames(
 			if (matchedMember) {
 				// Ensure we do not add duplicates
 				if (!matches.some((match) => match.uri === matchedMember.uri)) {
-					matches.push({
-						name: name,
-						uri: matchedMember.uri,
-						...(matchedMember.house_code! && {
-							house_code: matchedMember.house_code!,
-						}),
-					});
+					matches.push(matchedMember);
 				}
 			}
 		} else {
-			unSortedMatches.push({ name, bestMatch });
+			unSortedMatches.push({ name, bestMatch: bestMatchResult });
 		}
 	});
 
@@ -83,13 +78,7 @@ export function assignMemberURIsAndNames(
 					matchedMember &&
 					!matches.some((match) => match.uri === matchedMember.uri)
 				) {
-					matches.push({
-						name: unMatch.name,
-						uri: matchedMember.uri,
-						...(matchedMember.house_code! && {
-							house_code: matchedMember.house_code!,
-						}),
-					});
+					matches.push(matchedMember);
 					// Once a match is found and added, remove it from the unsorted list
 					unSortedMatches = unSortedMatches.filter(
 						(unsorted) => unsorted.name !== unMatch.name
@@ -102,6 +91,6 @@ export function assignMemberURIsAndNames(
 
 	return {
 		matches,
-		...(unmatchedURIs.length > 0 && { unMatchedURIs: unmatchedURIs }),
+		unMatched: unmatchedURIs?.length > 0 ? unmatchedURIs : [],
 	};
 }
