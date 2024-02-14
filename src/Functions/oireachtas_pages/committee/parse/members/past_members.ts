@@ -13,7 +13,7 @@ export function getPastMembers(
 	$: CheerioAPI,
 	allMembers: RawMember[],
 	dateRange: DateRangeObj
-): { dail?: CommitteeMember[]; seanad?: CommitteeMember[] } {
+): { dail: CommitteeMember[]; seanad: CommitteeMember[] } {
 	const dailMembers: CommitteeMember[] = [];
 	const seanadMembers: CommitteeMember[] = [];
 	$('.member_box_bottom-history.current-print').each((_index, element) => {
@@ -64,12 +64,8 @@ export function getPastMembers(
 	});
 
 	return {
-		...(dailMembers.length > 0 && {
-			dail: dailMembers,
-		}),
-		...(seanadMembers.length > 0 && {
-			seanad: seanadMembers,
-		}),
+		dail: dailMembers ? dailMembers : [],
+		seanad: seanadMembers ? seanadMembers : [],
 	};
 }
 
@@ -138,15 +134,7 @@ export function removePastMembers(
 		);
 	}
 	return {
-		...(dailMembers!
-			? {
-					dail: dailMembers,
-			  }
-			: { dail: members.dail }),
-		...(seanadMembers!
-			? {
-					seanad: seanadMembers,
-			  }
-			: { seanad: members.seanad }),
+		dail: dailMembers ? dailMembers : [],
+		seanad: seanadMembers ? seanadMembers : [],
 	};
 }
