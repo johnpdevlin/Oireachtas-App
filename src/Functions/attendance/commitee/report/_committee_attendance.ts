@@ -24,7 +24,7 @@ async function processCommitteeReportsBetweenDates(
 	// variable to allow for time for oir records to be available
 	const twoWeeksPast = getDateTwoWeeksAgo();
 
-	if (!date_start) return [];
+	if (!date_start || !house_no) return [];
 	if (!date_end || new Date(date_end!).getTime() > twoWeeksPast)
 		// To allow time for pdfs to be uploaded by Oireachtas
 		date_end = dateToYMDstring(new Date(twoWeeksPast));
@@ -43,7 +43,7 @@ async function processCommitteeReportsBetweenDates(
 		return { ...bc, records: [] };
 	});
 
-	// Members as reference for non-members of committees attendance
+	// Members as reference for non-members of committees a
 	const allMembers = await getMembers(house_no);
 	console.info('Fetched base committee and members details.');
 

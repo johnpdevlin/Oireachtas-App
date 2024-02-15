@@ -26,7 +26,7 @@ import Layout from '@/UI-Components/_layout';
 import { Button, Stack, TextField, Typography } from '@mui/material';
 import processChamberAttendanceReports from '@/functions/attendance/deprecated/get_chamber_attendance_report';
 import processCommitteeReportsBetweenDates from '@/functions/attendance/commitee/report/_committee_attendance';
-import scrapeAllWikiConstituencies from '@/functions/wikipedia/constit/all_constits';
+import scrapeAllWikiConstituencies from '@/functions/wikipedia_pages/constit/all_constits';
 import processAllCommitteeInfo from '@/functions/oireachtas_pages/committee/_all_committees_info';
 import scrapeCommitteesBaseDetails from '@/functions/oireachtas_pages/committee/base_info';
 import { SetStateAction, useState } from 'react';
@@ -190,12 +190,13 @@ export default function Tests() {
 							onClick={() =>
 								console.info(
 									processCommitteeReportsBetweenDates(
+										33,
 										'01/01/2020',
-										'01/12/2021'
+										'01/01/2024'
 									)
 								)
 							}>
-							Committee Attendance Reports (2020-2021)
+							Committee Attendance Reports (2020-2020)
 						</Button>
 						<Button
 							variant='contained'

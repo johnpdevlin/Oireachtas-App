@@ -7,7 +7,7 @@ import {
 	removeTextBetweenParentheses,
 } from '@/functions/_utils/strings';
 
-function formatPresentStr(pr: string): string | undefined {
+function normalisePresentStr(pr: string): string | undefined {
 	// remove unneccessary characters
 	if (pr == undefined || pr.length < 5 || !pr.includes(' ')) {
 		return undefined;
@@ -63,4 +63,4 @@ function formatPresentStr(pr: string): string | undefined {
 	return pr;
 }
 
-export { formatPresentStr };
+export { normalisePresentStr };

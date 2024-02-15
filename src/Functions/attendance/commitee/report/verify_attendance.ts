@@ -47,7 +47,6 @@ export function verifyAttendance(
 		);
 		confirmedAlsoPresent.push(...processed.matches);
 		if (processed.unMatched.length > 0) {
-			console.log(date, committee);
 			console.log(processed.unMatched.join(', '));
 		}
 	}

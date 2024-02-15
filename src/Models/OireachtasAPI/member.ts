@@ -1,10 +1,10 @@
 /** @format */
 
-import { BinaryChamber, ChamberType, MemberURI } from '../_utils';
+import { BinaryChamber, ChamberType } from '../_utils';
 import { DateRangeStr } from '../dates';
 
 export type MemberRequest = {
-	uri?: MemberURI;
+	uri?: string;
 	date_start?: string | Date;
 	date_end?: string | Date;
 	house_no?: number;
@@ -69,7 +69,7 @@ export type RawMember = {
 	uri: string;
 	fullName: string;
 	dateOfDeath: null;
-	memberCode: MemberURI;
+	memberCode: string;
 	image: boolean;
 	pId: string;
 };

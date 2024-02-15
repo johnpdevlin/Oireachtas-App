@@ -35,7 +35,11 @@ export async function getMemberUrisAndNames(
 export function assignMemberURIsAndNames<
 	T extends { name: string; uri: string }
 >(names: string[], members: T[]): { matches: T[]; unMatched: string[] } {
-	names = names.map((name) => name.toLowerCase());
+	names = names.map((name) => {
+		if (names.includes(', '))
+			name.split(',').map((nm) => names.push(nm.trim().toLowerCase()));
+		return name.toLowerCase();
+	});
 
 	let matches: T[] = [];
 	let unSortedMatches: { name: string; bestMatch: BestMatch }[] = [];

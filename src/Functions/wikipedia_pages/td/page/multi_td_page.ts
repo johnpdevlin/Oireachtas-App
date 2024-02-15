@@ -1,7 +1,7 @@
 /** @format */
 
-import scrapeDailSessionPage from '@/functions/wikipedia/dail/dail_session';
-import scrapeTDWikiPage from '@/functions/wikipedia/td/page/td_page';
+import scrapeDailSessionPage from '@/functions/wikipedia_pages/dail/dail_session';
+import scrapeTDWikiPage from '@/functions/wikipedia_pages/td/page/td_page';
 import { WikiTDProfileDetails } from '@/models/wiki_td';
 import { URIpair } from '@/models/_utils';
 

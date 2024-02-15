@@ -1,7 +1,7 @@
 /** @format */
 
 import { RawMember } from '@/models/oireachtasApi/member';
-import { formatPresentStr } from './format_present_str';
+import { normalisePresentStr } from './normalise_present_str';
 import { parsePresentLine } from './parse_present_line';
 
 function parseLine(
@@ -48,7 +48,9 @@ function parseLine(
 			if (!additionalNames) console.error(lines);
 			else alsoPresent.push(...additionalNames);
 		} else if (line.includes('in the absence')) {
-			const potentialName = formatPresentStr(line.split('in the absence')[0]);
+			const potentialName = normalisePresentStr(
+				line.split('in the absence')[0]
+			);
 			if (potentialName!) {
 				alsoPresent.push(potentialName);
 			}
@@ -85,7 +87,7 @@ function parseReplacementAttendees(line: string): {
 	const parts = line.split(/,\.|,|\./); // Split based on comma or period and comma
 
 	for (let i = 0; i < parts.length; i++) {
-		const part = formatPresentStr(parts[i]);
+		const part = normalisePresentStr(parts[i]);
 		if (!part) continue;
 
 		if (
@@ -96,7 +98,7 @@ function parseReplacementAttendees(line: string): {
 			if (parts[i + 1] === '*') {
 				alsoPresent.push(part);
 			} else {
-				const nextPart = formatPresentStr(parts[i + 2]);
+				const nextPart = normalisePresentStr(parts[i + 2]);
 				if (nextPart) {
 					alsoPresent.push(part);
 					alsoPresent.push(nextPart);
