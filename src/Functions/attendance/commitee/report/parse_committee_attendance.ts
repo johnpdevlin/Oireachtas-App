@@ -23,6 +23,7 @@ export default async function parseCommitteeReport(
 ): Promise<ParsedReport | undefined> {
 	try {
 		if (!url) return;
+
 		const text = await fetchRawTextFromUrl(url);
 		const lines = splitStringIntoLines(text);
 
@@ -35,7 +36,10 @@ export default async function parseCommitteeReport(
 
 			if (line!) {
 				// Check if the line indicates the start of attendee information
-				if (line.includes('present')) {
+				if (
+					present.length === 0 &&
+					(line.includes('present') || line.includes('i láthair'))
+				) {
 					searching = true;
 				}
 
@@ -58,7 +62,11 @@ export default async function parseCommitteeReport(
 					}
 				}
 				// Check if the line indicates the end of attendee information
-				if (line.includes('the chair')) {
+				if (
+					line.includes('the chair') ||
+					line.includes('sa chathaoir') ||
+					(alsoPresent.length > 0 && line === '1')
+				) {
 					searching = false;
 					break;
 				}

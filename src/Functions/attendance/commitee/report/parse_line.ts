@@ -108,7 +108,7 @@ function parseReplacementAttendees(line: string): {
 			present.push(part);
 		}
 	}
-	return { present, ...(alsoPresent! && { alsoPresent: alsoPresent }) };
+	return { present, alsoPresent };
 }
 
 export { parseLine };
