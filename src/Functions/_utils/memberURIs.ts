@@ -4,6 +4,7 @@ import { BinaryChamber, MemberBaseKeys, URIpair } from '@/models/_utils';
 import similarity, { BestMatch } from 'string-similarity';
 import { RawMember } from '@/models/oireachtasApi/member';
 import fetchMembers from '../APIs/Oireachtas/member/raw/_member_details';
+import { normaliseString } from './strings';
 
 export async function getMemberUrisAndNames(
 	names: string[],
@@ -33,17 +34,13 @@ export async function getMemberUrisAndNames(
 
 // Uses similarity to match standard URI pairs to input string names, improved version
 export function assignMemberURIsAndNames<
-	T extends { name: string; uri: string }
+	T extends { fullName?: string; name?: string; uri: string }
 >(names: string[], members: T[]): { matches: T[]; unMatched: string[] } {
-	names = names.map((name) => {
-		if (names.includes(', '))
-			name.split(',').map((nm) => names.push(nm.trim().toLowerCase()));
-		return name.toLowerCase();
-	});
-
 	let matches: T[] = [];
 	let unSortedMatches: { name: string; bestMatch: BestMatch }[] = [];
-	const uriNames = members.map((member) => member.name.toLowerCase());
+	const uriNames = members.map(
+		(member) => member.fullName?.toLowerCase() || member.name?.toLowerCase()
+	) as string[];
 
 	names.forEach((name) => {
 		if (typeof name !== 'string') console.info(name);
@@ -54,7 +51,9 @@ export function assignMemberURIsAndNames<
 		if (bestMatch.rating > 0.3) {
 			// Find the member with the exact name match from the original list
 			const matchedMember = members.find(
-				(member) => member.name.toLowerCase() === bestMatch.target
+				(member) =>
+					(member.fullName?.toLowerCase() === bestMatch.target ||
+						member.name?.toLowerCase()) === bestMatch.target
 			);
 
 			if (matchedMember) {
@@ -76,7 +75,9 @@ export function assignMemberURIsAndNames<
 			.sort((a, b) => b.rating - a.rating) // Sort by descending rating
 			.forEach((rating) => {
 				const matchedMember = members.find(
-					(member) => member.name.toLowerCase() === rating.target
+					(member) =>
+						(member.fullName?.toLowerCase() === rating.target ||
+							member.name?.toLowerCase()) === rating.target
 				);
 				if (
 					matchedMember &&
