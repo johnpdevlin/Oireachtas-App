@@ -1,37 +1,53 @@
 /** @format */
 
-import { MemberBaseKeys, BinaryChamber } from '@/models/_utils';
-import { Committee, CommitteeMember } from '@/models/committee';
+import { MemberBaseKeys, BinaryChamber, CommitteeType } from '@/models/_utils';
+import {
+	Committee,
+	CommitteeMember,
+	CommitteeMembers,
+} from '@/models/committee';
+import { DateRangeObj } from '@/models/dates';
 import { RawMember } from '@/models/oireachtasApi/member';
 
 function getMembersAndNonMembers(
 	committee: Committee,
-	allMembers: RawMember[]
-): {
-	members: MemberBaseKeys[];
-	nonMembers: MemberBaseKeys[];
-	warnings: string[];
-} {
-	const warnings: string[] = [];
-	let chamber: BinaryChamber = 'dail';
-	let members: MemberBaseKeys[] = [];
-	let nonMembers: MemberBaseKeys[] = [];
-
-	if (committee.members) {
-		const dail = committee.members.dail;
-		const seanad = committee.members.seanad;
-
-		members = members.concat(dail || []);
-		if (seanad && (chamber === 'dail' || committee.types?.[0] === 'select')) {
-			members = members.concat(seanad);
-			chamber = 'seanad';
-		}
-	} else {
-		warnings.push('No committee.');
+	type: CommitteeType,
+	allMembers: RawMember[],
+	date: Date
+):
+	| {
+			members: MemberBaseKeys[];
+			nonMembers: MemberBaseKeys[];
+	  }
+	| undefined {
+	const members: CommitteeMember[] = [];
+	let chamber = committee.chamber;
+	if (
+		committee.members.dail.length > 0 ||
+		committee.pastMembers.seanad.length > 0
+	) {
+		const parsed = parseMembers(chamber, type, committee.members);
+		members.push(...parsed.members);
+		chamber = parsed.chamber;
 	}
 
-	nonMembers = allMembers
-		.filter((am) => members.every((com) => com.uri !== am.uri))
+	if (
+		committee.pastMembers! &&
+		(committee.pastMembers.dail! || committee.pastMembers.seanad!)
+	) {
+		const relevantPastMembers = getRelevantPastMembers(
+			chamber,
+			committee.pastMembers,
+			date,
+			type
+		);
+
+		members.push(...relevantPastMembers);
+	}
+
+	const formattedMembers = formatAsBaseKeys(members)!;
+	const nonMembers = allMembers
+		.filter((am) => formattedMembers.every((com) => com.uri != am.memberCode))
 		.map(
 			(member) =>
 				({
@@ -41,53 +57,88 @@ function getMembersAndNonMembers(
 				} as MemberBaseKeys)
 		);
 
-	return { members, nonMembers, warnings };
+	return { members: formattedMembers, nonMembers };
 }
 
 // Sorts into current members and non members on given date
-function getPastMembers(
+function getRelevantPastMembers(
 	chamber: BinaryChamber,
-	committee: Committee
+	pastMembers: CommitteeMembers,
+	date: Date,
+	type: CommitteeType
 ): CommitteeMember[] {
-	let pastMembers: CommitteeMember[] = [];
-	if (committee.pastMembers) {
-		const dail = committee.pastMembers.dail;
-		const seanad = committee.pastMembers.seanad;
-
-		pastMembers = pastMembers.concat(dail || []);
-		if (seanad && (chamber === 'dail' || committee.types?.[0] === 'select')) {
-			pastMembers = pastMembers.concat(seanad);
-		}
+	if (pastMembers.dail || pastMembers.seanad) {
+		const parsed = parseMembers(chamber, type, pastMembers).members;
+		const relevantMembers = parseRelevantPastMembers(parsed, date);
+		return relevantMembers;
 	}
-	return pastMembers;
+	return [];
 }
 
-function handlePastMembers(
-	pastMembers: CommitteeMember[],
-	members: MemberBaseKeys[],
-	nonMembers: MemberBaseKeys[],
+// Get members who were relevant on given date
+function parseRelevantPastMembers(
+	members: CommitteeMember[],
 	date: Date
-): { members: MemberBaseKeys[]; nonMembers: MemberBaseKeys[] } {
-	pastMembers.forEach((member) => {
-		const mDateRange = member.dateRange;
-		const memberObj: MemberBaseKeys = {
-			uri: member.uri,
-			name: member.name,
-			house_code: member.house_code,
-		};
-
-		if (date.getTime() > new Date(mDateRange.start).getTime()) {
-			if (
-				new Date(mDateRange.end!).getTime() &&
-				date.getTime() < new Date(mDateRange.end!).getTime()
-			) {
-				members.push(memberObj);
-			} else {
-				nonMembers.push(memberObj);
-			}
-		}
-	});
-	return { members, nonMembers };
+): CommitteeMember[] {
+	return members.filter((member) => isRelevantDate(member.dateRange, date));
 }
 
-export { handlePastMembers, getMembersAndNonMembers, getPastMembers };
+function isRelevantDate(dr: DateRangeObj, date: Date): boolean {
+	// Extract year and month for easier comparison
+	const dateYear = date.getFullYear();
+	const dateMonth = date.getMonth();
+	const startYear = dr.start.getFullYear();
+	const startMonth = dr.start.getMonth();
+	const endYear = dr.end!.getFullYear();
+	const endMonth = dr.end!.getMonth();
+
+	// Check if the date is in the same year and month or later than the start
+	const isAfterStart =
+		dateYear > startYear || (dateYear === startYear && dateMonth >= startMonth);
+
+	// Check if the date is in the same year and month or before the end
+	const isBeforeEnd =
+		dateYear < endYear || (dateYear === endYear && dateMonth <= endMonth);
+
+	// The date is relevant if it's after the start and before the end
+	return isAfterStart && isBeforeEnd;
+}
+
+// Filter out based on committee type
+function parseMembers(
+	chamber: BinaryChamber,
+	type: CommitteeType,
+	members: CommitteeMembers
+): { chamber: BinaryChamber; members: CommitteeMember[] } {
+	const dail = members.dail;
+	const seanad = members.seanad;
+
+	const confirmedMembers: CommitteeMember[] = [];
+	if (dail!) confirmedMembers.push(...dail);
+	if (
+		seanad! &&
+		(type === 'joint' ||
+			!dail ||
+			type === 'working group' ||
+			chamber !== 'dail')
+	) {
+		confirmedMembers.push(...seanad);
+		chamber = 'seanad';
+	}
+	return {
+		chamber: chamber,
+		members: confirmedMembers,
+	};
+}
+
+function formatAsBaseKeys(members: CommitteeMember[]): MemberBaseKeys[] {
+	return members.map((com) => {
+		return {
+			uri: com.uri,
+			name: com.name,
+			house_code: com.house_code,
+		};
+	});
+}
+
+export { getMembersAndNonMembers };
