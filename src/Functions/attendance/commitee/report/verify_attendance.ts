@@ -3,102 +3,59 @@
 import { removeDuplicateObjects } from '@/functions/_utils/arrays';
 import { assignMemberURIsAndNames } from '@/functions/_utils/memberURIs';
 import { RawMember } from '@/models/oireachtasApi/member';
-import { CommitteeType, MemberBaseKeys, BinaryChamber } from '@/models/_utils';
-import { Committee, CommitteeMember } from '@/models/committee';
-import {
-	getMembersAndNonMembers,
-	getPastMembers,
-	handlePastMembers,
-} from './handle_members';
+import { CommitteeType, MemberBaseKeys } from '@/models/_utils';
+import { Committee } from '@/models/committee';
+import { getMembersAndNonMembers } from './handle_members';
 
 type AttendanceResult = {
 	type: string;
 	present: MemberBaseKeys[];
-	absent?: MemberBaseKeys[];
-	alsoPresent?: MemberBaseKeys[];
+	absent: MemberBaseKeys[];
+	alsoPresent: MemberBaseKeys[];
 };
 
 export function verifyAttendance(
-	type: string,
+	type: CommitteeType,
 	present: string[],
 	committee: Committee,
 	allMembers: RawMember[],
 	date: Date,
-	alsoPresent?: string[]
+	alsoPresent: string[]
 ): AttendanceResult {
-	let { members, nonMembers, warnings } = getMembersAndNonMembers(
+	// Gets members relevant to date and non-members
+
+	const { members, nonMembers } = getMembersAndNonMembers(
 		committee,
-		allMembers
-	);
-	const pastMembers = getPastMembers(
-		members[0]?.houseCode || 'dail',
-		committee
-	);
-
-	// Sorts current past past members
-	// to members or non members as on given date
-	const handledPastMembers = handlePastMembers(
-		pastMembers,
-		members,
-		nonMembers,
+		type,
+		allMembers,
 		date
-	);
-	members = handledPastMembers.members;
-	nonMembers = handledPastMembers.nonMembers;
+	)!;
 
+	const confirmedAlsoPresent: MemberBaseKeys[] = [];
 	const confirmedPresent = assignMemberURIsAndNames(present, members);
-	const confirmedAbsent = members.filter(
-		(member) => !confirmedPresent.matches.some((cp) => cp.uri === member.uri)
-	);
 
-	// handles any unmatched names which might be assigned to also present
-	alsoPresent = handleUnmatchedURIs(alsoPresent, confirmedPresent);
+	const confirmedAbsent = members.filter((member) =>
+		confirmedPresent!.matches.some((cp) => cp.uri === member.uri)
+	);
 
 	// Verifies alsoPresent's members attendance
 	// Deals with unmatched names to check if valid etc.
-	let confirmedAlsoPresent:
-		| { matches: MemberBaseKeys[]; unMatchedURIs?: string[] }
-		| undefined;
-	if (alsoPresent && alsoPresent.length > 0) {
-		confirmedAlsoPresent = assignMemberURIsAndNames(alsoPresent, nonMembers);
-		if (
-			confirmedAlsoPresent.unMatchedURIs &&
-			confirmedAlsoPresent.unMatchedURIs.length > 0
-		) {
-			warnings.push(
-				`No matches found for ${confirmedAlsoPresent.unMatchedURIs}`
-			);
-		}
-		const edgeCases = confirmedAlsoPresent.matches.filter((conAlso) =>
-			confirmedPresent.matches.some((conAb) => conAb.uri === conAlso.uri)
+	if (alsoPresent.length > 0 || confirmedPresent.unMatched.length > 0) {
+		const processed = assignMemberURIsAndNames(
+			[...alsoPresent, ...confirmedPresent.unMatched],
+			nonMembers
 		);
-		if (edgeCases.length > 0) {
-			warnings.push(
-				`Issue with ${edgeCases} \n Being picked up as also present rather than present.`
-			);
+		confirmedAlsoPresent.push(...processed.matches);
+		if (processed.unMatched.length > 0) {
+			console.log(date, committee);
+			console.log(processed.unMatched.join(', '));
 		}
 	}
 
 	return {
 		type: type,
 		present: removeDuplicateObjects(confirmedPresent.matches),
-		...(confirmedAlsoPresent && {
-			alsoPresent: removeDuplicateObjects(confirmedAlsoPresent.matches),
-		}),
-		...(confirmedAbsent && {
-			absent: removeDuplicateObjects(confirmedAbsent),
-		}),
+		alsoPresent: removeDuplicateObjects(confirmedAlsoPresent),
+		absent: removeDuplicateObjects(confirmedAbsent),
 	};
-}
-
-function handleUnmatchedURIs(
-	alsoPresent: string[] | undefined,
-	confirmedPresent: { matches: MemberBaseKeys[]; unMatchedURIs?: string[] }
-): string[] | undefined {
-	if (confirmedPresent.unMatchedURIs) {
-		return alsoPresent
-			? [...alsoPresent, ...confirmedPresent.unMatchedURIs]
-			: confirmedPresent.unMatchedURIs;
-	}
-	return alsoPresent;
 }
