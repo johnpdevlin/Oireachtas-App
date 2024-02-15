@@ -288,3 +288,11 @@ export function splitStringIntoLines(block: string): string[] {
 		.split('\n')
 		.filter((line) => line !== undefined && line.length > 0);
 }
+
+export function normaliseString(input: string): string {
+	return input
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.toLowerCase()
+		.trim();
+}
