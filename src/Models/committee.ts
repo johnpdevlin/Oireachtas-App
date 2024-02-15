@@ -43,7 +43,7 @@ export type CommitteeAttendance = CommitteeDebateRecord & {
 	alsoPresent?: MemberBaseKeys[];
 };
 
-export type CommitteeAttedanceRecord = {
+export type CommitteeAttendanceRecord = {
 	record_uri: string;
 	uri: string;
 	group_type: GroupType;
@@ -55,7 +55,7 @@ export type CommitteeAttedanceRecord = {
 	also_present: Date[][];
 };
 
-export type GroupCommitteeAttendanceRecord = CommitteeAttedanceRecord;
+export type GroupCommitteeAttendanceRecord = CommitteeAttendanceRecord;
 
 export type IndCommiteeAttendanceRecord = {
 	committee_type: CommitteeType;
@@ -66,4 +66,4 @@ export type IndCommiteeAttendanceRecord = {
 };
 
 export type MemberIndCommAttendanceRecord = IndCommiteeAttendanceRecord &
-	CommitteeAttedanceRecord;
+	CommitteeAttendanceRecord;

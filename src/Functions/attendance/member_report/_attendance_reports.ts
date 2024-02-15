@@ -38,7 +38,7 @@ async function processSittingReportsByTerm(
 			({ lastName, firstName, memberCode, memberships }) => ({
 				name: `${lastName} ${firstName}`.toLowerCase(),
 				uri: memberCode,
-				houseCode: memberships[0].membership.house.houseCode,
+				house_code: memberships[0].membership.house.houseCode,
 			})
 		);
 
@@ -52,7 +52,7 @@ async function processSittingReportsByTerm(
 // Function to assign member URIs to each report based on the best name match
 async function assignMemberURIsToReports(
 	reports: SittingDaysRecord[],
-	memberData: { name: string; uri: string; houseCode: string }[]
+	memberData: { name: string; uri: string; house_code: string }[]
 ): Promise<SittingDaysRecord[]> {
 	const reportNames = reports.map((report) => report.name!).filter(Boolean);
 

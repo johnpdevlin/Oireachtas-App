@@ -24,7 +24,7 @@ export default async function parseCommitteeReport(
 	try {
 		if (!url) return;
 
-		const text = await fetchRawTextFromUrl(url);
+		const text = (await fetchRawTextFromUrl(url)).toLowerCase();
 		const lines = splitStringIntoLines(text);
 
 		let searching = false;
@@ -32,7 +32,7 @@ export default async function parseCommitteeReport(
 		let alsoPresent: string[] = [];
 
 		for (let i = 0; i < lines.length; i++) {
-			let line = lines[i].toLowerCase();
+			let line = lines[i];
 
 			if (line!) {
 				// Check if the line indicates the start of attendee information

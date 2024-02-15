@@ -6,6 +6,8 @@ import { RawMember } from '@/models/oireachtasApi/member';
 import { CommitteeType, MemberBaseKeys } from '@/models/_utils';
 import { Committee } from '@/models/committee';
 import { getMembersAndNonMembers } from './handle_members';
+import { dateToYMDstring } from '../../../_utils/dates';
+import { normaliseString } from '../../../_utils/strings';
 
 type AttendanceResult = {
 	type: string;
@@ -47,7 +49,19 @@ export function verifyAttendance(
 		);
 		confirmedAlsoPresent.push(...processed.matches);
 		if (processed.unMatched.length > 0) {
-			console.log(processed.unMatched.join(', '));
+			if (
+				confirmedAlsoPresent.find((cap) =>
+					processed.unMatched.every(
+						(u) => normaliseString(cap.name) != normaliseString(u.trim())
+					)
+				)
+			) {
+				console.log(
+					dateToYMDstring(date),
+					`unmatched: ${processed.unMatched.join(', ')}`,
+					`also present: ${alsoPresent.join(', ')}`
+				);
+			}
 		}
 	}
 
