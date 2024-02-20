@@ -31,9 +31,6 @@ function aggregateMemberAttendance(
 			const month = record.date.getMonth();
 			// Use normalizedStatus to access the correct property
 			summary[normalizedStatus][month].push(record.date);
-
-			// Update percentage_present after each update.
-			summary.percentage_present = calculatePercentagePresent(summary);
 		};
 
 		// Update summary for each member status.
@@ -66,20 +63,7 @@ function initializeAttendanceSummary(
 		present: Array.from({ length: 12 }, () => []),
 		absent: Array.from({ length: 12 }, () => []),
 		also_present: Array.from({ length: 12 }, () => []),
-		percentage_present: 0,
 	};
-}
-
-// Calculate the percentage of present days.
-function calculatePercentagePresent(
-	summary: MemberIndCommAttendanceRecord
-): number {
-	const totalPresentDays = summary.present.flat().length;
-	const totalMeetingDays =
-		totalPresentDays +
-		summary.absent.flat().length +
-		summary.also_present.flat().length;
-	return totalMeetingDays > 0 ? (totalPresentDays / totalMeetingDays) * 100 : 0;
 }
 
 export { aggregateMemberAttendance };

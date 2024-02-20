@@ -191,8 +191,8 @@ export default function Tests() {
 								console.info(
 									processCommitteeReportsBetweenDates(
 										33,
-										'01/01/2020',
-										'01/01/2024'
+										'01/01/2022',
+										'01/01/2023'
 									)
 								)
 							}>
@@ -203,8 +203,9 @@ export default function Tests() {
 							onClick={() =>
 								console.info(
 									getMemberCommitteeAttendanceRecords(
+										33,
 										'01/01/2020',
-										'01/01/2023'
+										'01/01/2024'
 									)
 								)
 							}>

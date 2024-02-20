@@ -7,7 +7,7 @@ import getAllMembersOirData from '@/functions/oireachtas_pages/td/get/all_data/m
 import { WikiTDProfileDetails } from '@/models/wiki_td';
 import { OirData } from '@/models/member';
 import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
-import getTDsWikiData from '@/functions/wikipedia/td/page/multi_td_page';
+import getTDsWikiData from '@/functions/wikipedia_pages/td/page/multi_td_page';
 import similarity from 'string-similarity';
 import checkGender from '../../APIs/Irish_Names/index_';
 

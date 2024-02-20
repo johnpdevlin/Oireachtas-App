@@ -23,9 +23,6 @@ function parseBeforeDates(
 			// Extracts the date range
 			report.dateRange = extractDateRange(lines[i]);
 
-			// calculate percentage of sittings attended
-			report.percentage = report.sittingTotal / report.totalPossibleSittings;
-
 			// Work around to deal with case where number characters are corrupted
 			// issue with pdf or pdf extraction.
 			if (report.sittingTotal + report.otherTotal !== report.total) {
