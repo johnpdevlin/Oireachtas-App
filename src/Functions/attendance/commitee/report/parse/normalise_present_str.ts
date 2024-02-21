@@ -1,7 +1,6 @@
 /** @format */
 
 import {
-	normaliseString,
 	capitaliseFirstLetters,
 	removeTextAfterOpeningParenthesis,
 	removeTextBeforeClosingParenthesis,
@@ -64,9 +63,9 @@ function removeWords(pr: string): string {
 	if (pr.includes('seanadóirí')) pr = pr.replaceAll('seanadóirí', '');
 	if (pr.includes('seanadóir')) pr = pr.replaceAll('seanadóir', '');
 	if (pr.includes('cathaoirleach')) pr = pr.replaceAll('cathaoirleach', '');
-	if (pr.includes('department ')) pr = pr.replaceAll('department ', '');
-	if (pr.includes('government ')) pr = pr.replaceAll('government ', '');
-	if (pr.includes('development ')) pr = pr.replaceAll('development ', '');
+	if (pr.includes('department')) pr = pr.replaceAll('department', '');
+	if (pr.includes('government')) pr = pr.replaceAll('government', '');
+	if (pr.includes('development')) pr = pr.replaceAll('development', '');
 	if (pr.includes('local ')) pr = pr.replaceAll('local ', '');
 
 	if (pr.includes('i láthair')) pr = pr.replace('i láthair', '');
@@ -80,9 +79,9 @@ function removeWords(pr: string): string {
 	if (pr.includes('in the chair')) pr = pr.replace('in the chair', '');
 	if (pr.includes('sa chathaoir')) pr = pr.replace('sa chathaoir', '');
 	if (pr.includes('comhaltaii a bhi')) pr = pr.replace('comhaltai a bhi', '');
-	if (pr.includes(' of ')) pr = pr.replace(' of ', '');
-	if (pr.includes(' for ')) pr = pr.replace(' for ', '');
-	if (pr.includes(' the ')) pr = pr.replace(' the ', '');
+	if (pr.includes('of ')) pr = pr.replace('of', '');
+	if (pr.includes('for ')) pr = pr.replace('for', '');
+	if (pr.includes('the ')) pr = pr.replace('the', '');
 	return pr;
 }
 

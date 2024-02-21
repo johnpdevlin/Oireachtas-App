@@ -1,27 +1,10 @@
 /** @format */
 
 import Head from 'next/head';
-import Image from 'next/image';
 import { Inter } from 'next/font/google';
-import styles from '@/styles/Home.module.css';
-
 import processAllMemberDetails from '@/functions/processes/td/_all_current_agg_td_details';
 import { writeObjToFirestore } from '@/FirestoreDB/write';
 import axios from 'axios';
-import getMultiMembersAPIdetails from '../../functions/APIs/Oireachtas/member/formatted/_multi_member_details';
-import writeTds from '@/FirestoreDB/write/td';
-import writeTdsToFirestore from '@/FirestoreDB/write/td';
-import firestore from '@/FirestoreDB';
-import getActiveTDs from '@/FirestoreDB/read/activeTDs';
-import fetchConstituencies from '../../functions/APIs/Oireachtas/constit/_index';
-import { serialize } from 'v8';
-import fetchParties from '../../functions/APIs/Oireachtas/party/_index';
-import fetchMembers from '../../functions/APIs/Oireachtas/member/raw/_member_details';
-import { RawMember } from '@/models/oireachtasApi/member';
-import { PartyAPI } from '@/models/oireachtasApi/party';
-import { ConstituencyAPI } from '../models/oireachtasApi/constituency';
-import getMemberAPIdetails from '../../functions/APIs/Oireachtas/member/formatted/_member_details';
-import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
 import Layout from '@/UI-Components/_layout';
 import { Button, Stack, TextField, Typography } from '@mui/material';
 import processChamberAttendanceReports from '@/functions/attendance/deprecated/get_chamber_attendance_report';

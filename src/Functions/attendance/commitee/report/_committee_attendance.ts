@@ -5,7 +5,7 @@ import { CommitteeAttendance } from '@/models/committee';
 import fetchDebates from '../../../APIs/Oireachtas/debate/_index';
 import fetchMembers from '../../../APIs/Oireachtas/member/raw/_member_details';
 import processAllCommitteeInfo from '@/functions/oireachtas_pages/committee/_all_committees_info';
-import { bindReportsToDebateRecords } from '@/functions/attendance/commitee/report/bind_reports2debate_records';
+import { bindReportsToDebateRecords } from '@/functions/attendance/commitee/report/process/_bind_reports2debate_records';
 import { getDateTwoWeeksAgo, dateToYMDstring } from '@/functions/_utils/dates';
 import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
 import fetchHouses from '@/functions/APIs/Oireachtas/house/_index';
@@ -45,6 +45,7 @@ async function processCommitteeReportsBetweenDates(
 
 	// Members as reference for non-members of committees a
 	const allMembers = await getMembers(house_no);
+
 	console.info('Fetched base committee and members details.');
 
 	const processedAttendanceRecords = await bindReportsToDebateRecords(

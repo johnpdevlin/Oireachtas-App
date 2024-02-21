@@ -5,9 +5,9 @@ import { CommitteeType, MemberBaseKeys } from '@/models/_utils';
 import { Committee } from '@/models/committee';
 import axios from 'axios';
 import he from 'he';
-import { verifyAttendance } from './verify_attendance';
+import { verifyAttendance } from '../process/verify_attendance';
 import { parseLine } from './parse_line';
-import { splitStringIntoLines } from '../../../_utils/strings';
+import { splitStringIntoLines } from '../../../../_utils/strings';
 
 type ParsedReport = {
 	type: string;
@@ -81,6 +81,11 @@ export default async function parseCommitteeReport(
 			date,
 			alsoPresent
 		);
+
+		if (committee.uri.includes('seanad_public_consultation_committee')) {
+			console.log(verifiedAttendance);
+			console.log(text);
+		}
 
 		return verifiedAttendance;
 	} catch (error) {

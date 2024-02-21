@@ -24,17 +24,14 @@ function getMembersAndNonMembers(
 	let chamber = committee.chamber;
 	if (
 		committee.members.dail.length > 0 ||
-		committee.pastMembers.seanad.length > 0
+		committee.members.seanad.length > 0
 	) {
 		const parsed = parseMembers(chamber, type, committee.members);
 		members.push(...parsed.members);
 		chamber = parsed.chamber;
 	}
 
-	if (
-		committee.pastMembers! &&
-		(committee.pastMembers.dail! || committee.pastMembers.seanad!)
-	) {
+	if (committee.pastMembers!) {
 		const relevantPastMembers = getRelevantPastMembers(
 			chamber,
 			committee.pastMembers,
@@ -67,12 +64,10 @@ function getRelevantPastMembers(
 	date: Date,
 	type: CommitteeType
 ): CommitteeMember[] {
-	if (pastMembers.dail || pastMembers.seanad) {
-		const parsed = parseMembers(chamber, type, pastMembers).members;
-		const relevantMembers = parseRelevantPastMembers(parsed, date);
-		return relevantMembers;
-	}
-	return [];
+	const parsed = parseMembers(chamber, type, pastMembers).members;
+	const relevantMembers = parseRelevantPastMembers(parsed, date);
+	if (relevantMembers.length > 0) return relevantMembers;
+	else return [];
 }
 
 // Get members who were relevant on given date
@@ -110,21 +105,18 @@ function parseMembers(
 	type: CommitteeType,
 	members: CommitteeMembers
 ): { chamber: BinaryChamber; members: CommitteeMember[] } {
-	const dail = members.dail;
-	const seanad = members.seanad;
-
 	const confirmedMembers: CommitteeMember[] = [];
-	if (dail!) confirmedMembers.push(...dail);
+	if (members.dail) confirmedMembers.push(...members.dail);
+	if (members.seanad) confirmedMembers.push(...members.seanad);
+
 	if (
-		seanad! &&
-		(type === 'joint' ||
-			!dail ||
-			type === 'working group' ||
-			chamber !== 'dail')
-	) {
-		confirmedMembers.push(...seanad);
+		type === 'joint' ||
+		!members.dail ||
+		type === 'working group' ||
+		chamber !== 'dail'
+	)
 		chamber = 'seanad';
-	}
+
 	return {
 		chamber: chamber,
 		members: confirmedMembers,

@@ -6,8 +6,8 @@ import { RawMember } from '@/models/oireachtasApi/member';
 import { CommitteeType, MemberBaseKeys } from '@/models/_utils';
 import { Committee } from '@/models/committee';
 import { getMembersAndNonMembers } from './handle_members';
-import { dateToYMDstring } from '../../../_utils/dates';
-import { normaliseString } from '../../../_utils/strings';
+import { dateToYMDstring } from '../../../../_utils/dates';
+import { normaliseString } from '../../../../_utils/strings';
 
 type AttendanceResult = {
 	type: string;
@@ -34,8 +34,8 @@ export function verifyAttendance(
 	)!;
 
 	const confirmedAlsoPresent: MemberBaseKeys[] = [];
-	const confirmedPresent = assignMemberURIsAndNames(present, members);
 
+	const confirmedPresent = assignMemberURIsAndNames(present, members);
 	const confirmedAbsent = members.filter((member) =>
 		confirmedPresent!.matches.some((cp) => cp.uri === member.uri)
 	);
@@ -58,8 +58,8 @@ export function verifyAttendance(
 			) {
 				console.log(
 					dateToYMDstring(date),
-					`unmatched: ${processed.unMatched.join(', ')}`,
-					`also present: ${alsoPresent.join(', ')}`
+					`\nunmatched: ${processed.unMatched.join(', ')}`,
+					`\nalso present: ${alsoPresent.join(', ')}`
 				);
 			}
 		}

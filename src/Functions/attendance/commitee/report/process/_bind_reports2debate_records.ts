@@ -5,7 +5,7 @@ import { Committee, CommitteeAttendance } from '@/models/committee';
 import { RawMember } from '@/models/oireachtasApi/member';
 import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
 import similarity from 'string-similarity';
-import parseCommitteeReport from './parse_committee_attendance';
+import parseCommitteeReport from '../parse/_parse_committee_attendance';
 
 // Binds committee reports to debate records.
 export async function bindReportsToDebateRecords(
@@ -48,6 +48,8 @@ export async function bindReportsToDebateRecords(
 			continue; // Skip this record and continue with the next one
 		}
 
+		if (committee.uri === 'seanad_public_consultation_committee') {
+		}
 		const parsedRecord = {
 			date: record.date,
 			dateStr: record.dateStr,
@@ -68,6 +70,10 @@ export async function bindReportsToDebateRecords(
 
 		parsedRecords.push(parsedRecord);
 
+		if (committee.uri === 'seanad_public_consultation_committee') {
+			console.info(report);
+			console.info(parsedRecords);
+		}
 		if (count % 100 === 0 && count !== 0) {
 			console.info(`${count} bound...`);
 		}
