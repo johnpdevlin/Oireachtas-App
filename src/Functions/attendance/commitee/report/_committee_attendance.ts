@@ -3,12 +3,13 @@
 import { RawMember } from '@/models/oireachtasApi/member';
 import { CommitteeAttendance } from '@/models/committee';
 import fetchDebates from '../../../APIs/Oireachtas/debate/_index';
-import fetchMembers from '../../../APIs/Oireachtas/member/raw/_member_details';
 import processAllCommitteeInfo from '@/functions/oireachtas_pages/committee/_all_committees_info';
 import { bindReportsToDebateRecords } from '@/functions/attendance/commitee/report/process/_bind_reports2debate_records';
 import { getDateTwoWeeksAgo, dateToYMDstring } from '@/functions/_utils/dates';
 import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
-import fetchHouses from '@/functions/APIs/Oireachtas/house/_index';
+
+import { getAllMembers } from '../../../_utils/all_members_by_dail_no';
+
 /** 
 	Fetches from Orieachtas API: debates, members
 	Scrapes base committee info
@@ -19,7 +20,8 @@ import fetchHouses from '@/functions/APIs/Oireachtas/house/_index';
 async function processCommitteeReportsBetweenDates(
 	house_no: number,
 	date_start: string,
-	date_end?: string
+	date_end?: string,
+	allMembers?: RawMember[]
 ): Promise<CommitteeAttendance[]> {
 	// variable to allow for time for oir records to be available
 	const twoWeeksPast = getDateTwoWeeksAgo();
@@ -43,9 +45,10 @@ async function processCommitteeReportsBetweenDates(
 		return { ...bc, records: [] };
 	});
 
-	// Members as reference for non-members of committees a
-	const allMembers = await getMembers(house_no);
-
+	// Members as reference for non-members of committees
+	if (!allMembers) {
+		allMembers = await getAllMembers(house_no);
+	}
 	console.info('Fetched base committee and members details.');
 
 	const processedAttendanceRecords = await bindReportsToDebateRecords(
@@ -56,22 +59,6 @@ async function processCommitteeReportsBetweenDates(
 	console.info('All processes completed successfully.');
 	console.info(processedAttendanceRecords);
 	return processedAttendanceRecords;
-}
-
-async function getMembers(house_no: number): Promise<RawMember[]> {
-	// Get house for date references
-	const house = (await fetchHouses({})).find(
-		(h) => h.houseType === 'dail' && Number(h.houseNo) === Number(house_no)
-	);
-	const { start, end } = house!.dateRange;
-
-	// Fetch members for comparison for non-members of given committee but who are present
-	const allMembers = (await fetchMembers({
-		date_start: dateToYMDstring(new Date(start)),
-		...(end && { date_end: dateToYMDstring(new Date(end)) }),
-	})) as RawMember[];
-
-	return allMembers;
 }
 
 export default processCommitteeReportsBetweenDates;
