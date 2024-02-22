@@ -55,7 +55,11 @@ export type CommitteeAttendanceRecord = {
 	also_present: Date[][];
 };
 
-export type GroupCommitteeAttendanceRecord = CommitteeAttendanceRecord;
+export type GroupCommitteeAttendanceRecord = CommitteeAttendanceRecord & {
+	present: { uri: string; house_code: string; date: Date }[][];
+	absent: { uri: string; house_code: string; date: Date }[][];
+	also_present: { uri: string; house_code: string; date: Date }[][];
+};
 
 export type IndCommiteeAttendanceRecord = {
 	committee_type: CommitteeType;
