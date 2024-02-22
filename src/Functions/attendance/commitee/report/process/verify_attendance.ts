@@ -48,7 +48,10 @@ export function verifyAttendance(
 			nonMembers
 		);
 		confirmedAlsoPresent.push(...processed.matches);
-		if (processed.unMatched.length > 0) {
+		if (
+			processed.unMatched.length > 1 ||
+			(processed.unMatched.length === 1 && processed.unMatched[0].includes(' '))
+		) {
 			if (
 				confirmedAlsoPresent.find((cap) =>
 					processed.unMatched.every(

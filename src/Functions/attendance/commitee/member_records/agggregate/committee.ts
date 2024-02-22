@@ -6,7 +6,7 @@ import {
 	MemberIndCommAttendanceRecord,
 } from '@/models/committee';
 
-function aggregateMemberAttendance(
+function aggregateMemberCommAttendance(
 	records: CommitteeAttendance[]
 ): MemberIndCommAttendanceRecord[] {
 	const summaries: Record<string, MemberIndCommAttendanceRecord> = {};
@@ -66,4 +66,4 @@ function initializeAttendanceSummary(
 	};
 }
 
-export { aggregateMemberAttendance };
+export { aggregateMemberCommAttendance };

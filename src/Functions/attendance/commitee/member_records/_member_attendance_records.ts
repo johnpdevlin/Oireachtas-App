@@ -1,18 +1,22 @@
 /** @format */
 
-import { groupByNested } from '@/functions/_utils/objects';
 import processCommitteeReportsBetweenDates from '../report/_committee_attendance';
-import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
-import { aggregateMemberAttendance } from './agg_member_records';
-import { getMergedMemberAttRecords } from './merged_member_attendance';
 import { dateToYMDstring, getDateTwoWeeksAgo } from '@/functions/_utils/dates';
-import { CommitteeAttendanceRecord } from '@/models/committee';
+import {
+	CommitteeAttendanceRecord,
+	MemberIndCommAttendanceRecord,
+} from '@/models/committee';
+import { aggregateMemberAttendance } from './agggregate/overrall';
+import { aggregateMemberCommAttendance } from './agggregate/committee';
 
 async function getMemberCommitteeAttendanceRecords(
 	house_no: number,
 	date_start: string,
 	date_end?: string
-): Promise<CommitteeAttendanceRecord[]> {
+): Promise<{
+	committee: MemberIndCommAttendanceRecord[];
+	overall: CommitteeAttendanceRecord[];
+}> {
 	console.info(
 		'Processing committee report to return aggregated member committee attendance records for each year'
 	);
@@ -25,20 +29,12 @@ async function getMemberCommitteeAttendanceRecords(
 		adjustedDateEnd
 	);
 
-	const grouped = groupByURIandYear(records);
-	console.info(grouped);
-	const processed = aggregateMemberAttendance(records);
-	const merged = getMergedMemberAttRecords(processed);
-	console.info(merged);
+	// Aggregated committee record for each member by year (linked to house_no)
+	const memberCommAttendance = aggregateMemberCommAttendance(records);
+	const memberAttendance = aggregateMemberAttendance(memberCommAttendance);
 
-	return merged;
-}
-
-function groupByURIandYear(records: CommitteeDebateRecord[]) {
-	return groupByNested<CommitteeDebateRecord>(records, (record) => {
-		const year = record.date.getFullYear().toString();
-		return [record.uri, year];
-	});
+	console.info({ committee: memberCommAttendance, overall: memberAttendance });
+	return { committee: memberCommAttendance, overall: memberAttendance };
 }
 
 function adjustDateEnd(date_end?: string): string {

@@ -188,7 +188,7 @@ export default function Tests() {
 									getMemberCommitteeAttendanceRecords(
 										33,
 										'01/01/2020',
-										'01/01/2024'
+										'01/01/2023'
 									)
 								)
 							}>

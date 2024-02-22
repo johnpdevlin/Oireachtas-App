@@ -50,14 +50,13 @@ export async function bindReportsToDebateRecords(
 
 		if (committee.uri === 'seanad_public_consultation_committee') {
 		}
-		const parsedRecord = {
+		const parsedRecord: CommitteeAttendance = {
 			date: record.date,
 			dateStr: record.dateStr,
 			rootName: record.rootName,
 			name: record.name,
 			rootURI: record.rootURI,
 			uri: record.uri!,
-			committeeType: report.type,
 			type: record.type!,
 			houseNo: record.houseNo,
 			chamber: record.chamber as Exclude<Chamber, 'dail & seanad'>,

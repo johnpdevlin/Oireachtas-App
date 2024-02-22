@@ -6,7 +6,7 @@ import {
 	GroupType,
 	MemberBaseKeys,
 } from './_utils';
-import { DateRange, DateRangeObj, DateRangeStr } from './dates';
+import { DateRangeObj } from './dates';
 import { CommitteeDebateRecord } from './oireachtasApi/debate';
 
 export type CommitteeMember = {
