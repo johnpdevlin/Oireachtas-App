@@ -8,7 +8,7 @@ import { bindReportsToDebateRecords } from '@/functions/attendance/commitee/repo
 import { getDateTwoWeeksAgo, dateToYMDstring } from '@/functions/_utils/dates';
 import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
 
-import { getAllMembers } from '../../../_utils/all_members_by_dail_no';
+import { getAllRawMembers } from '../../../_utils/all_members_by_dail_no';
 
 /** 
 	Fetches from Orieachtas API: debates, members
@@ -47,17 +47,17 @@ async function processCommitteeReportsBetweenDates(
 
 	// Members as reference for non-members of committees
 	if (!allMembers) {
-		allMembers = await getAllMembers(house_no);
+		allMembers = await getAllRawMembers(house_no);
 	}
 	console.info('Fetched base committee and members details.');
 
 	const processedAttendanceRecords = await bindReportsToDebateRecords(
 		await formattedCommitteeDebates,
 		baseCommittees,
-		allMembers
+		allMembers!
 	);
 	console.info('All processes completed successfully.');
-	console.info(processedAttendanceRecords);
+
 	return processedAttendanceRecords;
 }
 

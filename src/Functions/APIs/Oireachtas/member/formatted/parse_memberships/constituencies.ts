@@ -89,7 +89,7 @@ function parseIndividualConstituency(
 
 	constits.forEach((con) => {
 		const tempHouseNo = parseInt(con.house.houseNo);
-		if (start === '') {
+		if (start === '' || !start) {
 			// If first iteration of loop, assign values
 			start = con.house.dateRange.start;
 			end = getEndDateStr(con.house.dateRange.end!)!;
@@ -97,17 +97,19 @@ function parseIndividualConstituency(
 			houses.push(houseNo);
 		} else if (tempHouseNo - houseNo !== 1) {
 			// If not +1 (i.e. not 30 -> 31), thus new period
-			results.push({
-				name: con.showAs,
-				chamber: type,
-				uri: con.representCode,
-				dateRange: { start: start, end: end },
-				houses: houses,
-			});
-			start = con.house.dateRange.start;
-			end = getEndDateStr(con.house.dateRange.end!)!;
-			houseNo = tempHouseNo;
-			houses = [tempHouseNo];
+			if (start! && houses.length > 1) {
+				results.push({
+					name: con.showAs,
+					chamber: type,
+					uri: con.representCode,
+					dateRange: { start: start, end: end },
+					houses: houses,
+				});
+				start = con.house.dateRange.start;
+				end = getEndDateStr(con.house.dateRange.end!)!;
+				houseNo = tempHouseNo;
+				houses = [tempHouseNo];
+			}
 		} else {
 			houses.push(tempHouseNo);
 			houseNo = tempHouseNo;
