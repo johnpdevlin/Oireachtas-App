@@ -2,6 +2,10 @@
 
 const urls = [
 	{
+		year: 2023,
+		url: 'https://data.oireachtas.ie/ie/oireachtas/members/registerOfMembersInterests/dail/2024/2024-02-21_register-of-member-s-interests-dail-eireann-2023_en.pdf',
+	},
+	{
 		year: 2022,
 		url: 'https://data.oireachtas.ie/ie/oireachtas/members/registerOfMembersInterests/dail/2023/2023-02-22_register-of-member-s-interests-dail-eireann-2022_en.pdf',
 	},
