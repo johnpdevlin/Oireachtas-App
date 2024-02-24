@@ -17,6 +17,7 @@ import parseInterestsReport from '@/functions/interests/register/_parse_interest
 import urls from '@/Data/member-interests/register-urls';
 import processSittingReportsByTerm from '@/functions/attendance/member_report/_attendance_reports';
 import { getMemberCommitteeAttendanceRecords } from '@/functions/attendance/commitee/member_records/_member_attendance_records';
+import { processCommitteeAttendanceBetweenDates } from '@/functions/attendance/commitee/_index';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -185,10 +186,10 @@ export default function Tests() {
 							variant='contained'
 							onClick={() =>
 								console.info(
-									getMemberCommitteeAttendanceRecords(
+									processCommitteeAttendanceBetweenDates(
 										33,
 										'01/01/2020',
-										'01/01/2023'
+										'01/01/2024'
 									)
 								)
 							}>

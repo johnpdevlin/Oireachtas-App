@@ -8,7 +8,7 @@ import {
 
 type MemberAtt = { uri: string; house_code: string; date: Date };
 
-function aggregateAttendance(
+function aggregateCommitteeGroupAttendance(
 	group_type: GroupType,
 	records: CommitteeAttendance[]
 ): GroupCommitteeAttendanceRecord {
@@ -72,4 +72,4 @@ function initializeGroupAttendanceSummary(
 		also_present: Array.from({ length: 12 }, () => []),
 	};
 }
-export { aggregateAttendance };
+export { aggregateCommitteeGroupAttendance };

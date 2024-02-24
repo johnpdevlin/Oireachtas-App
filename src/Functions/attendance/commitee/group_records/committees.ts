@@ -5,7 +5,7 @@ import {
 	GroupCommitteeAttendanceRecord,
 } from '@/models/committee';
 import { groupByURIandYear } from '../_utils/group_by_uri_and_year';
-import { aggregateAttendance } from './aggregate';
+import { aggregateCommitteeGroupAttendance } from './_utils/aggregate_committee_attendance';
 
 function aggregateCommitteeAttendanceRecords(
 	records: CommitteeAttendance[]
@@ -16,7 +16,7 @@ function aggregateCommitteeAttendanceRecords(
 	Object.values(groupedRecords).forEach((commRecords) => {
 		// Iterates over records for each year to return consolidated year record
 		Object.values(commRecords).forEach((v) => {
-			const processed = aggregateAttendance('committee', v);
+			const processed = aggregateCommitteeGroupAttendance('committee', v);
 			committeeRecords.push(processed);
 		});
 	});
