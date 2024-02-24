@@ -4,7 +4,7 @@ import { MemberBaseKeys } from '@/models/_utils';
 import {
 	CommitteeAttendance,
 	MemberIndCommAttendanceRecord,
-} from '@/models/committee';
+} from '@/models/attendance';
 
 function aggregateMemberCommAttendance(
 	records: CommitteeAttendance[]

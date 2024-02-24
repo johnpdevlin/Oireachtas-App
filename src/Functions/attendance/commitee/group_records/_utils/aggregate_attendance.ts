@@ -1,21 +1,18 @@
 /** @format */
 
+import { initializeAttendanceSummary } from '@/functions/attendance/_utils/init_attendance_summary';
 import { getHouseCode } from '@/functions/oireachtas_pages/committee/parse/house_code';
-import { BinaryChamber, GroupType, MemberBaseKeys } from '@/models/_utils';
-import {
-	CommitteeAttendanceRecord,
-	GroupCommitteeAttendanceRecord,
-} from '@/models/committee';
+import { BinaryChamber, GroupType } from '@/models/_utils';
+import { AttendanceRecord, GroupAttendanceRecord } from '@/models/attendance';
 import { RawMember } from '@/models/oireachtasApi/member';
 
 function aggregateMemberAttendance(
 	group_type: GroupType,
 	uri: string,
-	records: CommitteeAttendanceRecord[],
+	records: AttendanceRecord[],
 	members: RawMember[]
-): GroupCommitteeAttendanceRecord[] {
-	const aggregatedRecordsMap: Map<string, GroupCommitteeAttendanceRecord> =
-		new Map();
+): GroupAttendanceRecord[] {
+	const aggregatedRecordsMap: Map<string, GroupAttendanceRecord> = new Map();
 
 	let memberHouseCodes: { uri: string; house_code: BinaryChamber }[] = [];
 
@@ -25,12 +22,16 @@ function aggregateMemberAttendance(
 
 		if (!aggregated) {
 			// if doesn't exist create new object
-			aggregated = initializeAttendanceSummary(uri, record.year!, group_type);
+			aggregated = initializeAttendanceSummary(
+				uri,
+				record.year!,
+				group_type
+			) as GroupAttendanceRecord;
 			aggregatedRecordsMap.set(recordKey, aggregated);
 		}
 
 		// Aggregate monthly data for present, absent, and also_present.
-		const statuses: (keyof CommitteeAttendanceRecord)[] = [
+		const statuses: (keyof AttendanceRecord)[] = [
 			'present',
 			'absent',
 			'also_present',
@@ -69,24 +70,6 @@ function aggregateMemberAttendance(
 
 	// Convert the map back to an array
 	return Array.from(aggregatedRecordsMap.values());
-}
-
-function initializeAttendanceSummary(
-	uri: string,
-	year: number,
-	group_type: GroupType
-): GroupCommitteeAttendanceRecord {
-	return {
-		uri: `${
-			group_type === ('dail' || 'seanad') ? `${group_type}-${uri}` : uri
-		}`,
-		record_uri: `${group_type}-${uri}-${year}`,
-		year: year,
-		group_type: group_type,
-		present: Array.from({ length: 12 }, () => []),
-		absent: Array.from({ length: 12 }, () => []),
-		also_present: Array.from({ length: 12 }, () => []),
-	};
 }
 
 function getMemberHouseCode(

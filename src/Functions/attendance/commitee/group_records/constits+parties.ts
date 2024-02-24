@@ -1,9 +1,5 @@
 /** @format */
 
-import {
-	CommitteeAttendanceRecord,
-	GroupCommitteeAttendanceRecord,
-} from '@/models/committee';
 import { RawMember } from '@/models/oireachtasApi/member';
 import { filterMemberCommitteeRecordsByHouse } from './_utils/filter_by_house';
 import parseMemberships from '@/functions/APIs/Oireachtas/member/formatted/parse_memberships/_index';
@@ -11,13 +7,14 @@ import { BinaryChamber } from '@/models/_utils';
 import { groupObjectsByProperty } from '@/functions/_utils/objects';
 import { aggregateMemberAttendance } from './_utils/aggregate_attendance';
 import { handleMembershipExceptions } from './_utils/membership_exceptions';
+import { AttendanceRecord, GroupAttendanceRecord } from '@/models/attendance';
 
 export type MembershipType = 'constituency' | 'party';
 
 async function aggregateMembershipAttendanceRecords(
-	records: CommitteeAttendanceRecord[],
+	records: AttendanceRecord[],
 	allMembers: RawMember[]
-): Promise<GroupCommitteeAttendanceRecord[]> {
+): Promise<GroupAttendanceRecord[]> {
 	const { dail, seanad } = filterMemberCommitteeRecordsByHouse(
 		records,
 		allMembers
@@ -45,14 +42,11 @@ async function aggregateMembershipAttendanceRecords(
 	return processed.flat();
 }
 
-function processParties(
-	records: CommitteeAttendanceRecord[],
-	members: RawMember[]
-) {
+function processParties(records: AttendanceRecord[], members: RawMember[]) {
 	const processedMembers: {
 		uri: string;
 		group_type: MembershipType;
-		record: CommitteeAttendanceRecord;
+		record: AttendanceRecord;
 	}[] = [];
 	records.forEach((record) => {
 		const matched = members.find((member) => record.uri === member.memberCode);
@@ -82,13 +76,13 @@ function processParties(
 
 function processConstituencies(
 	chamber: BinaryChamber,
-	records: CommitteeAttendanceRecord[],
+	records: AttendanceRecord[],
 	members: RawMember[]
 ) {
 	const processedMembers: {
 		uri: string;
 		group_type: MembershipType;
-		record: CommitteeAttendanceRecord;
+		record: AttendanceRecord;
 	}[] = [];
 	records.forEach((record) => {
 		const matched = members.find((member) => record.uri === member.memberCode);

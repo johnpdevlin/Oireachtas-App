@@ -1,11 +1,11 @@
 /** @format */
 
 import { filterMembersByHouse } from '@/functions/_utils/all_members_by_dail_no';
-import { CommitteeAttendanceRecord } from '@/models/committee';
+import { AttendanceRecord } from '@/models/attendance';
 import { RawMember } from '@/models/oireachtasApi/member';
 
 function filterMemberCommitteeRecordsByMembership(
-	records: CommitteeAttendanceRecord[],
+	records: AttendanceRecord[],
 	members: RawMember[]
 ) {
 	// handle cases where multiple parties / constits etc.

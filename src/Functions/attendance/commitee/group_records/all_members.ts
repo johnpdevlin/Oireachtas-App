@@ -1,20 +1,17 @@
 /** @format */
 
-import {
-	CommitteeAttendanceRecord,
-	GroupCommitteeAttendanceRecord,
-} from '@/models/committee';
 import { RawMember } from '@/models/oireachtasApi/member';
 import { aggregateMemberAttendance } from './_utils/aggregate_attendance';
 import { filterMemberCommitteeRecordsByHouse } from './_utils/filter_by_house';
+import { AttendanceRecord, GroupAttendanceRecord } from '@/models/attendance';
 
 function aggregateAllMembersAttendanceRecords(
 	house_no: string,
-	records: CommitteeAttendanceRecord[],
+	records: AttendanceRecord[],
 	allMembers: RawMember[]
 ): {
-	dail: GroupCommitteeAttendanceRecord[];
-	seanad: GroupCommitteeAttendanceRecord[];
+	dail: GroupAttendanceRecord[];
+	seanad: GroupAttendanceRecord[];
 } {
 	const dail_no = house_no;
 	const seanad_no = (Number(house_no) - 7).toString();

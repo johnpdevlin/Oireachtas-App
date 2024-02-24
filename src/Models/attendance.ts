@@ -15,19 +15,19 @@ export type SittingDays = {
 	sittingTotal: number;
 	otherTotal: number;
 	total: number;
+	year: number;
 };
 
 export type SittingDaysRecord = {
 	url: string;
-	year: number;
+	uri: string;
 } & SittingDays;
 
 export type AttendanceRecord = {
 	record_uri: string;
 	uri: string;
 	group_type: GroupType;
-	date_start?: Date;
-	date_end?: Date;
+	dateRange?: DateRangeObj;
 	year?: number;
 	present: Date[][];
 	absent: Date[][];

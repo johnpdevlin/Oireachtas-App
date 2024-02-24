@@ -1,15 +1,13 @@
 /** @format */
 
-import {
-	CommitteeAttendanceRecord,
-	MemberIndCommAttendanceRecord,
-} from '@/models/committee';
+import { initializeAttendanceSummary } from '@/functions/attendance/_utils/init_attendance_summary';
+import { AttendanceRecord } from '@/models/attendance';
+import { MemberIndCommAttendanceRecord } from '@/models/attendance';
 
 function aggregateMemberAttendance(
 	records: MemberIndCommAttendanceRecord[]
-): CommitteeAttendanceRecord[] {
-	const aggregatedRecordsMap: Map<string, CommitteeAttendanceRecord> =
-		new Map();
+): AttendanceRecord[] {
+	const aggregatedRecordsMap: Map<string, AttendanceRecord> = new Map();
 
 	records.forEach((record) => {
 		const recordKey = `${record.uri}-${record.year}`;
@@ -17,7 +15,11 @@ function aggregateMemberAttendance(
 
 		if (!aggregated) {
 			// if doesn't exist create new object
-			aggregated = initializeAttendanceSummary(record);
+			aggregated = initializeAttendanceSummary(
+				record.uri,
+				record.year!,
+				'member'
+			);
 			aggregatedRecordsMap.set(recordKey, aggregated);
 		}
 
@@ -45,20 +47,6 @@ function aggregateMemberAttendance(
 
 	// Convert the map back to an array
 	return Array.from(aggregatedRecordsMap.values());
-}
-
-export function initializeAttendanceSummary(
-	record: MemberIndCommAttendanceRecord | CommitteeAttendanceRecord
-): CommitteeAttendanceRecord {
-	return {
-		uri: record.uri,
-		record_uri: `${record.uri}-${record.year}-overall-comm-attenance`,
-		year: record.year,
-		group_type: 'member',
-		present: Array.from({ length: 12 }, () => []),
-		absent: Array.from({ length: 12 }, () => []),
-		also_present: Array.from({ length: 12 }, () => []),
-	};
 }
 
 export { aggregateMemberAttendance };

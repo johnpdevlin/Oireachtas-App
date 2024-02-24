@@ -1,5 +1,6 @@
 /** @format */
 
+import { initializeAttendanceSummary } from '@/functions/attendance/_utils/init_attendance_summary';
 import { GroupType, MemberBaseKeys } from '@/models/_utils';
 import {
 	CommitteeAttendance,
@@ -8,18 +9,17 @@ import {
 
 type MemberAtt = { uri: string; house_code: string; date: Date };
 
-function aggregateCommitteeGroupAttendance(
+function aggregateGroupAttendance(
 	group_type: GroupType,
 	records: CommitteeAttendance[]
 ): GroupAttendanceRecord {
 	const year = records[0].date.getFullYear();
 	const uri = `${records[0].uri}-${year}`;
-	const summary = initializeGroupAttendanceSummary(
-		records[0],
-		group_type,
+	const summary = initializeAttendanceSummary(
 		uri,
-		year
-	);
+		year,
+		group_type
+	) as GroupAttendanceRecord;
 
 	records.forEach((record) => {
 		const year = record.date.getFullYear();
@@ -51,25 +51,5 @@ function aggregateCommitteeGroupAttendance(
 
 	return summary;
 }
-// Initialize attendance arrays for a new summary object.
-function initializeGroupAttendanceSummary(
-	record: CommitteeAttendance,
-	group_type: GroupType,
-	uri: string,
-	year: number
-): GroupAttendanceRecord {
-	const present: MemberAtt[][] = Array.from({ length: 12 }, () => []);
-	const alsoPresent: MemberAtt[][] = Array.from({ length: 12 }, () => []);
-	const absent: MemberAtt[][] = Array.from({ length: 12 }, () => []);
 
-	return {
-		group_type: group_type,
-		record_uri: uri,
-		uri: record.uri,
-		year,
-		present: Array.from({ length: 12 }, () => []),
-		absent: Array.from({ length: 12 }, () => []),
-		also_present: Array.from({ length: 12 }, () => []),
-	};
-}
-export { aggregateCommitteeGroupAttendance };
+export { aggregateGroupAttendance };
