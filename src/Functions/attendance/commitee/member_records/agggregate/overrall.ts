@@ -47,8 +47,8 @@ function aggregateMemberAttendance(
 	return Array.from(aggregatedRecordsMap.values());
 }
 
-function initializeAttendanceSummary(
-	record: MemberIndCommAttendanceRecord
+export function initializeAttendanceSummary(
+	record: MemberIndCommAttendanceRecord | CommitteeAttendanceRecord
 ): CommitteeAttendanceRecord {
 	return {
 		uri: record.uri,
