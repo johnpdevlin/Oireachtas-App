@@ -3,15 +3,15 @@
 import { GroupType, MemberBaseKeys } from '@/models/_utils';
 import {
 	CommitteeAttendance,
-	GroupCommitteeAttendanceRecord,
-} from '@/models/committee';
+	GroupAttendanceRecord,
+} from '@/models/attendance';
 
 type MemberAtt = { uri: string; house_code: string; date: Date };
 
 function aggregateCommitteeGroupAttendance(
 	group_type: GroupType,
 	records: CommitteeAttendance[]
-): GroupCommitteeAttendanceRecord {
+): GroupAttendanceRecord {
 	const year = records[0].date.getFullYear();
 	const uri = `${records[0].uri}-${year}`;
 	const summary = initializeGroupAttendanceSummary(
@@ -57,7 +57,7 @@ function initializeGroupAttendanceSummary(
 	group_type: GroupType,
 	uri: string,
 	year: number
-): GroupCommitteeAttendanceRecord {
+): GroupAttendanceRecord {
 	const present: MemberAtt[][] = Array.from({ length: 12 }, () => []);
 	const alsoPresent: MemberAtt[][] = Array.from({ length: 12 }, () => []);
 	const absent: MemberAtt[][] = Array.from({ length: 12 }, () => []);

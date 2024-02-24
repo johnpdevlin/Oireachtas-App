@@ -1,17 +1,17 @@
 /** @format */
 
 import processCommitteeReportsBetweenDates from '../report/_committee_attendance';
-import {
-	CommitteeAttendance,
-	CommitteeAttendanceRecord,
-	GroupCommitteeAttendanceRecord,
-	MemberIndCommAttendanceRecord,
-} from '@/models/committee';
 import { aggregateMemberAttendance } from './agggregate/overrall';
 import { aggregateMemberCommAttendance } from './agggregate/committee';
 import { getAllRawMembers } from '@/functions/_utils/all_members_by_dail_no';
 import { aggregateAllMembersAttendanceRecords } from '../group_records/all_members';
 import { RawMember } from '@/models/oireachtasApi/member';
+import {
+	AttendanceRecord,
+	CommitteeAttendance,
+	GroupAttendanceRecord,
+	MemberIndCommAttendanceRecord,
+} from '@/models/attendance';
 
 // Returns aggreggated records for members
 // (individual committee record, overall committee record
@@ -24,10 +24,10 @@ async function getMemberCommitteeAttendanceRecords(
 	allMembers?: RawMember[]
 ): Promise<{
 	member_committee_record: MemberIndCommAttendanceRecord[];
-	member_ind_overall: CommitteeAttendanceRecord[];
+	member_ind_overall: AttendanceRecord[];
 	all_agg_members: {
-		dail: GroupCommitteeAttendanceRecord[];
-		seanad: GroupCommitteeAttendanceRecord[];
+		dail: GroupAttendanceRecord[];
+		seanad: GroupAttendanceRecord[];
 	};
 }> {
 	console.info(
