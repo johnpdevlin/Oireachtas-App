@@ -3,7 +3,7 @@
 import { BinaryChamber } from '@/models/_utils';
 import parseSittingDaysPDF from './parse_attendance_report';
 import { SittingDaysRecord } from '@/models/attendance';
-import fetchMembers from '../../APIs/Oireachtas/member/raw/_member_details';
+import fetchMembers from '../../../APIs/Oireachtas/member/raw/_member_details';
 import reportURLs from '@/Data/attendance-reports-URLs.json';
 import { assignMemberURIsAndNames } from '@/functions/_utils/memberURIs';
 
@@ -56,7 +56,7 @@ async function assignMemberURIsToReports(
 ): Promise<SittingDaysRecord[]> {
 	const reportNames = reports.map((report) => report.name!).filter(Boolean);
 
-	const { matches, unMatchedURIs } = assignMemberURIsAndNames(
+	const { matches, unMatched } = assignMemberURIsAndNames(
 		reportNames,
 		memberData
 	);

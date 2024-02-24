@@ -3,6 +3,7 @@
 import { convertDMYdate2YMD } from '@/functions/_utils/dates';
 import { SittingDays } from '@/models/attendance';
 import { isReportConsistent } from './parse_member_block';
+import { DateRangeObj } from '@/models/dates';
 
 // Extracts, limit, totals and date range
 function parseBeforeDates(
@@ -109,12 +110,12 @@ function extractLimit(lines: string[], i: number) {
 	};
 }
 
-function extractDateRange(line: string): { start_date: Date; end_date: Date } {
+function extractDateRange(line: string): DateRangeObj {
 	const dr = line.replace('Date Range', '').trim();
 	const [start_date, end_date] = dr?.split(' to ');
 	return {
-		start_date: new Date(convertDMYdate2YMD(start_date)),
-		end_date: new Date(convertDMYdate2YMD(end_date)),
+		start: new Date(convertDMYdate2YMD(start_date)),
+		end: new Date(convertDMYdate2YMD(end_date)),
 	};
 }
 

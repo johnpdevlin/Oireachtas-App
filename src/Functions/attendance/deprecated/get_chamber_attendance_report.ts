@@ -1,6 +1,6 @@
 /** @format */
 
-import scrapeSittingReportsForChamber from '@/functions/attendance/member_report/_attendance_reports';
+import scrapeSittingReportsForChamber from '@/functions/attendance/house/report/_house_attendance';
 import { HouseRequest } from '@/models/oireachtasApi/house';
 import { BinaryChamber, Chamber } from '@/models/_utils';
 import { SittingDaysRecord } from '@/models/attendance';
