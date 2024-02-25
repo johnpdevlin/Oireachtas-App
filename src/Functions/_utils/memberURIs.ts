@@ -4,7 +4,6 @@ import { BinaryChamber, MemberBaseKeys, URIpair } from '@/models/_utils';
 import similarity, { BestMatch } from 'string-similarity';
 import { RawMember } from '@/models/oireachtasApi/member';
 import fetchMembers from '../APIs/Oireachtas/member/raw/_member_details';
-import { normaliseString } from './strings';
 
 export async function getMemberUrisAndNames(
 	names: string[],
@@ -16,29 +15,36 @@ export async function getMemberUrisAndNames(
 		house_no: houseNo,
 	})) as RawMember[];
 
-	const memberURIs: MemberBaseKeys[] = memberObjs.map((member) => {
+	const memberURIs = memberObjs.map((member) => {
 		return {
-			name: member.fullName,
+			fullName: member.fullName,
+			firstName: member.firstName,
+			lastName: member.lastName,
 			uri: member.memberCode,
 			house_code: chamber,
 		};
 	});
 
-	const matchedMembers: MemberBaseKeys[] = assignMemberURIsAndNames(
-		names,
-		memberURIs
-	).matches;
+	const matchedMembers = assignMemberURIsAndNames(names, memberURIs).matches;
 
-	return matchedMembers;
+	return matchedMembers.map((m) => {
+		return { name: m.fullName, uri: m.uri, house_code: m.house_code };
+	});
 }
 
 // Uses similarity to match standard URI pairs to input string names, improved version
 export function assignMemberURIsAndNames<
-	T extends { fullName?: string; name?: string; uri: string }
+	T extends {
+		name?: string;
+		fullName?: string;
+		firstName?: string;
+		lastName?: string;
+		uri: string;
+	}
 >(names: string[], members: T[]): { matches: T[]; unMatched: string[] } {
 	let matches: T[] = [];
 	let unSortedMatches: { name: string; bestMatch: BestMatch }[] = [];
-	const uriNames = members.map(
+	let uriNames = members.map(
 		(member) => member.fullName?.toLowerCase() || member.name?.toLowerCase()
 	) as string[];
 
@@ -52,14 +58,14 @@ export function assignMemberURIsAndNames<
 			// Find the member with the exact name match from the original list
 			const matchedMember = members.find(
 				(member) =>
-					(member.fullName?.toLowerCase() === bestMatch.target ||
-						member.name?.toLowerCase()) === bestMatch.target
+					member.fullName?.toLowerCase() === bestMatch.target ||
+					member.name?.toLowerCase() === bestMatch.target
 			);
 
 			if (matchedMember) {
 				// Ensure we do not add duplicates
 				if (!matches.some((match) => match.uri === matchedMember.uri)) {
-					matches.push(matchedMember);
+					matches.push({ name: name, ...matchedMember });
 				}
 			}
 		} else {
@@ -70,20 +76,21 @@ export function assignMemberURIsAndNames<
 	// Handling similar but not exact matches
 	unSortedMatches.forEach((unMatch) => {
 		const potentialMatches = similarity.findBestMatch(unMatch.name, uriNames);
+
 		potentialMatches.ratings
-			.filter((rating) => rating.rating > 0.3)
+			.filter((rating) => rating.rating > 0.25)
 			.sort((a, b) => b.rating - a.rating) // Sort by descending rating
 			.forEach((rating) => {
 				const matchedMember = members.find(
 					(member) =>
-						(member.fullName?.toLowerCase() === rating.target ||
-							member.name?.toLowerCase()) === rating.target
+						member.fullName?.toLowerCase() === rating.target ||
+						member.name?.toLowerCase() === rating.target
 				);
 				if (
 					matchedMember &&
 					!matches.some((match) => match.uri === matchedMember.uri)
 				) {
-					matches.push(matchedMember);
+					matches.push({ name: unMatch.name, ...matchedMember });
 					// Once a match is found and added, remove it from the unsorted list
 					unSortedMatches = unSortedMatches.filter(
 						(unsorted) => unsorted.name !== unMatch.name

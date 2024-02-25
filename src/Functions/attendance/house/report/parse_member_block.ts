@@ -55,6 +55,7 @@ function parseSittingDates(
 		report.sittingDates.push(sittingDate);
 		report.otherDates.push(otherDate);
 	}
+	report.year = new Date(report.sittingDates[0]!).getFullYear();
 	return report;
 }
 
@@ -62,8 +63,8 @@ function initialiseReport() {
 	return {
 		name: '',
 		dateRange: {
-			start_date: new Date(),
-			end_date: new Date(),
+			start: new Date(),
+			end: new Date(),
 		},
 		limit: 0,
 		totalPossibleSittings: 0,
@@ -73,6 +74,7 @@ function initialiseReport() {
 		otherTotal: 0,
 		total: 0,
 		percentage: 0,
+		year: 0,
 	};
 }
 
@@ -86,7 +88,7 @@ export function isReportConsistent(report: SittingDays): boolean {
 function logParsingError(report: SittingDays): void {
 	console.warn(
 		`${report.name} has not been parsed correctly: \n`,
-		`Date Range: ${report.dateRange.start_date} to ${report.dateRange.end_date}, \n`,
+		`Date Range: ${report.dateRange.start} to ${report.dateRange.end}, \n`,
 		`Total: ${report.total}, Other Dates: ${report.otherDates.length}, \n`,
 		`Other Total: ${report.otherTotal}, Sitting Dates: ${report.sittingDates.length}, \n`,
 		`Sitting Total: ${report.sittingTotal}`

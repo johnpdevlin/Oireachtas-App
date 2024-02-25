@@ -11,8 +11,6 @@ export default async function parseSittingDaysPDF(
 	return axios
 		.get(`api/pdf2text?url=${url}`)
 		.then((response) => {
-			const matches = url.match(/\/(\d{4})\//);
-			const year = matches && matches[1]; // finds year
 			const text = he.decode(response.data.text);
 
 			// split by delimiter to create array of member blocks
@@ -26,7 +24,7 @@ export default async function parseSittingDaysPDF(
 						console.warn('the following block may need investigated:', parsed); // a sort of error message
 					} else if (parsed!) {
 						// Constructs the SittingDaysReport object for each block
-						return { ...parsed, url: url, year: parseInt(year!) };
+						return { ...parsed, url: url };
 					}
 				})
 				.filter(Boolean) as SittingDaysRecord[];

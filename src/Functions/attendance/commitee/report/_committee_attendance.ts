@@ -1,7 +1,7 @@
 /** @format */
 
 import { RawMember } from '@/models/oireachtasApi/member';
-import { CommitteeAttendance } from '@/models/committee';
+import { CommitteeAttendance } from '@/models/attendance';
 import fetchDebates from '../../../APIs/Oireachtas/debate/_index';
 import processAllCommitteeInfo from '@/functions/oireachtas_pages/committee/_all_committees_info';
 import { bindReportsToDebateRecords } from '@/functions/attendance/commitee/report/process/_bind_reports2debate_records';
