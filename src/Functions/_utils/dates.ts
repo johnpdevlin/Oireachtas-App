@@ -351,3 +351,30 @@ export function calculateYearsAndMonthsSinceDate(input: Date | string): {
 
 	return { years: yearsDiff, months: monthsDiff };
 }
+export function aggregateDatesToMonthsArray(
+	dates: (string | undefined | Date)[]
+): Date[][] {
+	const aggregated: Date[][] = Array.from({ length: 12 }, () => []);
+
+	dates.forEach((d) => {
+		if (d != null) {
+			// Check if d is not null or undefined
+			let date: Date;
+			if (typeof d === 'string') {
+				const parsedDate = new Date(d);
+				if (!isNaN(parsedDate.getTime())) {
+					// Check if the parsed date is valid
+					date = parsedDate;
+				} else {
+					return; // Skip to the next iteration if the date string is invalid
+				}
+			} else {
+				date = d;
+			}
+			const month = date.getMonth();
+			aggregated[month].push(date);
+		}
+	});
+
+	return aggregated;
+}
