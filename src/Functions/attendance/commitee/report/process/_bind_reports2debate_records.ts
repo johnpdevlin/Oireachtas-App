@@ -1,11 +1,12 @@
 /** @format */
 
 import { Chamber } from '@/models/_utils';
-import { Committee, CommitteeAttendance } from '@/models/committee';
+import { Committee } from '@/models/committee';
 import { RawMember } from '@/models/oireachtasApi/member';
 import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
 import similarity from 'string-similarity';
 import parseCommitteeReport from '../parse/_parse_committee_attendance';
+import { CommitteeAttendance } from '@/models/attendance';
 
 // Binds committee reports to debate records.
 export async function bindReportsToDebateRecords(

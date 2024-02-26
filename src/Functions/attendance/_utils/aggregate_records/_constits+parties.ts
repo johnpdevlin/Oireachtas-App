@@ -1,12 +1,12 @@
 /** @format */
 
 import { RawMember } from '@/models/oireachtasApi/member';
-import { filterMemberCommitteeRecordsByHouse } from './_utils/filter_by_house';
+import { filterMemberCommitteeRecordsByHouse } from './filter_by_house';
 import parseMemberships from '@/functions/APIs/Oireachtas/member/formatted/parse_memberships/_index';
 import { BinaryChamber } from '@/models/_utils';
 import { groupObjectsByProperty } from '@/functions/_utils/objects';
-import { aggregateMemberAttendance } from './_utils/aggregate_attendance';
-import { handleMembershipExceptions } from './_utils/membership_exceptions';
+import { aggregateMemberAttendance } from './aggregate_attendance';
+import { handleMembershipExceptions } from './membership_exceptions';
 import { AttendanceRecord, GroupAttendanceRecord } from '@/models/attendance';
 
 export type MembershipType = 'constituency' | 'party';

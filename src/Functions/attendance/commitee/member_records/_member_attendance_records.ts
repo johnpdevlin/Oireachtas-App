@@ -4,7 +4,7 @@ import processCommitteeReportsBetweenDates from '../report/_committee_attendance
 import { aggregateMemberAttendance } from './agggregate/overrall';
 import { aggregateMemberCommAttendance } from './agggregate/committee';
 import { getAllRawMembers } from '@/functions/_utils/all_members_by_dail_no';
-import { aggregateAllMembersAttendanceRecords } from '../group_records/all_members';
+import { aggregateAllMembersAttendanceRecords } from '../../_utils/aggregate_records/_all_members';
 import { RawMember } from '@/models/oireachtasApi/member';
 import {
 	AttendanceRecord,

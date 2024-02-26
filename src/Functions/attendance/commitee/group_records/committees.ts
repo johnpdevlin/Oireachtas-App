@@ -4,8 +4,8 @@ import {
 	CommitteeAttendance,
 	GroupAttendanceRecord,
 } from '@/models/attendance';
-import { groupByURIandYear } from '../_utils/group_by_uri_and_year';
-import { aggregateGroupAttendance } from '../../_utils/aggregate_group_attendance';
+import { groupByURIandYear } from '../../_utils/group_by_uri_and_year';
+import { aggregateGroupAttendance } from '../../_utils/aggregate_records/aggregate_group_attendance';
 
 function aggregateCommitteeAttendanceRecords(
 	records: CommitteeAttendance[]

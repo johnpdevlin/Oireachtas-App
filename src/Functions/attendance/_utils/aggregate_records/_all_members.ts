@@ -1,8 +1,8 @@
 /** @format */
 
 import { RawMember } from '@/models/oireachtasApi/member';
-import { aggregateMemberAttendance } from './_utils/aggregate_attendance';
-import { filterMemberCommitteeRecordsByHouse } from './_utils/filter_by_house';
+import { aggregateMemberAttendance } from './aggregate_attendance';
+import { filterMemberCommitteeRecordsByHouse } from './filter_by_house';
 import { AttendanceRecord, GroupAttendanceRecord } from '@/models/attendance';
 
 function aggregateAllMembersAttendanceRecords(

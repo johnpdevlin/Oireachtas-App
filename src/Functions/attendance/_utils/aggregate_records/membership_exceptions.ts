@@ -2,7 +2,7 @@
 
 import { MemberParty } from '@/models/member';
 import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/constituency';
-import { MembershipType } from '../constits+parties';
+import { MembershipType } from './_constits+parties';
 import { AttendanceRecord } from '@/models/attendance';
 import { initializeAttendanceSummary } from '@/functions/attendance/_utils/init_attendance_summary';
 
