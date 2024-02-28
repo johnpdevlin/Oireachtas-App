@@ -5,6 +5,8 @@ import {
 	SittingDaysRecord,
 } from '../../../../models/attendance';
 import { initializeAttendanceSummary } from '../../_utils/init_attendance_summary';
+import { addPresentPercentage } from '../../_utils/add_percentage_calculations';
+
 function getMemberHouseAttendanceRecord(
 	record: SittingDaysRecord,
 	possibleSittings: Date[]
@@ -22,6 +24,7 @@ function getMemberHouseAttendanceRecord(
 
 	attendanceRecord.dateRange = record.dateRange;
 	const { start, end } = record.dateRange;
+
 	// Gets sitting dates relevant for record period
 	const relevantSittings = possibleSittings.filter(
 		(s) => s >= start && s <= end!
@@ -31,7 +34,11 @@ function getMemberHouseAttendanceRecord(
 		attendanceRecord.present.flat()
 	);
 
-	return attendanceRecord;
+	const processedAttendance = addPresentPercentage(
+		attendanceRecord
+	) as AttendanceRecord;
+
+	return processedAttendance;
 }
 
 function getAbsent(relevant: Date[], present: Date[]): Date[][] {

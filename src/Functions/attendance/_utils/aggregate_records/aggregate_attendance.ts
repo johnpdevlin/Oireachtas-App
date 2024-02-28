@@ -5,6 +5,7 @@ import { getHouseCode } from '@/functions/oireachtas_pages/committee/parse/house
 import { BinaryChamber, GroupType } from '@/models/_utils';
 import { AttendanceRecord, GroupAttendanceRecord } from '@/models/attendance';
 import { RawMember } from '@/models/oireachtasApi/member';
+import { addPresentPercentage } from '../add_percentage_calculations';
 
 function aggregateMemberAttendance(
 	group_type: GroupType,
@@ -69,7 +70,9 @@ function aggregateMemberAttendance(
 	});
 
 	// Convert the map back to an array
-	return Array.from(aggregatedRecordsMap.values());
+	return Array.from(aggregatedRecordsMap.values()).map((record) => {
+		return addPresentPercentage(record);
+	}) as GroupAttendanceRecord[];
 }
 
 function getMemberHouseCode(

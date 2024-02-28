@@ -6,6 +6,7 @@ import {
 	CommitteeAttendance,
 	GroupAttendanceRecord,
 } from '@/models/attendance';
+import { addPresentPercentage } from '../add_percentage_calculations';
 
 type MemberAtt = { uri: string; house_code: string; date: Date };
 
@@ -49,7 +50,10 @@ function aggregateGroupAttendance(
 		);
 	});
 
-	return summary;
+	// Calculates and adds present percentages to obj
+	const processed = addPresentPercentage(summary) as GroupAttendanceRecord;
+
+	return processed;
 }
 
 export { aggregateGroupAttendance };

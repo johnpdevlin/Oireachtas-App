@@ -32,6 +32,10 @@ export type AttendanceRecord = {
 	present: Date[][];
 	absent: Date[][];
 	also_present: Date[][];
+	presentPercentage?: {
+		overall: number;
+		months: (number | undefined)[];
+	};
 };
 
 export type GroupAttendanceRecord = AttendanceRecord & {
