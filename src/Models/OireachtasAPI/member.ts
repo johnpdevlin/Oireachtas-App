@@ -2,6 +2,7 @@
 
 import { BinaryChamber, ChamberType } from '../_utils';
 import { DateRangeStr } from '../dates';
+import { RawCommittee, RawCommitteeMember } from './committee';
 
 export type MemberRequest = {
 	uri?: string;
@@ -41,6 +42,9 @@ export type RawOuterMembership = {
 	membership: RawMembership;
 };
 
+export type RawMemberCommittee = RawCommittee &
+	RawCommitteeMember & { committeeURI: string };
+
 export type RawMemberHouse = {
 	houseCode: BinaryChamber;
 	uri: string;
@@ -57,6 +61,7 @@ export type RawMembership = {
 	}[];
 	uri: string;
 	represents: { represent: RawMemberRepresent }[];
+	committees: RawMemberCommittee[];
 	dateRange: DateRangeStr;
 };
 
@@ -106,4 +111,5 @@ export type RawFormattedMember = {
 	offices: RawMemberOffice[] | RawMemberOffice;
 	constituencies: RawMemberRepresent[] | RawMemberRepresent;
 	parties: RawMemberParty[] | RawMemberParty;
+	committees: RawMemberCommittee[];
 };

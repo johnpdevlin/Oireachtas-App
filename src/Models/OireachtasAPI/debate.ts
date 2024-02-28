@@ -68,6 +68,7 @@ export type DebateRecord = {
 };
 
 export type CommitteeDebateRecord = {
+	committeeCode: string;
 	date: Date;
 	dateStr: string;
 	rootName: string;

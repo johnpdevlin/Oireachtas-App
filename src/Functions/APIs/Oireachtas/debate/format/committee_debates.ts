@@ -7,6 +7,7 @@ import {
 import { DebateRecord } from '@/models/oireachtasApi/debate';
 import { CommitteeType } from '@/models/_utils';
 import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
+
 export default function formatCommitteeDebates(
 	debates: DebateRecord[]
 ): CommitteeDebateRecord[] {
@@ -25,14 +26,16 @@ export default function formatCommitteeDebates(
 				);
 			} else {
 				const rootURI = extractRootCommitteeDetails(deb.house.committeeCode!);
-				const uri = deb.house.committeeCode!;
+				const uri = deb.house.uri;
 
 				const type = extractCommitteeType(deb.house.showAs.toLowerCase());
 				const houseNo = parseInt(deb.house.houseNo);
 				const chamber = deb.house.houseCode;
 				const xml = deb.formats.xml?.uri;
+				const committeeCode = deb.house.committeeCode!;
 
 				results.push({
+					committeeCode,
 					date,
 					dateStr,
 					rootName,
