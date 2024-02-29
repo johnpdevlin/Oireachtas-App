@@ -4,7 +4,6 @@ import processCommitteeReportsBetweenDates from '../report/_committee_attendance
 import { aggregateMemberAttendance } from './agggregate/overrall';
 import { aggregateMemberCommAttendance } from './agggregate/committee';
 import { getAllRawMembers } from '@/functions/_utils/all_members_by_dail_no';
-import { aggregateAllMembersAttendanceRecords } from '../../_utils/aggregate_records/_all_members';
 import { RawMember } from '@/models/oireachtasApi/member';
 import {
 	AttendanceRecord,
@@ -12,6 +11,7 @@ import {
 	GroupAttendanceRecord,
 	MemberIndCommAttendanceRecord,
 } from '@/models/attendance';
+import { aggregateAllMembersAttendanceRecords } from '../../_utils/aggregate_records/_all_members';
 
 // Returns aggreggated records for members
 // (individual committee record, overall committee record
@@ -45,6 +45,8 @@ async function getMemberCommitteeAttendanceRecords(
 
 	// Aggregated committee record for each member by year (linked to house_no)
 	const memberCommAttendance = aggregateMemberCommAttendance(records);
+
+	// Get aggrgegated commitee attendance for each member
 	const memberAttendance = aggregateMemberAttendance(memberCommAttendance);
 
 	// Aggregated record for all members

@@ -4,9 +4,9 @@ import { getAllRawMembers } from '@/functions/_utils/all_members_by_dail_no';
 import processCommitteeReportsBetweenDates from './report/_committee_attendance';
 import { getMemberCommitteeAttendanceRecords } from './member_records/_member_attendance_records';
 import { aggregateCommitteeAttendanceRecords } from './group_records/committees';
-import { aggregateMembershipAttendanceRecords } from '../_utils/aggregate_records/_constits+parties';
 import { dateToYMDstring, getDateTwoWeeksAgo } from '@/functions/_utils/dates';
 import { aggregateAllMembersAttendanceRecords } from '../_utils/aggregate_records/_all_members';
+import { aggregateMembershipAttendanceRecords } from '../_utils/aggregate_records/_constits+parties';
 
 async function processCommitteeAttendanceBetweenDates(
 	house_no: number,
@@ -49,6 +49,7 @@ async function processCommitteeAttendanceBetweenDates(
 
 	return {
 		all_members: aggregatedAllMembers,
+		ind_member_committee: member_committee_record,
 		ind_member: member_ind_overall,
 		committees: aggregatedByCommittee,
 		memberships: aggregatedByMembership,

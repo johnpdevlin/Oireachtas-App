@@ -1,5 +1,6 @@
 /** @format */
 
+import { addPresentPercentage } from '@/functions/attendance/_utils/add_percentage_calculations';
 import { initializeAttendanceSummary } from '@/functions/attendance/_utils/init_attendance_summary';
 import { AttendanceRecord } from '@/models/attendance';
 import { MemberIndCommAttendanceRecord } from '@/models/attendance';
@@ -46,7 +47,10 @@ function aggregateMemberAttendance(
 	});
 
 	// Convert the map back to an array
-	return Array.from(aggregatedRecordsMap.values());
+
+	return Array.from(aggregatedRecordsMap.values()).map((record) => {
+		return addPresentPercentage(record);
+	});
 }
 
 export { aggregateMemberAttendance };

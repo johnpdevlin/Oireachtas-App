@@ -1,5 +1,6 @@
 /** @format */
 
+import { addPresentPercentage } from '@/functions/attendance/_utils/add_percentage_calculations';
 import { MemberBaseKeys } from '@/models/_utils';
 import {
 	CommitteeAttendance,
@@ -41,7 +42,10 @@ function aggregateMemberCommAttendance(
 		);
 	});
 
-	return Object.values(summaries);
+	// Calculates and adds present percentages to each record
+	return Object.values(summaries).map((sum) => {
+		return addPresentPercentage(sum) as MemberIndCommAttendanceRecord;
+	});
 }
 
 // Initialize attendance arrays for a new summary object.
