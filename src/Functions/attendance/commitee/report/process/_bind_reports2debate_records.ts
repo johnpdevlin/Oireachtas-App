@@ -7,12 +7,15 @@ import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
 import similarity from 'string-similarity';
 import parseCommitteeReport from '../parse/_parse_committee_attendance';
 import { CommitteeAttendance } from '@/models/attendance';
+import { RawCommittee } from '@/models/oireachtasApi/committee';
+
+// Binds committee reports to debate records.
 
 // Binds committee reports to debate records.
 export async function bindReportsToDebateRecords(
 	records: CommitteeDebateRecord[],
-	committees: Committee[],
-	members: RawMember[]
+	committees: RawCommittee[],
+	allMembers: RawMember[]
 ): Promise<CommitteeAttendance[]> {
 	const parsedRecords: CommitteeAttendance[] = [];
 	const totalRecords: number = records.length;
@@ -27,12 +30,17 @@ export async function bindReportsToDebateRecords(
 			continue; // Skip this record and continue with the next one
 		}
 
-		const committee = findMatchingCommittee(record.rootURI, committees);
+		const possibleURIs = getPossibleURIsAndHouseNo(record.uri, committees);
+		const committee = findMatchingCommitteeURI(
+			record.uri,
+			possibleURIs,
+			committees
+		);
 		if (!committee) {
 			console.log(
-				'No committee found rootURI: ',
-				record.rootURI,
-				' url: ',
+				'No committee found for: ',
+				record.name,
+				' uri: ',
 				record.uri
 			);
 			continue; // Skip this record and continue with the next one
@@ -41,7 +49,7 @@ export async function bindReportsToDebateRecords(
 		const report = await parseCommitteeReport(
 			record.pdf,
 			committee,
-			members,
+			allMembers,
 			record.date
 		);
 		if (!report) {
@@ -52,12 +60,13 @@ export async function bindReportsToDebateRecords(
 		if (committee.uri === 'seanad_public_consultation_committee') {
 		}
 		const parsedRecord: CommitteeAttendance = {
+			uri: record.uri!,
+			committeeCode: record.committeeCode,
 			date: record.date,
 			dateStr: record.dateStr,
 			rootName: record.rootName,
 			name: record.name,
 			rootURI: record.rootURI,
-			uri: record.uri!,
 			type: record.type!,
 			houseNo: record.houseNo,
 			chamber: record.chamber as Exclude<Chamber, 'dail & seanad'>,
@@ -86,26 +95,35 @@ export async function bindReportsToDebateRecords(
 	return parsedRecords;
 }
 
-/**
- * Helper function to find a matching committee.
- *
- * @param {string} rootURI - Root URI to match.
- * @param {Committee[]} committees - List of committees to search.
- * @returns {Committee | null} Matched committee or null if not found.
- */
-function findMatchingCommittee(
-	rootURI: string,
-	committees: Committee[]
-): Committee | undefined {
-	const committee = committees.find((c) => c.uri === rootURI);
-	if (committee) {
-		return committee;
-	}
+function getPossibleURIsAndHouseNo(uri: string, committees: RawCommittee[]) {
+	const houseNo = uri.split('/').at(-2);
+	const possibleURIs: string[] = [];
+	committees.forEach((c) => {
+		if (!houseNo || c.uri.includes(houseNo)) {
+			possibleURIs.push(c.uri);
+			if (c.altCommitteeURIs) possibleURIs.push(...c.altCommitteeURIs);
+		}
+	});
+	return possibleURIs;
+}
 
-	const match = similarity.findBestMatch(
-		rootURI,
-		committees.map((c) => c.uri)
-	).bestMatch.target;
+// Helper function to find a matching committee.
+function findMatchingCommitteeURI(
+	uri: string,
+	possibleURIs: string[],
+	committees: RawCommittee[]
+): RawCommittee | undefined {
+	const committee = committees.find(
+		(c) => c.uri === uri || c.altCommitteeURIs?.includes(uri)
+	);
+	if (committee) return committee;
 
-	return committees.find((c) => c.uri === match);
+	const bestMatch = similarity.findBestMatch(uri, possibleURIs).bestMatch
+		.target;
+
+	if (bestMatch) {
+		return committees.find(
+			(c) => c.uri === bestMatch || c.altCommitteeURIs?.includes(bestMatch)
+		);
+	} else console.info('No match returned.');
 }

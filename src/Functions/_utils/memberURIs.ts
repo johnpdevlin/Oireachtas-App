@@ -17,9 +17,7 @@ export async function getMemberUrisAndNames(
 
 	const memberURIs = memberObjs.map((member) => {
 		return {
-			fullName: member.fullName,
-			firstName: member.firstName,
-			lastName: member.lastName,
+			name: member.fullName,
 			uri: member.memberCode,
 			house_code: chamber,
 		};
@@ -28,44 +26,37 @@ export async function getMemberUrisAndNames(
 	const matchedMembers = assignMemberURIsAndNames(names, memberURIs).matches;
 
 	return matchedMembers.map((m) => {
-		return { name: m.fullName, uri: m.uri, house_code: m.house_code };
+		return { name: m.name, uri: m.uri, house_code: m.house_code };
 	});
 }
 
 // Uses similarity to match standard URI pairs to input string names, improved version
 export function assignMemberURIsAndNames<
 	T extends {
-		name?: string;
-		fullName?: string;
-		firstName?: string;
-		lastName?: string;
+		name: string;
 		uri: string;
 	}
 >(names: string[], members: T[]): { matches: T[]; unMatched: string[] } {
 	let matches: T[] = [];
 	let unSortedMatches: { name: string; bestMatch: BestMatch }[] = [];
-	let uriNames = members.map(
-		(member) => member.fullName?.toLowerCase() || member.name?.toLowerCase()
+	let uriNames = members.map((member) =>
+		member.name?.toLowerCase()
 	) as string[];
 
 	names.forEach((name) => {
-		if (typeof name !== 'string') console.info(name);
-
 		const bestMatchResult = similarity.findBestMatch(name, uriNames);
 		const bestMatch = bestMatchResult.bestMatch;
 
 		if (bestMatch.rating > 0.3) {
 			// Find the member with the exact name match from the original list
 			const matchedMember = members.find(
-				(member) =>
-					member.fullName?.toLowerCase() === bestMatch.target ||
-					member.name?.toLowerCase() === bestMatch.target
+				(member) => member.name?.toLowerCase() === bestMatch.target
 			);
 
 			if (matchedMember) {
 				// Ensure we do not add duplicates
 				if (!matches.some((match) => match.uri === matchedMember.uri)) {
-					matches.push({ name: name, ...matchedMember });
+					matches.push({ ...matchedMember, name });
 				}
 			}
 		} else {
@@ -82,15 +73,13 @@ export function assignMemberURIsAndNames<
 			.sort((a, b) => b.rating - a.rating) // Sort by descending rating
 			.forEach((rating) => {
 				const matchedMember = members.find(
-					(member) =>
-						member.fullName?.toLowerCase() === rating.target ||
-						member.name?.toLowerCase() === rating.target
+					(member) => member.name?.toLowerCase() === rating.target
 				);
 				if (
 					matchedMember &&
 					!matches.some((match) => match.uri === matchedMember.uri)
 				) {
-					matches.push({ name: unMatch.name, ...matchedMember });
+					matches.push({ ...matchedMember, name: unMatch.name });
 					// Once a match is found and added, remove it from the unsorted list
 					unSortedMatches = unSortedMatches.filter(
 						(unsorted) => unsorted.name !== unMatch.name

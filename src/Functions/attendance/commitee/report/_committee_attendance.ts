@@ -3,25 +3,22 @@
 import { RawMember } from '@/models/oireachtasApi/member';
 import { CommitteeAttendance } from '@/models/attendance';
 import fetchDebates from '../../../APIs/Oireachtas/debate/_index';
-import processAllCommitteeInfo from '@/functions/oireachtas_pages/committee/_all_committees_info';
 import { bindReportsToDebateRecords } from '@/functions/attendance/commitee/report/process/_bind_reports2debate_records';
 import { getDateTwoWeeksAgo, dateToYMDstring } from '@/functions/_utils/dates';
 import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
-
 import { getAllRawMembers } from '../../../_utils/all_members_by_dail_no';
+import { RawCommittee } from '@/models/oireachtasApi/committee';
 
 /** 
 	Fetches from Orieachtas API: debates, members
-	Scrapes base committee info
-	Passes above for processing
-	Verifies attendance which cross references against above
-	and with additional scrapes called within called functions 
+	Verifies attendance which cross references against committee and member
 **/
 async function processCommitteeReportsBetweenDates(
 	house_no: number,
-	date_start: string,
-	date_end?: string,
-	allMembers?: RawMember[]
+	committees: RawCommittee[],
+	allMembers?: RawMember[],
+	date_start?: string,
+	date_end?: string
 ): Promise<CommitteeAttendance[]> {
 	// variable to allow for time for oir records to be available
 	const twoWeeksPast = getDateTwoWeeksAgo();
@@ -31,8 +28,11 @@ async function processCommitteeReportsBetweenDates(
 		// To allow time for pdfs to be uploaded by Oireachtas
 		date_end = dateToYMDstring(new Date(twoWeeksPast));
 
-	console.log(`Records to be processed between ${date_start} and ${date_end}`);
+	if (!allMembers) allMembers = await getAllRawMembers(house_no);
 
+	console.info(`Records to be processed between ${date_start} and ${date_end}`);
+
+	console.info('Fetching and formatting committee debates.');
 	const formattedCommitteeDebates: Promise<CommitteeDebateRecord[]> =
 		fetchDebates({
 			date_start: date_start,
@@ -41,24 +41,16 @@ async function processCommitteeReportsBetweenDates(
 		}) as Promise<CommitteeDebateRecord[]>;
 	console.info('Fetched and formatted debate records.');
 
-	const baseCommittees = (await processAllCommitteeInfo()).map((bc) => {
-		return { ...bc, records: [] };
-	});
-
-	// Members as reference for non-members of committees
-	if (!allMembers) {
-		allMembers = await getAllRawMembers(house_no);
-	}
 	console.info('Fetched base committee and members details.');
 
 	const processedAttendanceRecords = await bindReportsToDebateRecords(
 		await formattedCommitteeDebates,
-		baseCommittees,
-		allMembers!
+		committees,
+		allMembers
 	);
-	console.info('All processes completed successfully.');
 
-	return processedAttendanceRecords;
+	console.info('All processes completed successfully.');
+	return processedAttendanceRecords!;
 }
 
 export default processCommitteeReportsBetweenDates;

@@ -8,19 +8,14 @@ import he from 'he';
 import { verifyAttendance } from '../process/verify_attendance';
 import { parseLine } from './parse_line';
 import { splitStringIntoLines } from '../../../../_utils/strings';
+import { RawCommittee } from '@/models/oireachtasApi/committee';
 
-type ParsedReport = {
-	type: string;
-	present: MemberBaseKeys[];
-	absent?: MemberBaseKeys[];
-	alsoPresent?: MemberBaseKeys[];
-};
 export default async function parseCommitteeReport(
 	url: string,
-	committee: Committee,
+	committee: RawCommittee,
 	allMembers: RawMember[],
 	date: Date
-): Promise<ParsedReport | undefined> {
+) {
 	try {
 		if (!url) return;
 
@@ -74,12 +69,11 @@ export default async function parseCommitteeReport(
 		}
 
 		const verifiedAttendance = verifyAttendance(
-			getCommitteeType(url, committee)!,
-			present,
-			committee,
-			allMembers,
+			url,
 			date,
-			alsoPresent
+			[...present, ...alsoPresent],
+			committee,
+			allMembers
 		);
 
 		if (committee.uri.includes('seanad_public_consultation_committee')) {
@@ -96,17 +90,4 @@ export default async function parseCommitteeReport(
 async function fetchRawTextFromUrl(url: string): Promise<string> {
 	const response = await axios.get(`api/pdf2text?url=${url}`);
 	return he.decode(response.data.text);
-}
-
-function getCommitteeType(
-	url: string,
-	committee: Committee
-): CommitteeType | void {
-	if (committee && committee.types! && committee.types!.length === 1)
-		return committee.types[0];
-	else if (url.includes('joint') || url.includes('comh')) return 'joint';
-	else if (url.includes('select') || url.includes('rogh')) return 'select';
-	else if (url.includes('standing')) return 'standing';
-	else if (url.includes('working')) return 'working group';
-	else if (!committee || !committee.types) console.log(`no types for ${url}`);
 }
