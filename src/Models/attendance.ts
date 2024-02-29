@@ -1,6 +1,6 @@
 /** @format */
 
-import { CommitteeType, GroupType, MemberBaseKeys } from './_utils';
+import { CommitteeType, GroupType, MemberBaseKeys, URIpair } from './_utils';
 import { DateRangeObj } from './dates';
 import { CommitteeDebateRecord } from './oireachtasApi/debate';
 
@@ -39,16 +39,16 @@ export type AttendanceRecord = {
 };
 
 export type GroupAttendanceRecord = AttendanceRecord & {
-	present: { uri: string; house_code: string; date: Date }[][];
-	absent: { uri: string; house_code: string; date: Date }[][];
-	also_present: { uri: string; house_code: string; date: Date }[][];
+	present: { uri: string; date: Date }[][];
+	absent: { uri: string; date: Date }[][];
+	also_present: { uri: string; date: Date }[][];
 };
 
 export type CommitteeAttendance = CommitteeDebateRecord & {
 	type: string;
-	present: MemberBaseKeys[];
-	absent?: MemberBaseKeys[];
-	alsoPresent?: MemberBaseKeys[];
+	present: URIpair[];
+	absent: URIpair[];
+	alsoPresent: URIpair[];
 };
 
 export type IndCommiteeAttendanceRecord = {

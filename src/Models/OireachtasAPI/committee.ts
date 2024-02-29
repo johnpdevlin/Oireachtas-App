@@ -25,8 +25,14 @@ export type RawCommitteeMember = {
 	memberDateRange: DateRangeStr;
 };
 
+export type CommitteeName = {
+	dateRange: DateRangeStr;
+	nameGa?: string;
+	nameEn: string;
+};
+
 export type RawCommittee = {
-	uri: string;
+	uri: string; // unique
 	committeeDateRange: DateRangeStr;
 	committeeType: RawCommitteeType[];
 	expiryType: 'Sessional' | 'Standing' | 'Special';
@@ -36,13 +42,10 @@ export type RawCommittee = {
 		| 'Journal Office'
 		| 'Bills Office'
 		| 'Seanad Office';
-	committeeCode: string;
-	committeeID: number;
-	committeeName: {
-		dateRange: DateRangeStr;
-		nameGa: string;
-		nameEn: string;
-	}[];
+	committeeCode: string; // Committees which occur across multiple sessions may share
+	committeeID: number; // Unique
+	committeeName: CommitteeName[];
+	altCommitteeURIs: string[];
 	houseNo: number;
 	status: 'Live - Primary' | 'Dissolved' | 'Archived';
 	members: RawCommitteeMember[];

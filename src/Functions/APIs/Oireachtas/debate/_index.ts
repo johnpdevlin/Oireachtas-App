@@ -30,6 +30,8 @@ export default async function fetchDebates(
 			return removeOuterObjects(debate.debateRecord);
 		});
 
+		if (props.formatted === false) return output;
+
 		if (props.chamber_type === 'committee') {
 			return formatCommitteeDebates(output);
 		}

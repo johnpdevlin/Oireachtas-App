@@ -16,6 +16,7 @@ export type DebateRequest = {
 	date_end?: string;
 	debate_id?: string;
 	limit?: number;
+	formatted?: boolean;
 };
 
 export type DebateRecord = {
@@ -77,7 +78,7 @@ export type CommitteeDebateRecord = {
 	type: CommitteeType;
 	chamber: BinaryChamber;
 	houseNo: number;
-	uri: string; // to differentiate for joint, select etc.
+	uri: string;
 	pdf: string;
 	xml: string;
 };
