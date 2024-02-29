@@ -110,3 +110,14 @@ export function groupByNested<T>(
 		return accumulator;
 	}, {});
 }
+
+export function excludeProperties<T extends object, K extends keyof T>(
+	obj: T,
+	propsToExclude: K[]
+): Omit<T, K> {
+	const newObj = { ...obj };
+	propsToExclude.forEach((prop) => {
+		delete newObj[prop];
+	});
+	return newObj as Omit<T, K>;
+}
