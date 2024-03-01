@@ -276,7 +276,10 @@ export function extractWebsiteDomainName(
 		if (name! && match[1].includes(name.toLowerCase()))
 			// Check if its possibly a personal page
 			return 'website';
-		else return match[1];
+		else if (url.includes('/ie.')) {
+			const newURL = url.replace('ie.', '');
+			return extractWebsiteDomainName(newURL);
+		} else return match[1];
 	}
 
 	return undefined;
