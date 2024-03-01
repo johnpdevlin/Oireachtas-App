@@ -5,7 +5,7 @@ import { scrapeCommitteePageInfo } from './committee_info';
 import fetchMembers from '../../APIs/Oireachtas/member/raw/_member_details';
 import { RawMember } from '@/models/oireachtasApi/member';
 import scrapeCommitteesBaseDetails, { BaseCommittee } from './base_info';
-import { formatRenamedCommittee } from './renamed_committee';
+import { formatRenamedCommittee } from './process/renamed_committee';
 
 async function processAllCommitteeInfo(): Promise<Committee[]> {
 	console.info('Retrieving all committee info...');

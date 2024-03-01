@@ -5,14 +5,14 @@ import { getTodayDateString } from '@/functions/_utils/dates';
 import { DateRangeStr } from '@/models/dates';
 
 export async function getHouseDatesSpoken(
-	member: string,
+	member_uri: string,
 	dateRange: DateRangeStr
 ): Promise<string[]> {
 	if (dateRange.end === undefined) dateRange.end = getTodayDateString();
 
 	// Fetches debates
 	const debates = await fetchDebates({
-		member: member,
+		member: member_uri,
 		date_start: dateRange.start,
 		date_end: dateRange.end!,
 	});

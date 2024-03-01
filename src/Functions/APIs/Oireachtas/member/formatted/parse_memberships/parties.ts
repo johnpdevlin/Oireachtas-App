@@ -1,7 +1,6 @@
 /** @format */
 import { RawMparty } from './_index';
 import { getEndDateStr } from '@/functions/_utils/dates';
-import { OirDate } from '@/models/dates';
 import { MemberParty } from '@/models/member';
 
 /* Sorts by earliest date

@@ -1,7 +1,6 @@
 /** @format */
 
 import { Chamber } from '@/models/_utils';
-import { Committee } from '@/models/committee';
 import { RawMember } from '@/models/oireachtasApi/member';
 import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
 import similarity from 'string-similarity';

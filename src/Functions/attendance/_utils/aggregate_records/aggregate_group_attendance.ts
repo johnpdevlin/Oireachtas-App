@@ -1,7 +1,7 @@
 /** @format */
 
 import { initializeAttendanceSummary } from '@/functions/attendance/_utils/init_attendance_summary';
-import { GroupType, MemberBaseKeys, URIpair } from '@/models/_utils';
+import { GroupType, URIpair } from '@/models/_utils';
 import {
 	CommitteeAttendance,
 	GroupAttendanceRecord,

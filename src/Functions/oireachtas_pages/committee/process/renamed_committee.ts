@@ -40,7 +40,10 @@ function formatActiveRenamedMembers(
 	start: Date,
 	end: Date
 ): CommitteeMembers {
-	const updatedMembers: CommitteeMembers = {};
+	const updatedMembers: CommitteeMembers = {
+		dail: [],
+		seanad: [],
+	};
 	if (members.dail!) {
 		updatedMembers.dail! = members.dail?.map((member) => {
 			return {
