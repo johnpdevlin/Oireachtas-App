@@ -14,11 +14,11 @@ export type RawCommitteeType =
 	| 'Committees relating to Private Business';
 
 export type RawCommitteeMember = {
-	uri: string;
-	fullName: string;
-	firstName: string;
-	lastName: string;
-	role:
+	uri?: string;
+	fullName?: string;
+	firstName?: string;
+	lastName?: string;
+	role?:
 		| { dateRange: DateRangeStr; title: string }[]
 		| {}
 		| { dateRange: DateRangeStr; title: string };

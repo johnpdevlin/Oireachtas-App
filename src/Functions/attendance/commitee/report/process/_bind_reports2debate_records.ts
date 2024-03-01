@@ -9,8 +9,6 @@ import { CommitteeAttendance } from '@/models/attendance';
 import { RawCommittee } from '@/models/oireachtasApi/committee';
 
 // Binds committee reports to debate records.
-
-// Binds committee reports to debate records.
 export async function bindReportsToDebateRecords(
 	records: CommitteeDebateRecord[],
 	committees: RawCommittee[],

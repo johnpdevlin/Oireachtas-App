@@ -43,7 +43,7 @@ export type RawOuterMembership = {
 };
 
 export type RawMemberCommittee = RawCommittee &
-	RawCommitteeMember & { committeeURI: string };
+	RawCommitteeMember & { committeeURI?: string };
 
 export type RawMemberHouse = {
 	houseCode: BinaryChamber;

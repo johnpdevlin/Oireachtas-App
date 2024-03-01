@@ -45,7 +45,7 @@ function formatAsURIpair(
 ): URIpair[] {
 	return members.map((com) => {
 		return {
-			uri: com.uri,
+			uri: com.uri!,
 			name: `${com.lastName} ${com.firstName}`,
 		};
 	});
