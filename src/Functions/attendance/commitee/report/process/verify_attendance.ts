@@ -37,8 +37,9 @@ export function verifyAttendance(
 		members
 	);
 	const confirmedAbsent =
-		members.filter((member) =>
-			confirmedPresent!.matches.some((cp) => cp.uri === member.uri)
+		members.filter(
+			(member) =>
+				confirmedPresent!.matches.some((cp) => cp.uri === member.uri) === false
 		) ?? [];
 
 	// Verifies alsoPresent's members attendance
@@ -63,8 +64,12 @@ export function verifyAttendance(
 				return un;
 		});
 		if (
-			(processed.unMatched.length > 1 && processed.unMatched.length < 15) ||
-			(processed.unMatched.length === 1 && processed.unMatched[0].includes(' '))
+			(processed.unMatched.length > 1 &&
+				processed.unMatched.length < 15 &&
+				processed.unMatched[0].length < 50) ||
+			(processed.unMatched.length === 1 &&
+				processed.unMatched[0].includes(' ') &&
+				processed.unMatched[0].length < 50)
 		) {
 			console.log(
 				`\nURL:  ${url}`,
@@ -96,7 +101,7 @@ export function verifyAttendance(
 
 	if (confirmedPresent.matches.length === 0)
 		console.log(
-			`....................`,
+			`...NO MEMBERS IDENTIFIED AS PRESENT...`,
 			`\n\nURL:  ${url}`,
 			`\n\nDATE:  ${date}`,
 			`\n\nATTENDANCE RECORDED:  ${attendanceRecorded.join(', ')}}`,

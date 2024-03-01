@@ -1,8 +1,6 @@
 /** @format */
 
 import { RawMember } from '@/models/oireachtasApi/member';
-import { CommitteeType, MemberBaseKeys } from '@/models/_utils';
-import { Committee } from '@/models/committee';
 import axios from 'axios';
 import he from 'he';
 import { verifyAttendance } from '../process/verify_attendance';
@@ -75,11 +73,6 @@ export default async function parseCommitteeReport(
 			committee,
 			allMembers
 		);
-
-		if (committee.uri.includes('seanad_public_consultation_committee')) {
-			console.log(verifiedAttendance);
-			console.log(text);
-		}
 
 		return verifiedAttendance;
 	} catch (error) {

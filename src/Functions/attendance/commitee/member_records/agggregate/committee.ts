@@ -1,7 +1,7 @@
 /** @format */
 
 import { addPresentPercentage } from '@/functions/attendance/_utils/add_percentage_calculations';
-import { MemberBaseKeys } from '@/models/_utils';
+import { URIpair } from '@/models/_utils';
 import {
 	CommitteeAttendance,
 	MemberIndCommAttendanceRecord,
@@ -16,7 +16,7 @@ function aggregateMemberCommAttendance(
 		const year = record.date.getFullYear();
 
 		const updateSummary = (
-			member: MemberBaseKeys,
+			member: URIpair,
 			status: 'present' | 'absent' | 'alsoPresent'
 		) => {
 			// Normalize the status to match the property names in MemberCommitteeAttendance
@@ -50,7 +50,7 @@ function aggregateMemberCommAttendance(
 
 // Initialize attendance arrays for a new summary object.
 function initializeAttendanceSummary(
-	member: MemberBaseKeys,
+	member: URIpair,
 	record: CommitteeAttendance,
 	year: number
 ): MemberIndCommAttendanceRecord {
