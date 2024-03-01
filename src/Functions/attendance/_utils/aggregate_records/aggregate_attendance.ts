@@ -1,11 +1,12 @@
 /** @format */
 
 import { initializeAttendanceSummary } from '@/functions/attendance/_utils/init_attendance_summary';
-import { getHouseCode } from '@/functions/oireachtas_pages/committee/parse/house_code';
-import { BinaryChamber, GroupType } from '@/models/_utils';
+
 import { AttendanceRecord, GroupAttendanceRecord } from '@/models/attendance';
 import { RawMember } from '@/models/oireachtasApi/member';
 import { addPresentPercentage } from '../add_percentage_calculations';
+import { BinaryChamber, GroupType } from '@/models/_utils';
+import { getHouseCode } from '@/functions/APIs/Oireachtas/_utils/get_house_code';
 
 function aggregateMemberAttendance(
 	group_type: GroupType,
