@@ -30,6 +30,7 @@ async function aggregateMembershipAttendanceRecords(
 	// Group and aggregate records
 	const aggregated = [...dailRecords, ...seanadRecords, ...partyRecords];
 	const grouped = groupObjectsByProperty(aggregated, 'uri');
+
 	const processed = grouped.map((group) =>
 		aggregateMemberAttendance(
 			group[0].group_type,
@@ -52,22 +53,29 @@ function processParties(records: AttendanceRecord[], members: RawMember[]) {
 		const matched = members.find((member) => record.uri === member.memberCode);
 		if (!matched) console.info('no member found for ', record.uri);
 		if (matched) {
-			const parties = parseMemberships(matched.memberships).parties;
+			const parties = matched.memberships.flatMap((membership) =>
+				membership.membership.parties.map((p) => {
+					return { ...p.party, uri: p.party.partyCode };
+				})
+			);
+
 			if (!parties || parties?.length === 0)
-				console.info('no constituencies found for ', matched.memberCode);
-			else if (parties?.length === 1)
+				console.info('No parties found for: ', matched.memberCode);
+			else if (!parties.some((p) => p.uri !== parties[0].uri))
+				// If there are no other parties recorded (identified by uri)
 				processedMembers.push({
 					uri: parties![0].uri,
 					group_type: 'party',
 					record: record,
 				});
-			else if (parties!.length > 1) {
+			else {
 				const exceptions = handleMembershipExceptions(
 					parties!,
-					'constituency',
+					'party',
 					record
 				);
-				processedMembers.push(...exceptions!);
+
+				processedMembers.push(...exceptions.flat()!);
 			}
 		}
 	});

@@ -1,14 +1,12 @@
 /** @format */
 
 import { initializeAttendanceSummary } from '@/functions/attendance/_utils/init_attendance_summary';
-import { GroupType, MemberBaseKeys } from '@/models/_utils';
+import { GroupType, MemberBaseKeys, URIpair } from '@/models/_utils';
 import {
 	CommitteeAttendance,
 	GroupAttendanceRecord,
 } from '@/models/attendance';
 import { addPresentPercentage } from '../add_percentage_calculations';
-
-type MemberAtt = { uri: string; house_code: string; date: Date };
 
 function aggregateGroupAttendance(
 	group_type: GroupType,
@@ -26,7 +24,7 @@ function aggregateGroupAttendance(
 		const year = record.date.getFullYear();
 
 		const updateSummary = (
-			member: MemberBaseKeys,
+			member: URIpair,
 			status: 'present' | 'absent' | 'alsoPresent'
 		) => {
 			// Normalize the status to match the property names in MemberCommitteeAttendance
@@ -37,7 +35,6 @@ function aggregateGroupAttendance(
 			// Use normalizedStatus to access the correct property
 			summary[normalizedStatus][month].push({
 				uri: member.uri,
-				house_code: member.house_code,
 				date: record.date,
 			});
 		};
