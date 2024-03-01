@@ -4,6 +4,7 @@ import { assignMemberURIsAndNames } from '@/functions/_utils/memberURIs';
 import { normaliseString } from '@/functions/_utils/strings';
 import { SittingDaysRecord } from '@/models/attendance';
 import { groupObjectsByProperty } from '../../../_utils/objects';
+import { URIpair } from '@/models/_utils';
 
 type MemberData = {
 	name?: string;
@@ -17,15 +18,13 @@ type MemberData = {
 // Function to assign member URIs to each report based on the best name match
 async function matchMemberURIsToReports(
 	reports: SittingDaysRecord[],
-	memberData: MemberData[]
+	memberData: URIpair[]
 ): Promise<SittingDaysRecord[]> {
-	let reportNames: string[] = reports
-		.map((report) => report.name!)
-		.filter(Boolean);
+	const reportNames = reports.map((report) => report.name!);
 
 	let { matches, unMatched } = assignMemberURIsAndNames(
 		reportNames,
-		memberData
+		memberData!
 	);
 
 	unMatched = unMatched.filter((um) => um! && um !== '');
@@ -40,10 +39,10 @@ async function matchMemberURIsToReports(
 		);
 
 		if (match!) {
-			const { firstName, lastName, uri } = match;
+			const { name, uri } = match;
 			matchedReports.push({
 				...report,
-				name: `${firstName} ${lastName}`,
+				name: name,
 				uri: uri,
 			});
 		}
@@ -52,10 +51,10 @@ async function matchMemberURIsToReports(
 			const name = normaliseString(report.name!);
 			const matched = assignMemberURIsAndNames([name], memberData);
 			if (matched.matches.length === 1) {
-				const { firstName, lastName, uri } = matched.matches[0];
+				const { name, uri } = matched.matches[0];
 				matchedReports.push({
 					...report,
-					name: `${firstName} ${lastName}`,
+					name: name,
 					uri: uri,
 				});
 			} else if (matched.matches.length > 1) console.info(matched.matches);
@@ -71,14 +70,14 @@ async function matchMemberURIsToReports(
 
 function logMembersNotAppearing(
 	reports: SittingDaysRecord[],
-	members: MemberData[]
+	members: URIpair[]
 ): void {
 	const yearGrouped = groupObjectsByProperty(reports, 'year');
 	members.forEach((member) => {
 		yearGrouped.forEach((report) => {
 			if (report.every((re) => re.uri !== member.uri)) {
 				console.info(
-					`Attendance record for ${member.fullName} not found for ${report[0].year}`
+					`Attendance record for ${member.uri} not found for ${report[0].year}`
 				);
 			}
 		});

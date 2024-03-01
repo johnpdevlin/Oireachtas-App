@@ -1,5 +1,5 @@
 /** @format */
-import { BinaryChamber } from '@/models/_utils';
+import { BinaryChamber, URIpair } from '@/models/_utils';
 import parseSittingDaysPDF from './parse_attendance_report';
 import { SittingDaysRecord } from '@/models/attendance';
 import fetchMembers from '../../../APIs/Oireachtas/member/raw/_member_details';
@@ -14,6 +14,8 @@ async function processSittingReportsByTerm(
 	membersData?: RawMember[]
 ): Promise<SittingDaysRecord[]> {
 	try {
+		// Fethces Reports and members data
+		// Matches Member to Report
 		const reports = await fetchReports(chamber, house_no);
 		if (!reports.length) return [];
 
@@ -51,13 +53,10 @@ async function fetchReports(
 		.flat();
 }
 
-function parseRelevantMemberData(data: RawMember[]) {
-	return data.map(({ lastName, firstName, memberCode, memberships }) => ({
-		fullName: `${lastName} ${firstName}`.toLowerCase(),
-		firstName: firstName,
-		lastName: lastName,
+function parseRelevantMemberData(data: RawMember[]): URIpair[] {
+	return data.map(({ lastName, firstName, memberCode }) => ({
+		name: `${lastName} ${firstName}`.toLowerCase(),
 		uri: memberCode,
-		house_code: memberships[0].membership.house.houseCode,
 	}));
 }
 
