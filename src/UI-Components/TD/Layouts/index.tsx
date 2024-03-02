@@ -34,18 +34,24 @@ export default function TDIndexLayout(props: {
 	});
 
 	useEffect(() => {
-		let filtered = props.members;
-		if (selectedConstits.length > 0)
-			filtered = filtered.filter((m) =>
-				selectedConstits.some((c) => c.id === m.constituencies.dail![0].uri)
-			);
-		if (selectedParties.length > 0) console.log(selectedParties);
-		filtered = filtered.filter((m) =>
-			selectedParties.some((c) => c.id === m.parties[0].uri)
-		);
+		let filtered: MemberAPIdetails[] = [];
 		if (selectedParties.length === 0 && selectedConstits.length === 0) {
 			filtered = props.members;
-		}
+		} else if (selectedParties.length > 0 && selectedConstits.length > 0)
+			filtered = props.members.filter(
+				(m) =>
+					selectedConstits.some(
+						(c) => c.id === m.constituencies.dail![0].uri
+					) && selectedParties.some((p) => p.id === m.parties[0].uri)
+			);
+		else if (selectedConstits.length > 0)
+			filtered = props.members.filter((m) =>
+				selectedConstits.some((c) => c.id === m.constituencies.dail![0].uri)
+			);
+		else if (selectedParties.length > 0)
+			filtered = props.members.filter((m) =>
+				selectedParties.some((c) => c.id === m.parties[0].uri)
+			);
 
 		setFilteredMembers(filtered);
 	}, [selectedConstits, selectedParties]);
