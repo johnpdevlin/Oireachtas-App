@@ -4,9 +4,9 @@ import fetchNames from './fetch_names_';
 
 export default async function checkGender(
 	firstName: string,
-	boyNames?: Record<number, string>,
-	girlNames?: Record<number, string>
-): Promise<string> {
+	boyNames?: string[],
+	girlNames?: string[]
+): Promise<'unisex' | 'female' | 'male' | 'unknown'> {
 	if (!firstName) {
 		throw new Error('Name not provided');
 	}
@@ -19,16 +19,13 @@ export default async function checkGender(
 	}
 
 	firstName = firstName.toLowerCase();
-	const boysSet = new Set(Object.values(boyNames));
-	const girlsSet = new Set(Object.values(girlNames));
 
-	if (boysSet.has(firstName) && girlsSet.has(firstName)) {
+	if (
+		boyNames.find((bn) => bn === firstName) &&
+		girlNames.find((gn) => gn === firstName)
+	)
 		return 'unisex';
-	} else if (boysSet.has(firstName)) {
-		return 'male';
-	} else if (girlsSet.has(firstName)) {
-		return 'female';
-	}
-
-	return 'unknown';
+	else if (boyNames.find((bn) => bn === firstName)) return 'male';
+	else if (girlNames.find((gn) => gn === firstName)) return 'female';
+	else return 'unknown';
 }
