@@ -34,8 +34,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# testing dir
+# testing & script dirs
 /src/pages/test
+/src/scripts
 
 # Txt files
 /TODOs.txt
