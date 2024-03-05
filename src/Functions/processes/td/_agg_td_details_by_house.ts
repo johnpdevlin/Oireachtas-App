@@ -1,18 +1,17 @@
 /** @format */
 
 import fetchNames from '../../APIs/Irish_Names/fetch_names_';
-
 import getAllMembersAPIdetails from '../../APIs/Oireachtas/member/formatted/_multi_member_details';
-import getAllMembersOirData from '@/functions/oireachtas_pages/td/get/all_data/multi_TDs';
+import getAllMembersOirData from '@/functions/oireachtas_pages/td/multi_TDs';
 import { WikiTDProfileDetails } from '@/models/wiki_td';
-import { OirData } from '@/models/member';
 import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
 import getTDsWikiData from '@/functions/wikipedia_pages/td/page/multi_td_page';
 import similarity from 'string-similarity';
 import checkGender from '../../APIs/Irish_Names/index_';
+import { MemberOirProfile } from '@/functions/oireachtas_pages/td/profile/td_profile';
 
 // Consolidated Member Bio Data
-export type MemberBioData = { gender: string | void } & OirData &
+export type MemberBioData = { gender: string | void } & MemberOirProfile &
 	WikiTDProfileDetails &
 	MemberAPIdetails;
 
@@ -30,12 +29,21 @@ async function getAggregatedTDsDetailsByHouse(house_no: number) {
 
 	// Gets all URIs
 	const uris = apiData!.map((member: { uri: string }) => member.uri);
+	console.info(
+		'Member data retrieved, parsed and processed from Oireachtas API.'
+	);
 
 	// Gets Data from Oireachtas Website profiles
 	const oirData = await getAllMembersOirData(uris!);
+	console.info(
+		'Member data scraped, parsed and processed from Oireachtas website.'
+	);
 
 	// Gets data from Wikipedia
 	const wikiDetails = await getTDsWikiData(33);
+	console.info(
+		'Member data scraped, parsed and processed from Wikipedia profile.'
+	);
 
 	// Function to merge / bind all data together to create objects
 	const mergedData = await bindAllData(uris, oirData, wikiDetails, apiData);
@@ -48,19 +56,19 @@ async function getAggregatedTDsDetailsByHouse(house_no: number) {
 
 async function bindAllData(
 	uris: string[],
-	oirData: OirData[],
+	oirData: MemberOirProfile[],
 	wikiData: WikiTDProfileDetails[],
 	apiData: MemberAPIdetails[]
 ): Promise<MemberBioData[]> {
-	const boyNames = (await fetchNames('boy')) as Record<number, string>;
-	const girlNames = (await fetchNames('girl')) as Record<number, string>;
+	const boyNames = await fetchNames('boy');
+	const girlNames = await fetchNames('girl');
 
 	const bound = await Promise.all(
 		// Iterate over each URI
 		uris.map(async (uri: string) => {
 			// Find TD API and OIR data by URI
 			const api = apiData.find((data) => data.uri === uri);
-			const oir = oirData.find((data: OirData) => data.uri === uri);
+			const oir = oirData.find((data) => data.uri === uri);
 
 			// Find Wiki Data by name
 			let wiki = wikiData.find(
@@ -80,11 +88,7 @@ async function bindAllData(
 			}
 
 			// Get gender by name match
-			const gender = await checkGender(
-				api!.firstName.toLowerCase(),
-				boyNames,
-				girlNames
-			);
+			const gender = await checkGender(api!.firstName, boyNames, girlNames);
 
 			return {
 				...oir,

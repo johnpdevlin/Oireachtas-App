@@ -1,6 +1,6 @@
 /** @format */
 
-import { MemberOirProfile } from '@/functions/oireachtas_pages/td/get/profile/td_profile';
+import { MemberOirProfile } from '@/functions/oireachtas_pages/td/profile/td_profile';
 
 export type OirData = MemberOirProfile & {
 	committees: { current?: MemberCommittee[]; past?: MemberCommittee[] };

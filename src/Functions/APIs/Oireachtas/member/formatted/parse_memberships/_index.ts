@@ -1,6 +1,7 @@
 /** @format */
 
 import {
+	RawMemberCommittee,
 	RawMemberHouse,
 	RawMemberParty,
 	RawMemberRepresent,
@@ -16,6 +17,7 @@ import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/cons
 import { MemberOffice } from '@/models/oireachtasApi/Formatted/Member/office';
 import { MemberParty } from '@/models/oireachtasApi/Formatted/Member/party';
 
+
 type MembershipResponse = {
 	constituencies: {
 		dail?: MemberConstituency[];
@@ -25,6 +27,7 @@ type MembershipResponse = {
 	isActiveTD: boolean;
 	parties: MemberParty[];
 	offices?: MemberOffice[];
+	committees?: RawMemberCommittee[];
 	isActiveSeniorMinister: boolean;
 	isActiveJunior: boolean;
 };
@@ -49,6 +52,11 @@ function parseMemberships(
 
 	const parties = parseAndFormatParties(destructured.parties);
 	const offices = parseAndFormatOffices(destructured.offices as RawMoffice[]);
+	const rawCommittees = memberships
+		.flat()
+		.map((mem) => mem.membership.committees)
+		.flat();
+	const committees = rawCommittees;
 
 	return {
 		constituencies,
@@ -62,6 +70,7 @@ function parseMemberships(
 					isActiveJunior: offices.isActiveJunior,
 			  }
 			: { isActiveJunior: false, isActiveSeniorMinister: false }),
+		committees,
 	} as MembershipResponse;
 }
 

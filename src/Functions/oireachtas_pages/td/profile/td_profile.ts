@@ -3,10 +3,9 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import he from 'he';
 import { extractWebsiteDomainName } from '@/functions/_utils/strings';
-import { MemberURI } from '@/models/_utils';
 
 export type MemberOirProfile = {
-	uri: MemberURI;
+	uri: string;
 	address: string;
 	contactNumbers: string[];
 	email: string;
@@ -16,7 +15,7 @@ export type MemberOirProfile = {
 type WebsitePair = { website: string | undefined; url: string };
 
 export default async function scrapeMemberOirProfile(
-	uri: MemberURI
+	uri: string
 ): Promise<MemberOirProfile> {
 	const url = `https://www.oireachtas.ie/en/members/member/${uri}`;
 	const response = he.decode(
@@ -64,3 +63,5 @@ function formatWebpages(webpages: string[], uri: string): WebsitePair[] {
 		} as WebsitePair;
 	});
 }
+
+

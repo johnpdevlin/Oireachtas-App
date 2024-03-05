@@ -1,11 +1,10 @@
 /** @format */
 import { MemberRequest, RawMember } from '@/models/oireachtasApi/member';
-import fetchMembers from '../../../../APIs/Oireachtas/member/raw/_member_details';
+import fetchMembers from '../../../APIs/Oireachtas/member/raw/_member_details';
 import scrapeMemberOirProfile, { MemberOirProfile } from './td_profile';
-import { MemberURI } from '@/models/_utils';
 
 export default async function getMultiMembersOirdetails(
-	uris?: MemberURI[],
+	uris?: string[],
 	request?: MemberRequest
 ): Promise<MemberOirProfile[] | void> {
 	try {

@@ -36,6 +36,7 @@ next-env.d.ts
 
 # testing & script dirs
 /src/pages/test
+/src/pages/scripts
 /src/scripts
 
 # Txt files
