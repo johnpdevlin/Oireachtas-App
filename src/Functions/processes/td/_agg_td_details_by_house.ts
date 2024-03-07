@@ -89,11 +89,27 @@ async function bindAllData(
 
 			// Get gender by name match
 			const gender = await checkGender(api!.firstName, boyNames, girlNames);
+			const websites = () => {
+				const wikipedia = {
+					website: 'wikipedia',
+					url: `https://en.wikipedia.org${wiki?.wikiURI}`,
+				};
+				const oireachtas = {
+					website: 'oireachtas',
+					url: `https://www.oireachtas.ie/en/members/member/${oir?.uri}`,
+				};
+				const webpages = oir!.webpages.map((w) => {
+					if (isParty(w.website!)) return { website: 'party', url: w.url };
+					else return w;
+				});
+				return [...webpages, wikipedia, oireachtas];
+			};
 
 			return {
 				...oir,
 				...wiki,
 				...api,
+				webpages: websites(),
 				gender,
 			};
 		})
@@ -102,4 +118,27 @@ async function bindAllData(
 	return bound as MemberBioData[];
 }
 
+const isParty = (website: string): boolean => {
+	const possibleParties = [
+		'sinnfein',
+		'finegael',
+		'fiannafail',
+		'pbp',
+		'greenparty',
+		'labour',
+		'socialdemocrats',
+		'letusrise',
+		'solidarity',
+		'independentireland',
+		'aontu',
+		'righttochange',
+		'hdalliance',
+		'anrabhartaglas',
+		'wuag',
+		'workersparty',
+		'republicansinnfein',
+	];
+	if (possibleParties.includes(website)) return true;
+	else return false;
+};
 export default getAggregatedTDsDetailsByHouse;

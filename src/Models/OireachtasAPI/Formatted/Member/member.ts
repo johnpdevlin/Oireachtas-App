@@ -2,11 +2,10 @@
 
 import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/constituency';
 import { MemberOffice } from '@/models/oireachtasApi/Formatted/Member/office';
-import { MemberParty } from '@/Models/DB/Member/party';
-import { MemberURI } from '@/models/_utils';
+import { MemberParty } from '@/models/oireachtasApi/Formatted/Member/party';
 
 export type MemberAPIdetails = {
-	uri: MemberURI;
+	uri: string;
 	fullName: string;
 	firstName: string;
 	lastName: string;

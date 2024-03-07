@@ -12,7 +12,7 @@ export type MemberOirProfile = {
 	webpages: WebsitePair[];
 };
 
-type WebsitePair = { website: string | undefined; url: string };
+export type WebsitePair = { website: string | undefined; url: string };
 
 export default async function scrapeMemberOirProfile(
 	uri: string
@@ -58,10 +58,8 @@ function formatWebpages(webpages: string[], uri: string): WebsitePair[] {
 
 	return webpages.map((page: string) => {
 		return {
-			website: extractWebsiteDomainName(page, name),
+			website: extractWebsiteDomainName(page, name)?.toLowerCase(),
 			url: page,
 		} as WebsitePair;
 	});
 }
-
-
