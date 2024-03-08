@@ -11,9 +11,12 @@ import {
 	HowToVote,
 	Place,
 	HourglassEmpty,
+	Groups,
+	CropSquareRounded,
+	Work,
 } from '@mui/icons-material';
 import HoverableFootnote from '../../_utils/HoverableFootnote';
-import { MemberBioData } from '@/functions/processes/td/_all_current_agg_td_details';
+
 import {
 	calculateYearsAndMonthsSinceDate,
 	formatDateToString,
@@ -21,17 +24,21 @@ import {
 import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/constituency';
 import { capitaliseFirstLetters } from '../../../functions/_utils/strings';
 import { MemberParty } from '@/models/member';
+import { ScreenSize } from '@/models/ui';
+import { MemberBioData } from '@/functions/processes/td/_agg_td_details_by_house';
 
-function BasicDetails(props: { member: MemberBioData }) {
+function BasicDetails(props: { member: MemberBioData; size: ScreenSize }) {
 	const {
 		birthdate,
 		birthplace,
 		birthCountry,
 		almaMater,
 		parties,
+		offices,
 		constituencies,
 		isActiveTD,
 		isActiveSenator,
+		committees,
 	} = props.member;
 
 	const formattedBirthdate = birthdate
@@ -46,14 +53,14 @@ function BasicDetails(props: { member: MemberBioData }) {
 			if (isActiveTD! && constituencies.dail!.length > 1)
 				return constituencies.dail!.slice(1);
 			else if (isActiveSenator!) return constituencies.dail!;
-		} else return undefined;
+		} else return [];
 	};
 	const formerSeanadConstituencies = () => {
 		if (constituencies.seanad!.length >= 1) {
 			if (isActiveSenator! && constituencies.seanad!.length > 1)
 				return constituencies.seanad!.slice(1);
 			else if (isActiveTD!) return constituencies.seanad!;
-		} else return undefined;
+		} else return [];
 	};
 
 	const formatFormerMemberships = (
@@ -80,6 +87,8 @@ function BasicDetails(props: { member: MemberBioData }) {
 
 	const formerParties =
 		parties.length > 1 && formatFormerMemberships(parties.slice(1));
+
+	const formerOffices = offices?.filter((off) => off.dateRange.end!) ?? [];
 
 	const firstElected = () => {
 		if (isActiveTD!)
@@ -211,6 +220,60 @@ function BasicDetails(props: { member: MemberBioData }) {
 							</Typography>
 						</TableCell>
 					</TableRow>
+					{props.size !== 'lg' && (
+						<TableRow>
+							<TableCell sx={{ verticalAlign: 'top' }}>
+								<Stack direction='row' sx={{ verticalAlign: 'top' }}>
+									<Groups fontSize='small' />
+									<Typography
+										variant='body2'
+										align='left'
+										sx={{ ml: 0.5, mt: 0.1 }}>
+										Committees:
+									</Typography>
+								</Stack>
+							</TableCell>
+							<TableCell>
+								{committees.current.map((c) => {
+									return (
+										<Stack direction='row' gap={0.5}>
+											<CropSquareRounded fontSize='inherit' sx={{ mt: 0.4 }} />
+											<Typography variant='subtitle2' align='left'>
+												{c.name}
+											</Typography>
+										</Stack>
+									);
+								})}
+							</TableCell>
+						</TableRow>
+					)}
+					{props.size !== 'lg' && formerOffices.length > 0 && (
+						<TableRow>
+							<TableCell sx={{ verticalAlign: 'top' }}>
+								<Stack direction='row' sx={{ verticalAlign: 'top' }}>
+									<Work fontSize='inherit' />
+									<Typography
+										variant='body2'
+										align='left'
+										sx={{ ml: 0.5, mt: 0.1 }}>
+										Former Positions:
+									</Typography>
+								</Stack>
+							</TableCell>
+							<TableCell>
+								{formerOffices.map((c) => {
+									return (
+										<Stack direction='row' gap={0.5}>
+											<CropSquareRounded fontSize='inherit' sx={{ mt: 0.4 }} />
+											<Typography variant='subtitle2' align='left'>
+												{c.name}
+											</Typography>
+										</Stack>
+									);
+								})}
+							</TableCell>
+						</TableRow>
+					)}
 					<TableRow>
 						<TableCell>
 							<Stack direction='row'>

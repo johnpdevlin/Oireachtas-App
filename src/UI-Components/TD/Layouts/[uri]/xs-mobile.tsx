@@ -1,25 +1,28 @@
 /** @format */
 
-import ProfileImage from '../../Components/ProfileImg';
-import ProfileHeader from '../../Components/ProfileHeader';
-import BasicDetails from '../../Components/BasicDetails';
 import { Box } from '@mui/material';
+import { MemberBioData } from '@/functions/processes/td/_agg_td_details_by_house';
+import ProfileHeader from '../../[uri]/ProfileHeader';
+import ProfileImage from '../../_utils/ProfileImg';
+import BasicDetails from '../../[uri]/BasicDetails';
 
 export default function MobileTDlayout(props: {
-	member: unknown;
+	member: MemberBioData;
 }): JSX.Element {
-	// member: unknown
-
 	return (
 		<>
 			<Box sx={{ mx: 1 }}>
-				<ProfileHeader name={props.member.name} textAlign='center' />
+				<ProfileHeader
+					name={props.member.fullName}
+					textAlign='center'
+					offices={props.member.offices}
+				/>
 				<ProfileImage
 					uri={props.member.uri}
-					name={props.member.name}
+					name={props.member.fullName}
 					size={510}
 				/>
-				<BasicDetails />
+				<BasicDetails member={props.member} size='xs' />
 			</Box>
 		</>
 	);

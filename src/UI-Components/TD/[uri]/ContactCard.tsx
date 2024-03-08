@@ -8,13 +8,15 @@ import {
 	CardActions,
 	Divider,
 	Stack,
+	Badge,
 } from '@mui/material';
 
-import SocialIcons from '@/UI-Components/_utils/SocialIcons';
 import ProfileImage from '../_utils/ProfileImg';
 import Address from '@/UI-Components/_utils/Contact/Address';
 import PhoneNumber from '@/UI-Components/_utils/Contact/PhoneNumber';
 import Email from '@/UI-Components/_utils/Contact/Email';
+import { WebsitePair } from '@/functions/oireachtas_pages/td/profile/td_profile';
+import SocialIcon from '@/UI-Components/_utils/SocialIcon';
 
 export default function ContactCard(props: {
 	uri: string;
@@ -22,32 +24,31 @@ export default function ContactCard(props: {
 	address: string;
 	phoneNumber: string;
 	email: string;
+	webpages: WebsitePair[];
 }) {
 	return (
 		<Card sx={{ mt: 2.5 }}>
 			<CardMedia sx={{ mb: 0, width: '100%' }}>
-				<ProfileImage
-					uri={'Leo-Varadkar.D.2007-06-14'}
-					name={'Leo Varadkar'}
-					size={300}
-				/>
+				<ProfileImage uri={props.uri} name={props.name} size={300} />
 			</CardMedia>
 			<CardContent>
-				<Address
-					label='Constitunecy Address'
-					address='Unit 1, Old Quarry Campus, Kilshane Park, Northwest Business Park,
-					Blanchardstown, Dublin 15, D15 A337'
-				/>
+				<Address label='Constitunecy Address' address={props.address} />
 
 				<Stack direction='column' sx={{ mt: 1 }}>
 					<Typography variant='body1'>Contact Details </Typography>
 					<Divider />
-					<PhoneNumber number='(01) 619 4000' />
-					<Email email='leo.varadkar@oireachtas.ie' />
+					<PhoneNumber number={props.phoneNumber} />
+					<Email email={props.email} />
 				</Stack>
 			</CardContent>
 
-			<CardActions>{/* <SocialIcons /> */}</CardActions>
+			<CardActions>
+				<Stack direction='row' sx={{ m: 2 }} spacing={2}>
+					{props.webpages.map((page, _) => (
+						<SocialIcon key={_} page={page} color={'DarkSlateBlue'} />
+					))}
+				</Stack>
+			</CardActions>
 		</Card>
 	);
 }

@@ -6,8 +6,8 @@ import MemberMenu from '../../[uri]/MemberMenu';
 import ProfileCard from '../../[uri]/ProfileCard';
 import CommitteesCard from '../../[uri]/CommitteesCard';
 import FormerPositions from '../../[uri]/FormerPositions';
-import { MemberBioData } from '@/functions/processes/td/_all_current_agg_td_details';
 import CommitteeAttendanceChart from '../../[uri]/AttendanceChart';
+import { MemberBioData } from '@/functions/processes/td/_agg_td_details_by_house';
 
 export default function LargeTDlayout(props: {
 	member: MemberBioData;
@@ -27,19 +27,20 @@ export default function LargeTDlayout(props: {
 								name={props.member.fullName}
 								phoneNumber={props.member.contactNumbers[0]}
 								address={props.member.address}
+								webpages={props.member.webpages}
 							/>
 						</Grid>
 						<Grid item lg={6.5}>
-							<ProfileCard member={props.member} />
+							<ProfileCard member={props.member} size='lg' />
 						</Grid>
 
 						<Grid item lg={3}>
 							<Stack direction='column' spacing={1} sx={{ mt: 2, mr: 1 }}>
-								{props.member.committees! && (
+								{props.member.committees.current.length > 0 && (
 									<CommitteesCard committees={props.member.committees} />
 								)}
-								{props.member.offices! && (
-									<FormerPositions offices={props.member.offices} />
+								{props.member.offices?.length! > 0 && (
+									<FormerPositions offices={props.member.offices!} />
 								)}
 							</Stack>
 						</Grid>

@@ -2,10 +2,10 @@
 import { Stack } from '@mui/material';
 import ProfileHeader from './ProfileHeader';
 import BasicDetails from './BasicDetails';
-import { MemberBioData } from '@/functions/processes/td/_all_current_agg_td_details';
+import { MemberBioData } from '@/functions/processes/td/_agg_td_details_by_house';
+import { ScreenSize } from '@/models/ui';
 
-function ProfileCard(props: { member: MemberBioData }) {
-	console.log(props.member.offices);
+function ProfileCard(props: { member: MemberBioData; size: ScreenSize }) {
 	return (
 		<>
 			<Stack direction='column' sx={{ ml: 1.5, mr: 2 }}>
@@ -16,7 +16,7 @@ function ProfileCard(props: { member: MemberBioData }) {
 						textAlign='left'
 					/>
 				</Stack>
-				<BasicDetails member={props.member} />
+				<BasicDetails member={props.member} size={props.size} />
 			</Stack>
 		</>
 	);
