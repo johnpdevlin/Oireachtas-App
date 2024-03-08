@@ -16,18 +16,19 @@ import { DateRangeObj, DateRangeStr, OirDate } from '@/models/dates';
 import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/constituency';
 import { MemberOffice } from '@/models/oireachtasApi/Formatted/Member/office';
 import { MemberParty } from '@/models/oireachtasApi/Formatted/Member/party';
-
+import { parseAndFormatCommittees } from './committees';
+import { MemberCommittee } from '@/models/oireachtasApi/Formatted/Member/committee';
 
 type MembershipResponse = {
 	constituencies: {
-		dail?: MemberConstituency[];
-		seanad?: MemberConstituency[];
+		dail: MemberConstituency[];
+		seanad: MemberConstituency[];
 	};
 	isActiveSenator: boolean;
 	isActiveTD: boolean;
 	parties: MemberParty[];
-	offices?: MemberOffice[];
-	committees?: RawMemberCommittee[];
+	offices: MemberOffice[];
+	committees: { current: MemberCommittee[]; past: MemberCommittee[] };
 	isActiveSeniorMinister: boolean;
 	isActiveJunior: boolean;
 };
@@ -56,16 +57,16 @@ function parseMemberships(
 		.flat()
 		.map((mem) => mem.membership.committees)
 		.flat();
-	const committees = rawCommittees;
+	const committees = parseAndFormatCommittees(rawCommittees);
 
 	return {
 		constituencies,
 		isActiveSenator,
 		isActiveTD,
 		parties,
+		offices: offices.offices,
 		...(offices.offices.length > 0
 			? {
-					offices: offices.offices,
 					isActiveSeniorMinister: offices.isActiveSeniorMinister,
 					isActiveJunior: offices.isActiveJunior,
 			  }
@@ -104,7 +105,7 @@ function destructureMemberships(
 	};
 	const parties: RawMparty[] = [];
 
-	memberships.map((membership) => {
+	memberships.forEach((membership) => {
 		const mem = membership.membership;
 
 		// House allows for easy comparison
@@ -114,18 +115,17 @@ function destructureMemberships(
 		};
 
 		if (mem.offices?.length > 0)
-			mem.offices.map((office) =>
+			mem.offices.forEach((office) =>
 				offices.push({ house: house, ...office.office })
 			);
 		if (mem.represents?.length > 0)
-			mem.represents.map((represent) => {
+			mem.represents.forEach((represent) => {
 				if (represent.represent.representType === 'panel')
 					constits.seanad.push({ house, ...represent.represent });
 				else constits.dail.push({ house, ...represent.represent });
 			});
-
-		if (mem.parties?.length > 0)
-			mem.parties.map((p) =>
+		else if (mem.parties?.length > 0)
+			mem.parties.forEach((p) =>
 				parties.push({
 					...p.party,
 					house,

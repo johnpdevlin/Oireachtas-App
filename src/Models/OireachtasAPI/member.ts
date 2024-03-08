@@ -42,7 +42,7 @@ export type RawOuterMembership = {
 	membership: RawMembership;
 };
 
-export type RawMemberCommittee = RawCommittee &
+export type RawMemberCommittee = Omit<RawCommittee, 'members'> &
 	RawCommitteeMember & { committeeURI?: string };
 
 export type RawMemberHouse = {
