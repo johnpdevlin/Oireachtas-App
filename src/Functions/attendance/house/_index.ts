@@ -33,12 +33,12 @@ async function processHouseAttendanceByTerm(
 
 	return {
 		possibleSittingDates,
-		records: {
-			ind_member_records,
-			all_members,
-			membership_records,
-			...all_members,
-		},
+		records: [
+			...ind_member_records,
+			...membership_records,
+			...all_members.dail,
+			...all_members.seanad,
+		],
 	};
 }
 

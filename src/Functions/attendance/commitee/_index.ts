@@ -49,13 +49,14 @@ async function processCommitteeAttendanceBetweenDates(
 		allMembers
 	);
 
-	return {
-		all_members: aggregatedAllMembers,
-		ind_member_committee: member_committee_record,
-		ind_member: member_ind_overall,
-		committees: aggregatedByCommittee,
-		memberships: aggregatedByMembership,
-	};
+	return [
+		...aggregatedAllMembers.dail,
+		...aggregatedAllMembers.seanad,
+		...member_committee_record,
+		...member_ind_overall,
+		...aggregatedByCommittee,
+		...aggregatedByMembership,
+	];
 }
 function adjustDateEnd(date_end?: string): string {
 	const twoWeeksPast = getDateTwoWeeksAgo();
