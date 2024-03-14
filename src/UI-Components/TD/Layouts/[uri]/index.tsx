@@ -10,7 +10,7 @@ import { MemberBioData } from '@/functions/processes/td/_agg_td_details_by_house
 export default function TDlayout(props: { member: MemberBioData }) {
 	return (
 		<>
-			{/* <CommitteeAttendanceChart /> */}
+			{/* <CommitteeAttendanceChart width={0} height={0} /> */}
 			<Box
 				sx={{
 					display: {

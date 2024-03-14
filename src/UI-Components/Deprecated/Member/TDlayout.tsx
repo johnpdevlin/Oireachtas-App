@@ -11,7 +11,7 @@ import Paper from '@mui/material/Paper';
 
 import RecordsTabs from './RecordsTabs';
 import TDprofile from './ProfileCard';
-import ParticipationTable from '../../../UI-Components/ParticipationTable';
+import ParticipationTable from '../../ParticipationTable';
 import {
 	groupParticipationRecord,
 	participationRecord,

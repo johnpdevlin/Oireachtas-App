@@ -8,7 +8,6 @@ import {
 	CardActions,
 	Divider,
 	Stack,
-	Badge,
 } from '@mui/material';
 
 import ProfileImage from '../_utils/ProfileImg';

@@ -6,7 +6,6 @@ import ProfileImage from '../../_utils/ProfileImg';
 import BasicDetails from '../../[uri]/BasicDetails';
 import Address from '@/UI-Components/_utils/Contact/Address';
 import PhoneNumber from '@/UI-Components/_utils/Contact/PhoneNumber';
-import SocialIcons from '@/UI-Components/_utils/SocialIcon';
 import Email from '@/UI-Components/_utils/Contact/Email';
 import { MemberBioData } from '@/functions/processes/td/_agg_td_details_by_house';
 import SocialIcon from '@/UI-Components/_utils/SocialIcon';

@@ -1,7 +1,7 @@
 /** @format */
 import { Box, FormControl, FormLabel, Grid, Stack } from '@mui/material';
-import Header from '@/UI-Components/Header';
-import MultipleSelect from '@/UI-Components/_utils/Select/MultiSelect';
+import Header from '@/Components/Header';
+import MultipleSelect from '@/Components/_utils/Select/MultiSelect';
 import { memo, useEffect, useState } from 'react';
 import { PartyAPI } from '@/models/oireachtasApi/party';
 import { ConstituencyAPI } from '@/models/oireachtasApi/constituency';

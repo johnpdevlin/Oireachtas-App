@@ -7,8 +7,8 @@ import fetchParties from '../../functions/APIs/Oireachtas/party/_index';
 import { PartyAPI } from '@/models/oireachtasApi/party';
 import { ConstituencyAPI } from '@/models/oireachtasApi/constituency';
 import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
-import TDIndexLayout from '@/UI-Components/TD/Layouts';
-import Layout from '@/UI-Components/_layout';
+import TDIndexLayout from '@/Components/TD/Layouts';
+import Layout from '@/Components/_layout';
 
 const inter = Inter({ subsets: ['latin'] });
 
