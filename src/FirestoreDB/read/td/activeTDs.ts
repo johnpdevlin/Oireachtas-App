@@ -1,8 +1,9 @@
 /** @format */
 
-import firestore from '..';
+import { MemberBioData } from '@/functions/processes/td/_agg_td_details_by_house';
+import firestore from '../..';
 
-export default async function getActiveTDs() {
+export default async function getActiveTDs(): Promise<MemberBioData[]> {
 	// Get collection ref
 	const membersRef = firestore.collection('td');
 
@@ -10,12 +11,12 @@ export default async function getActiveTDs() {
 	const snapshot = await membersRef.where('isActiveTD', '==', true).get();
 	if (snapshot.empty) {
 		console.log('No matching documents.');
-		return;
+		return [];
 	}
 
-	const members = [];
+	const members: MemberBioData[] = [];
 	snapshot.forEach((doc) => {
-		return members.push(doc.data());
+		return members.push(doc.data() as MemberBioData);
 	});
 	return members;
 }
