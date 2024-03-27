@@ -7,6 +7,7 @@ import { verifyAttendance } from '../process/verify_attendance';
 import { parseLine } from './parse_line';
 import { splitStringIntoLines } from '../../../../_utils/strings';
 import { RawCommittee } from '@/models/oireachtasApi/committee';
+import { fetchRawTextFromUrlWithRetry } from '@/functions/_utils/fetch_raw_text_from_url';
 
 export default async function parseCommitteeReport(
 	url: string,
@@ -17,7 +18,7 @@ export default async function parseCommitteeReport(
 	try {
 		if (!url) return;
 
-		const text = (await fetchRawTextFromUrl(url)).toLowerCase();
+		const text = (await fetchRawTextFromUrlWithRetry(url)).toLowerCase();
 		const lines = splitStringIntoLines(text);
 
 		let searching = false;
@@ -78,9 +79,4 @@ export default async function parseCommitteeReport(
 	} catch (error) {
 		console.log(url, error);
 	}
-}
-
-async function fetchRawTextFromUrl(url: string): Promise<string> {
-	const response = await axios.get(`api/pdf2text?url=${url}`);
-	return he.decode(response.data.text);
 }
