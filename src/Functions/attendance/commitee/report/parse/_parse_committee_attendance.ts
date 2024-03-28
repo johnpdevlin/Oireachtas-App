@@ -70,7 +70,8 @@ export default async function parseCommitteeReport(
 		const verifiedAttendance = verifyAttendance(
 			url,
 			date,
-			[...present, ...alsoPresent],
+			present,
+			alsoPresent,
 			committee,
 			allMembers
 		);

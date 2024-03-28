@@ -7,6 +7,7 @@ import {
 	GroupAttendanceRecord,
 } from '@/models/attendance';
 import { addPresentPercentage } from '../add_percentage_calculations';
+import { dateToYMDstring } from '@/functions/_utils/dates';
 
 function aggregateGroupAttendance(
 	group_type: GroupType,
@@ -31,11 +32,20 @@ function aggregateGroupAttendance(
 			const normalizedStatus =
 				status === 'alsoPresent' ? 'also_present' : status;
 
-			const month = record.date.getMonth();
+			const month =
+				record.date instanceof Date
+					? record.date.getMonth()
+					: new Date(record.date).getMonth();
+
+			const date =
+				record.date instanceof Date
+					? dateToYMDstring(record.date)
+					: record.date;
+
 			// Use normalizedStatus to access the correct property
 			summary[normalizedStatus][month].push({
 				uri: member.uri,
-				date: record.date,
+				date: date,
 			});
 		};
 

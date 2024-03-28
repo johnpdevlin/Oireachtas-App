@@ -16,11 +16,18 @@ function getMembersAndNonMembers(
 	const members = formatAsURIpair(
 		parseRelevantMembers(committee.members, date)
 	);
+	const inactiveMembers = formatAsURIpair(
+		committee.members.filter((mem) => !members.some((m) => mem.uri === m.uri))
+	);
 	const nonMembers = formatAsURIpair(
-		allMembers.filter((am) => !members.find((mem) => mem.uri === am.memberCode))
+		allMembers.filter(
+			(am) =>
+				!members.some((mem) => mem.uri === am.memberCode) &&
+				!inactiveMembers.some((mem) => mem.uri === am.memberCode)
+		)
 	);
 
-	return { members, nonMembers };
+	return { members, nonMembers, inactiveMembers };
 }
 
 // Get members who were relevant on given date

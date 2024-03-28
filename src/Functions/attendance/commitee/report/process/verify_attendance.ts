@@ -17,102 +17,73 @@ type AttendanceResult = {
 export function verifyAttendance(
 	url: string,
 	date: Date,
-	attendanceRecorded: string[],
+	present: string[],
+	alsoPresent: string[],
 	committee: RawCommittee,
 	allMembers: RawMember[]
 ): AttendanceResult {
-	// Gets members relevant to date and non-members
-	const { members, nonMembers } = getMembersAndNonMembers(
+	const attendanceRecorded = [...present, ...alsoPresent];
+
+	// Get members relevant to the date and non-members
+	const { members, nonMembers, inactiveMembers } = getMembersAndNonMembers(
 		committee,
 		allMembers,
 		date
 	);
 
-	if (!members) console.info(`no members found.\n`, url, committee, date);
+	const possibleMembers = [...members, ...inactiveMembers] as URIpair[];
 
-	const confirmedAlsoPresent: URIpair[] = [];
+	if (!members)
+		console.info(
+			`url: ${url} \n No members found for committee: ${committee.committeeName} on ${date}.`
+		);
 
-	const confirmedPresent = assignMemberURIsAndNames(
-		attendanceRecorded,
-		members
-	);
+	let confirmedPresent: {
+		matches: URIpair[];
+		unMatched: string[];
+	} = { matches: [], unMatched: [] };
+
+	try {
+		confirmedPresent = assignMemberURIsAndNames(
+			attendanceRecorded,
+			possibleMembers
+		);
+	} catch (e) {
+		console.error(`url: ${url} \n Error assigning member URIs and names: ${e}`);
+	}
+
 	const confirmedAbsent =
 		members.filter(
-			(member) =>
-				confirmedPresent!.matches.some((cp) => cp.uri === member.uri) === false
+			(member) => !confirmedPresent.matches.some((cp) => cp.uri === member.uri)
 		) ?? [];
 
-	// Verifies alsoPresent's members attendance
-	// Deals with unmatched names to check if valid etc.
+	const confirmedAlsoPresent: URIpair[] = [];
 	if (confirmedPresent.unMatched.length > 0) {
 		const processed = assignMemberURIsAndNames(
 			confirmedPresent.unMatched,
 			nonMembers
 		);
 		confirmedAlsoPresent.push(...processed.matches);
-
 		processed.unMatched = processed.unMatched.filter((un) => {
-			if (
-				(confirmedAlsoPresent.some(
+			const isUnmatchedValid =
+				!confirmedAlsoPresent.some(
 					(cap) => cap.name.toLowerCase().trim() === un.toLowerCase().trim()
-				) === false &&
-					confirmedPresent.matches.some(
-						(cp) => cp.name.toLowerCase().trim() === un.toLowerCase().trim()
-					) === false) ||
-				un.split(' ').length < 4
-			)
-				return un;
+				) &&
+				!confirmedPresent.matches.some(
+					(cp) => cp.name.toLowerCase().trim() === un.toLowerCase().trim()
+				) &&
+				un.split(' ').length >= 4;
+			return isUnmatchedValid;
 		});
-		if (
-			(processed.unMatched.length > 1 &&
-				processed.unMatched.length < 15 &&
-				processed.unMatched[0].length < 50) ||
-			(processed.unMatched.length === 1 &&
-				processed.unMatched[0].includes(' ') &&
-				processed.unMatched[0].length < 50)
-		) {
-			console.log(
-				`\nURL:  ${url}`,
-				`\nDATE:  ${dateToYMDstring(date)}`,
-				`\nCOMMITTEE:  ${committee.uri}`,
-				`\n\nUNMATCHED:  ${processed.unMatched}`,
-				`\n\nconfirmed PRESENT:  ${confirmedPresent.matches
-					.map((p) => p.name)
-					.join(', ')}\n`,
-				`\n\nATTENDANCE RECORDED:  ${attendanceRecorded.join(', ')}}`,
-				`\nConfirmed ALSO PRESENT: ${confirmedAlsoPresent
-					.map((m) => m.name)
-					.join(', ')}`,
-				`\nMEMBERS:  ${committee.members
-					.map(
-						(member) =>
-							`${member.fullName} (${dateToYMDstring(
-								new Date(member.memberDateRange.start)
-							)} - ${
-								member.memberDateRange.end
-									? dateToYMDstring(new Date(member.memberDateRange.end))
-									: undefined
-							})`
-					)
-					.join(', ')}`
-			);
-		}
+
+		if (processed.unMatched.length > 0)
+			console.log(`url: ${url}\n
+		Unmatched members: ${processed.unMatched.join(', ')}`);
 	}
 
 	if (confirmedPresent.matches.length === 0)
 		console.log(
-			`...NO MEMBERS IDENTIFIED AS PRESENT...`,
-			`\n\nURL:  ${url}`,
-			`\n\nDATE:  ${date}`,
-			`\n\nATTENDANCE RECORDED:  ${attendanceRecorded.join(', ')}}`,
-			`\n\nConfirmed ALSO PRESENT: ${confirmedAlsoPresent
-				.map((m) => m.name)
-				.join(', ')}`,
-			`\n\nCOMMITTEE:  ${committee.committeeName}`,
-			`\n\nMEMBERS:  ${committee.members
-				.map((member) => member.fullName)
-				.join(', ')}`,
-			'\n....................'
+			`url: ${url}\nNo members identified as present for committee ${committee.committeeName} on ${date}.`
 		);
 
 	return {
