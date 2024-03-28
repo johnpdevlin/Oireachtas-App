@@ -1,4 +1,5 @@
 /** @format */
+
 import {
 	CommitteeName,
 	RawCommittee,
@@ -7,7 +8,6 @@ import {
 import fetchMembers from '../../member/raw/_member_details';
 import { RawMemberCommittee } from '@/models/oireachtasApi/member';
 import { excludeProperties } from '@/functions/_utils/objects';
-import { DateRangeStr } from '@/models/dates';
 import similarity from 'string-similarity';
 
 async function fetchAllDetailedCommittees(): Promise<{
@@ -16,44 +16,60 @@ async function fetchAllDetailedCommittees(): Promise<{
 }> {
 	const allMembers = await fetchMembers({});
 
-	let committees = new Map<string, RawCommittee>();
-	let memberCommittees = new Map<string, RawMemberCommittee>();
+	const committees: { [key: string]: RawCommittee } = {};
+	const memberCommittees: { [key: string]: RawMemberCommittee } = {};
 
-	// Parse all committees
-	if (allMembers)
-		for (let am of allMembers) {
-			const uri = am.memberCode;
-			am.memberships.forEach((mem) => {
-				if (mem.membership.committees! && mem.membership.committees.length > 0)
+	if (allMembers) {
+		allMembers.forEach((member) => {
+			const uri = member.memberCode;
+			member.memberships.forEach((mem) => {
+				if (mem.membership.committees && mem.membership.committees.length > 0) {
 					mem.membership.committees.forEach((committee: RawMemberCommittee) => {
-						memberCommittees.set(`${uri}-${committee.uri}`, {
+						const key = `${uri}-${committee.uri}-${committee.memberDateRange.start}-${committee.committeeDateRange.start}`;
+						memberCommittees[key] = {
 							...committee,
-							fullName: am.fullName,
-							firstName: am.firstName,
-							lastName: am.lastName,
+							fullName: member.fullName,
+							firstName: member.firstName,
+							lastName: member.lastName,
 							altCommitteeURIs: getAlternativeURIs(
 								committee.committeeName,
 								committee.uri
 							),
 							committeeURI: committee.uri,
-							uri: uri,
-						});
+							uri,
+						};
+
 						const comm = excludeProperties(committee, [
 							'role',
 							'memberDateRange',
 						]);
 						comm.members = [];
-						committees.set(comm.uri, comm);
+						const commKey = `${comm.uri}-${comm.committeeDateRange.start}`;
+						committees[commKey] = comm;
 					});
+				}
 			});
-		}
+		});
+	}
 
-	const processedCommittees = new Map<string, RawCommittee>();
-	// Add members to committee objects
-	Array.from(committees.values()).forEach((committee) => {
-		const members = Array.from(memberCommittees.values())
-			.filter((c) => c.committeeURI === committee.uri)
+	const processedCommittees: { [key: string]: RawCommittee } = {};
+
+	Object.values(committees).forEach((committee) => {
+		let earliestDate = new Date();
+		const members = Object.values(memberCommittees)
+			.filter(
+				(mem) =>
+					mem.committeeURI === committee.uri ||
+					(mem.altCommitteeURIs?.length > 0 &&
+						committee.altCommitteeURIs?.length > 0 &&
+						mem.altCommitteeURIs.some((ac) =>
+							committee.altCommitteeURIs.includes(ac)
+						))
+			)
 			.map((member) => {
+				const start = new Date(member.memberDateRange.start);
+				if (start < earliestDate) earliestDate = start;
+
 				return {
 					role: member.role,
 					uri: member.uri,
@@ -63,17 +79,23 @@ async function fetchAllDetailedCommittees(): Promise<{
 					memberDateRange: member.memberDateRange,
 					houseNo: member.houseNo,
 				} as RawCommitteeMember;
+			})
+			.map((member) => {
+				if (earliestDate === new Date(member.memberDateRange.start))
+					member.memberDateRange.start = committee.committeeDateRange.start;
+
+				return member;
 			});
 
-		processedCommittees.set(committee.uri, {
+		processedCommittees[committee.uri] = {
 			...committee,
 			members,
-		});
+		};
 	});
 
 	return {
-		committees: Array.from(processedCommittees.values()),
-		memberCommittees: Array.from(memberCommittees.values()),
+		committees: Object.values(processedCommittees),
+		memberCommittees: Object.values(memberCommittees),
 	};
 }
 
@@ -82,24 +104,24 @@ function getAlternativeURIs(names: CommitteeName[], uri: string): string[] {
 
 	const uriCode = uri.split('/').at(-1)!;
 	const root = uri.split(uriCode!).at(0)?.slice(0, -1)!;
-	let alternativeURIs: { uri: string; rating: number }[] = [];
+	const alternativeURIs: string[] = [];
 	names.forEach((name) => {
 		const altEn = name.nameEn.toLowerCase().replaceAll(' ', '_');
 		const altGa = name.nameGa?.toLowerCase().replaceAll(' ', '_');
 		const enRating = similarity.compareTwoStrings(altEn, uriCode);
 		const gaRating = altGa && similarity.compareTwoStrings(altGa, uriCode);
-		alternativeURIs.push({ uri: altEn, rating: enRating });
-		if (altGa && gaRating)
-			alternativeURIs.push({ uri: altGa, rating: gaRating });
+		alternativeURIs.push(altEn);
+		if (altGa && gaRating) alternativeURIs.push(altGa);
 	});
 
-	const ratings = alternativeURIs?.map((a) => a.rating);
+	const ratings = alternativeURIs.map((a) =>
+		similarity.compareTwoStrings(a, uriCode)
+	);
 	const max = Math.max(...ratings);
 
-	const processedAltURIs: string[] = alternativeURIs
-		.filter((a) => a.rating !== max)
-		.map((a) => root + a.uri);
-	return processedAltURIs;
+	return alternativeURIs
+		.filter((a, index) => ratings[index] !== max)
+		.map((a) => root + a);
 }
 
 export { fetchAllDetailedCommittees };
