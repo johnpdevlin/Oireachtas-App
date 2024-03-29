@@ -3,7 +3,7 @@
 import { Chamber } from '@/models/_utils';
 
 export type HouseRequest = {
-	chamber?: Chamber & 'dail & seanad';
+	chamber?: Chamber;
 	house_no?: number;
 	limit?: number;
 };
