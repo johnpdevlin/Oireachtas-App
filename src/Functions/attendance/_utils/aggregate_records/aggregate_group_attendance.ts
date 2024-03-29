@@ -14,7 +14,7 @@ function aggregateGroupAttendance(
 	records: CommitteeAttendance[]
 ): GroupAttendanceRecord {
 	const year = records[0].date.getFullYear();
-	const uri = `${records[0].uri}-${year}`;
+	const uri = `${records[0].uri ?? group_type}`;
 	const summary = initializeAttendanceSummary(
 		uri,
 		year,

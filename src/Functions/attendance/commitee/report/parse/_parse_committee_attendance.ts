@@ -1,13 +1,11 @@
 /** @format */
 
 import { RawMember } from '@/models/oireachtasApi/member';
-import axios from 'axios';
-import he from 'he';
-import { verifyAttendance } from '../process/verify_attendance';
 import { parseLine } from './parse_line';
 import { splitStringIntoLines } from '../../../../_utils/strings';
 import { RawCommittee } from '@/models/oireachtasApi/committee';
 import { fetchRawTextFromUrlWithRetry } from '@/functions/_utils/fetch_raw_text_from_url';
+import { verifyInitialAttendance } from '../process/initial_attendance_verification';
 
 export default async function parseCommitteeReport(
 	url: string,
@@ -31,8 +29,11 @@ export default async function parseCommitteeReport(
 			if (line!) {
 				// Check if the line indicates the start of attendee information
 				if (
-					present.length === 0 &&
-					(line.includes('present') || line.includes('i láthair'))
+					(present.length === 0 &&
+						(line.includes('present') || line.includes('i láthair'))) ||
+					(url ===
+						'https://data.oireachtas.ie/ie/oireachtas/debateRecord/select_committee_on_education_and_skills/2017-05-16/debate/mul@/main.pdf' &&
+						line.includes('deputies'))
 				) {
 					searching = true;
 				}
@@ -67,7 +68,7 @@ export default async function parseCommitteeReport(
 			}
 		}
 
-		const verifiedAttendance = verifyAttendance(
+		const verifiedAttendance = verifyInitialAttendance(
 			url,
 			date,
 			present,

@@ -49,7 +49,7 @@ async function processCommitteeAttendanceBetweenDates(
 		allMembers
 	);
 
-	return [
+	const processedRecords = [
 		...aggregatedAllMembers.dail,
 		...aggregatedAllMembers.seanad,
 		...member_committee_record,
@@ -57,7 +57,12 @@ async function processCommitteeAttendanceBetweenDates(
 		...aggregatedByCommittee,
 		...aggregatedByMembership,
 	];
+
+	console.info(`${processedRecords.length} aggregated records created.`);
+
+	return processedRecords;
 }
+
 function adjustDateEnd(date_end?: string): string {
 	const twoWeeksPast = getDateTwoWeeksAgo();
 	if (!date_end || new Date(date_end).getTime() > twoWeeksPast) {

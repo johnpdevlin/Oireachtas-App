@@ -2,10 +2,11 @@
 
 import { RawMember } from '@/models/oireachtasApi/member';
 import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
-import similarity from 'string-similarity';
 import parseCommitteeReport from '../parse/_parse_committee_attendance';
 import { CommitteeAttendance } from '@/models/attendance';
 import { RawCommittee } from '@/models/oireachtasApi/committee';
+import { matchReport2Committee } from './match_report2committee';
+import { verifyAttendanceReports } from './final_attendance_verification';
 
 export async function bindReportsToDebateRecords(
 	records: CommitteeDebateRecord[],
@@ -22,15 +23,10 @@ export async function bindReportsToDebateRecords(
 			continue;
 		}
 
-		const possibleURIs = getPossibleURIsAndHouseNo(
+		const committee = matchReport2Committee(
 			record.uri,
 			committees,
 			record.date
-		);
-		const committee = findMatchingCommitteeURI(
-			record.uri,
-			possibleURIs,
-			committees
 		);
 
 		if (!committee) {
@@ -52,6 +48,7 @@ export async function bindReportsToDebateRecords(
 
 			parsedRecords.push({
 				...record,
+				uri: committee.uri,
 				present: report.present,
 				absent: report.absent,
 				alsoPresent: report.alsoPresent,
@@ -76,7 +73,7 @@ export async function bindReportsToDebateRecords(
 	console.log(
 		`${parsedRecords.length} reports successfully bound to records. Process completed.`
 	);
-	return parsedRecords;
+	return verifyAttendanceReports(parsedRecords, committees);
 }
 
 async function fetchReportWithRetry(
@@ -100,59 +97,4 @@ async function fetchReportWithRetry(
 	throw new Error(
 		`Failed to fetch committee report from URL ${url} after ${maxRetries} retries`
 	);
-}
-
-function getPossibleURIsAndHouseNo(
-	uri: string,
-	committees: RawCommittee[],
-	date: Date
-) {
-	const houseNo = uri.split('/').at(-2);
-	const possibleURIs: string[] = [];
-	const currentTime = date.getTime();
-	for (const committee of committees) {
-		const {
-			committeeDateRange,
-			uri: committeeURI,
-			altCommitteeURIs,
-		} = committee;
-		const { start, end } = committeeDateRange;
-		const committeeStartTime = new Date(start).getTime();
-		const committeeEndTime = end ? new Date(end).getTime() : Infinity;
-		if (
-			(!houseNo || committeeURI.includes(houseNo)) &&
-			currentTime > committeeStartTime &&
-			currentTime <= committeeEndTime
-		) {
-			possibleURIs.push(committeeURI);
-			if (altCommitteeURIs) possibleURIs.push(...altCommitteeURIs);
-		}
-	}
-	return possibleURIs;
-}
-
-function findMatchingCommitteeURI(
-	uri: string,
-	possibleURIs: string[],
-	committees: RawCommittee[]
-): RawCommittee | undefined {
-	const matchingCommittee = committees.find(
-		(committee) =>
-			committee.uri === uri ||
-			(committee.altCommitteeURIs && committee.altCommitteeURIs.includes(uri))
-	);
-	if (matchingCommittee) return matchingCommittee;
-
-	const bestMatch = similarity.findBestMatch(uri, possibleURIs).bestMatch
-		.target;
-	if (bestMatch) {
-		return committees.find(
-			(committee) =>
-				committee.uri === bestMatch ||
-				(committee.altCommitteeURIs &&
-					committee.altCommitteeURIs.includes(bestMatch))
-		);
-	}
-
-	console.warn('No matching committee found for URI: ', uri);
 }

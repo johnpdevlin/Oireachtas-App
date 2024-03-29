@@ -5,7 +5,6 @@ import { assignMemberURIsAndNames } from '@/functions/_utils/memberURIs';
 import { RawMember } from '@/models/oireachtasApi/member';
 import { URIpair } from '@/models/_utils';
 import { getMembersAndNonMembers } from './handle_members';
-import { dateToYMDstring } from '../../../../_utils/dates';
 import { RawCommittee } from '@/models/oireachtasApi/committee';
 
 type AttendanceResult = {
@@ -14,7 +13,7 @@ type AttendanceResult = {
 	alsoPresent: URIpair[];
 };
 
-export function verifyAttendance(
+export function verifyInitialAttendance(
 	url: string,
 	date: Date,
 	present: string[],
@@ -76,14 +75,28 @@ export function verifyAttendance(
 			return isUnmatchedValid;
 		});
 
-		if (processed.unMatched.length > 0)
+		if (processed.unMatched.length > 0 && processed.unMatched.length < 10)
 			console.log(`url: ${url}\n
 		Unmatched members: ${processed.unMatched.join(', ')}`);
 	}
 
 	if (confirmedPresent.matches.length === 0)
 		console.log(
-			`url: ${url}\nNo members identified as present for committee ${committee.committeeName} on ${date}.`
+			`url: ${url}\nNo members identified as present for committee ${
+				committee.committeeName[0].nameEn
+			} on ${date}.\n
+			members: ${committee.members
+				.map(
+					(c) =>
+						`${c.fullName} (${new Date(
+							c.memberDateRange.start
+						).toISOString()}-${new Date(
+							c.memberDateRange.start
+						).toISOString()})`
+				)
+				.join(', ')}\n
+			recorded Present: ${present.join(', ')}\n
+			recorded AlsoPresent: ${alsoPresent.join(', ')}`
 		);
 
 	return {

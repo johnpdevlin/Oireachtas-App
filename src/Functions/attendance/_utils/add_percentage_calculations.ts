@@ -15,10 +15,8 @@ function addPresentPercentage(
 		| AttendanceRecord
 		| GroupAttendanceRecord
 ): AttendanceRecord | GroupAttendanceRecord | MemberIndCommAttendanceRecord {
-	const overallPercentage = calculatePercentagePresent(
-		record.present,
-		record.absent
-	)!;
+	const overallPercentage =
+		calculatePercentagePresent(record.present, record.absent) ?? undefined;
 	const monthsPercentage = (): (number | undefined)[] => {
 		const months = [];
 		for (let i = 0; i < 12; i++) {

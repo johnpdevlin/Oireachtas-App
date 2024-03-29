@@ -10,7 +10,7 @@ export function initializeAttendanceSummary(
 ): GroupAttendanceRecord | AttendanceRecord {
 	return {
 		uri: `${
-			group_type === ('dail' || 'seanad') ? `${group_type}-${uri}` : uri
+			group_type === 'dail' || group_type === 'seanad' ? group_type : uri
 		}`,
 		record_uri: `${group_type}-${uri}-${year}`,
 		year: year,

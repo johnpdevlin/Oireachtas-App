@@ -1,6 +1,12 @@
 /** @format */
 
-import { CommitteeType, GroupType, MemberBaseKeys, URIpair } from './_utils';
+import {
+	BinaryChamber,
+	CommitteeType,
+	GroupType,
+	MemberBaseKeys,
+	URIpair,
+} from './_utils';
 import { DateRangeObj } from './dates';
 import { CommitteeDebateRecord } from './oireachtasApi/debate';
 
@@ -33,7 +39,7 @@ export type AttendanceRecord = {
 	absent: Date[][];
 	also_present: Date[][];
 	presentPercentage?: {
-		overall: number;
+		overall: number | undefined;
 		months: (number | undefined)[];
 	};
 };

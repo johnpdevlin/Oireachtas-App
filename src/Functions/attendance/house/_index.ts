@@ -31,14 +31,18 @@ async function processHouseAttendanceByTerm(
 		members!
 	);
 
+	const processedRecords = [
+		...ind_member_records,
+		...membership_records,
+		...all_members.dail,
+		...all_members.seanad,
+	];
+
+	console.info(`${processedRecords.length} aggregated records created.`);
+
 	return {
 		possibleSittingDates,
-		records: [
-			...ind_member_records,
-			...membership_records,
-			...all_members.dail,
-			...all_members.seanad,
-		],
+		records: processedRecords,
 	};
 }
 
