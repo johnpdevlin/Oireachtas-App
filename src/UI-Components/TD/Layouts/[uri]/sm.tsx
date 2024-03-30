@@ -7,19 +7,20 @@ import BasicDetails from '../../[uri]/BasicDetails';
 import Address from '@/UI-Components/_utils/Contact/Address';
 import PhoneNumber from '@/UI-Components/_utils/Contact/PhoneNumber';
 import Email from '@/UI-Components/_utils/Contact/Email';
-import { MemberBioData } from '@/functions/processes/td/_agg_td_details_by_house';
+
 import SocialIcon from '@/UI-Components/_utils/SocialIcon';
+import { MemberBioData } from '@/models/ui/member';
 
 export default function SmallTDlayout(props: {
-	member: MemberBioData;
+	bio: MemberBioData;
 }): JSX.Element {
 	return (
 		<>
 			<Box sx={{ mx: 1 }}>
 				<ProfileHeader
-					name={props.member.fullName}
+					name={props.bio.fullName}
 					textAlign='justify'
-					offices={props.member.offices}
+					offices={props.bio.offices}
 				/>
 				<Divider />
 				<Grid
@@ -33,43 +34,40 @@ export default function SmallTDlayout(props: {
 						sm={3.5}
 						sx={{ minHeight: '95%', maxHeight: '100%', mt: 1 }}>
 						<ProfileImage
-							uri={props.member.uri}
-							name={props.member.fullName}
+							uri={props.bio.uri}
+							name={props.bio.fullName}
 							size={180}
 							borderRadius={5}
 						/>
 					</Grid>
 					<Grid item sm={8.5}>
-						<BasicDetails member={props.member} size='sm' />
+						<BasicDetails member={props.bio} size='sm' />
 					</Grid>
 				</Grid>
 
 				<Grid container direction='row' alignItems='left' spacing={4}>
 					<Grid item sm={4.25}>
-						<Address
-							label='Constiuency Address'
-							address={props.member.address}
-						/>
+						<Address label='Constiuency Address' address={props.bio.address} />
 					</Grid>
 					<Grid item sm={4.25}>
 						<Box sx={{ minWidth: '100%' }}>
 							<Typography variant='body1'>Contact Details </Typography>
 							<Divider />
-							{props.member.contactNumbers.map((num, index) => {
+							{props.bio.contactNumbers.map((num, index) => {
 								return (
 									<div key={index}>
 										<PhoneNumber number={num} />
 									</div>
 								);
 							})}
-							<Email email={props.member.email} />
+							<Email email={props.bio.email} />
 						</Box>
 					</Grid>
 					<Grid item sm={3.5}>
 						<Typography variant='body1'>Online Presence </Typography>
 						<Divider sx={{ mb: 1 }} />
 						<Stack direction='row' sx={{ mt: 2 }} spacing={2}>
-							{props.member.webpages.map((page, _) => (
+							{props.bio.webpages.map((page, _) => (
 								<SocialIcon key={_} page={page} color='DarkSlateBlue' />
 							))}
 						</Stack>

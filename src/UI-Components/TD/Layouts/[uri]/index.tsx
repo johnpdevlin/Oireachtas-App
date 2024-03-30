@@ -4,13 +4,13 @@ import LargeTDlayout from './lg';
 import MobileTDlayout from './xs-mobile';
 import SmalllTDlayout from './sm';
 import MediumTDlayout from './md';
-import CommitteeAttendanceChart from '@/UI-Components/TD/[uri]/AttendanceChart';
-import { MemberBioData } from '@/functions/processes/td/_agg_td_details_by_house';
+import AttendanceChart from '@/UI-Components/TD/[uri]/AttendanceChart';
+import { MemberPageData } from '@/models/ui/member';
 
-export default function TDlayout(props: { member: MemberBioData }) {
+export default function TDlayout({ bio, attendance }: MemberPageData) {
 	return (
 		<>
-			{/* <CommitteeAttendanceChart width={0} height={0} /> */}
+			<AttendanceChart width={0} height={0} data={attendance.house} />
 			<Box
 				sx={{
 					display: {
@@ -21,7 +21,7 @@ export default function TDlayout(props: { member: MemberBioData }) {
 						xl: 'none',
 					},
 				}}>
-				<MobileTDlayout member={props.member} />
+				<MobileTDlayout bio={bio} />
 			</Box>
 			<Box
 				sx={{
@@ -33,7 +33,7 @@ export default function TDlayout(props: { member: MemberBioData }) {
 						xl: 'none',
 					},
 				}}>
-				<SmalllTDlayout member={props.member} />
+				<SmalllTDlayout bio={bio} />
 			</Box>
 			<Box
 				sx={{
@@ -45,7 +45,7 @@ export default function TDlayout(props: { member: MemberBioData }) {
 						xl: 'none',
 					},
 				}}>
-				<MediumTDlayout member={props.member} />
+				<MediumTDlayout bio={bio} />
 			</Box>
 
 			<Box
@@ -58,7 +58,7 @@ export default function TDlayout(props: { member: MemberBioData }) {
 						xl: 'block',
 					},
 				}}>
-				<LargeTDlayout member={props.member} />
+				<LargeTDlayout bio={bio} />
 			</Box>
 		</>
 	);

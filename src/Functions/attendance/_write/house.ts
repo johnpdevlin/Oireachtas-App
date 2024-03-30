@@ -18,7 +18,9 @@ const exportHouseAttendanceRecords = async (
 		console.info(
 			`Beginning exporting of ${collection} attendance records for ${
 				house[0].showAs
-			} from ${house[0].dateRange.start}-${house[0].dateRange.end ?? 'present'}`
+			} from ${house[0].dateRange.start} to ${
+				house[0].dateRange.end ?? 'present'
+			}`
 		);
 
 		const records = (await processHouseAttendanceByTerm(chamber, house_no))

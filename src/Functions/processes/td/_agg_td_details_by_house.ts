@@ -9,11 +9,7 @@ import getTDsWikiData from '@/functions/wikipedia_pages/td/page/multi_td_page';
 import similarity from 'string-similarity';
 import checkGender from '../../APIs/Irish_Names/index_';
 import { MemberOirProfile } from '@/functions/oireachtas_pages/td/profile/td_profile';
-
-// Consolidated Member Bio Data
-export type MemberBioData = { gender: string | void } & MemberOirProfile &
-	WikiTDProfileDetails &
-	MemberAPIdetails;
+import { MemberBioData } from '@/models/ui/member';
 
 /**
  * Fetches all member data

@@ -7,10 +7,10 @@ import ProfileCard from '../../[uri]/ProfileCard';
 import CommitteesCard from '../../[uri]/CommitteesCard';
 import FormerPositions from '../../[uri]/FormerPositions';
 import CommitteeAttendanceChart from '../../[uri]/AttendanceChart';
-import { MemberBioData } from '@/functions/processes/td/_agg_td_details_by_house';
+import { MemberBioData } from '@/models/ui/member';
 
 export default function LargeTDlayout(props: {
-	member: MemberBioData;
+	bio: MemberBioData;
 }): JSX.Element {
 	return (
 		<>
@@ -22,25 +22,25 @@ export default function LargeTDlayout(props: {
 					<Grid container>
 						<Grid item lg={2.5}>
 							<ContactCard
-								uri={props.member.uri}
-								email={props.member.email}
-								name={props.member.fullName}
-								phoneNumber={props.member.contactNumbers[0]}
-								address={props.member.address}
-								webpages={props.member.webpages}
+								uri={props.bio.uri}
+								email={props.bio.email}
+								name={props.bio.fullName}
+								phoneNumber={props.bio.contactNumbers[0]}
+								address={props.bio.address}
+								webpages={props.bio.webpages}
 							/>
 						</Grid>
 						<Grid item lg={6.5}>
-							<ProfileCard member={props.member} size='lg' />
+							<ProfileCard member={props.bio} size='lg' />
 						</Grid>
 
 						<Grid item lg={3}>
 							<Stack direction='column' spacing={1} sx={{ mt: 2, mr: 1 }}>
-								{props.member.committees.current.length > 0 && (
-									<CommitteesCard committees={props.member.committees} />
+								{props.bio.committees.current.length > 0 && (
+									<CommitteesCard committees={props.bio.committees} />
 								)}
-								{props.member.offices?.length! > 0 && (
-									<FormerPositions offices={props.member.offices!} />
+								{props.bio.offices?.length! > 0 && (
+									<FormerPositions offices={props.bio.offices!} />
 								)}
 							</Stack>
 						</Grid>

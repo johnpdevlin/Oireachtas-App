@@ -1,12 +1,6 @@
 /** @format */
 
-import {
-	BinaryChamber,
-	CommitteeType,
-	GroupType,
-	MemberBaseKeys,
-	URIpair,
-} from './_utils';
+import { CommitteeType, GroupType, URIpair } from './_utils';
 import { DateRangeObj } from './dates';
 import { CommitteeDebateRecord } from './oireachtasApi/debate';
 
@@ -42,6 +36,7 @@ export type AttendanceRecord = {
 		overall: number | undefined;
 		months: (number | undefined)[];
 	};
+	created?: string;
 };
 
 export type GroupAttendanceRecord = AttendanceRecord & {
