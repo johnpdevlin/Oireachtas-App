@@ -269,7 +269,7 @@ export function getDateTwoWeeksAgo(): number {
 	return Date.now() - 1209600000;
 }
 
-export function getMonthStrFromNumber(months: number[]): MonthChar[] | void {
+export function getMonthStrFromNumber(month: number): MonthChar | undefined {
 	const monthNames: MonthChar[] = [
 		'Jan',
 		'Feb',
@@ -285,17 +285,7 @@ export function getMonthStrFromNumber(months: number[]): MonthChar[] | void {
 		'Dec',
 	];
 
-	const output = months.map((month) => {
-		if (month >= 1 && month <= 12) {
-			return monthNames[month - 1];
-		} else {
-			return 'Unknown';
-		}
-	});
-
-	if (output.length > 0 && !output.includes('Unknown'))
-		return output as MonthChar[];
-	else console.warn('Error with months: ', output);
+	return monthNames.at(month);
 }
 
 export function getEndDateObj(end: string) {
