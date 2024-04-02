@@ -1,17 +1,18 @@
 /** @format */
 
+import { ScreenSize } from '@/models/ui';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface ViewportContextProps {
 	width: number;
 	height: number;
-	breakpoint: string;
+	breakpoint?: ScreenSize;
 }
 
 const ViewportContext = createContext<ViewportContextProps>({
 	width: 0,
 	height: 0,
-	breakpoint: '',
+	breakpoint: 'xs',
 });
 
 interface ViewportProviderProps {
@@ -23,7 +24,7 @@ const ViewportProvider: React.FunctionComponent<ViewportProviderProps> = ({
 }) => {
 	const [width, setWidth] = useState(0);
 	const [height, setHeight] = useState(0);
-	const [breakpoint, setBreakpoint] = useState('');
+	const [breakpoint, setBreakpoint] = useState<ScreenSize>();
 
 	const handleWindowResize = () => {
 		setWidth(window.innerWidth);
