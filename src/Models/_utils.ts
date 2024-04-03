@@ -23,3 +23,19 @@ export type GroupType =
 	| 'constituency'
 	| 'member'
 	| 'committee';
+
+export type PartyCode =
+	| 'Social_Democrats'
+	| 'Sinn_Féin'
+	| 'Fianna_Fáil'
+	| 'Fine_Gael'
+	| 'Labour_Party'
+	| 'People_Before_Profit_Solidarity'
+	| 'Anti-Austerity_Alliance_People_Before_Profit'
+	| 'Independent'
+	| 'Green_Party'
+	| 'Independents_4_Change'
+	| 'Aontú'
+	| 'Renua'
+	| 'Socialist_Party'
+	| 'Workers_and_Unemployed_Action';
