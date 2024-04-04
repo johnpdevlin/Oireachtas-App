@@ -3,7 +3,7 @@
 import { Box, Divider, Grid, Stack, Typography } from '@mui/material';
 import ProfileHeader from '../../[uri]/ProfileHeader';
 import ProfileImage from '../../_utils/ProfileImg';
-import BasicDetails from '../../[uri]/BasicDetails';
+import BasicDetails from '../../[uri]/Bio/BasicDetails';
 import Address from '@/UI-Components/_utils/Contact/Address';
 import PhoneNumber from '@/UI-Components/_utils/Contact/PhoneNumber';
 import Email from '@/UI-Components/_utils/Contact/Email';

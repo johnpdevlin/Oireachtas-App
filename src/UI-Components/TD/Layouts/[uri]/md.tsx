@@ -11,7 +11,7 @@ import {
 	Typography,
 } from '@mui/material';
 import ProfileImage from '../../_utils/ProfileImg';
-import ProfileCard from '../../[uri]/ProfileCard';
+import ProfileCard from '../../[uri]/Bio/ProfileCard';
 import Address from '@/UI-Components/_utils/Contact/Address';
 import PhoneNumber from '@/UI-Components/_utils/Contact/PhoneNumber';
 import Email from '@/UI-Components/_utils/Contact/Email';

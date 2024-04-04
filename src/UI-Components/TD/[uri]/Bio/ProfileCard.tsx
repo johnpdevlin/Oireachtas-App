@@ -1,9 +1,9 @@
 /** @format */
 import { Stack } from '@mui/material';
-import ProfileHeader from './ProfileHeader';
+import ProfileHeader from '../ProfileHeader';
 import BasicDetails from './BasicDetails';
-import { MemberBioData } from '@/functions/processes/td/_agg_td_details_by_house';
 import { ScreenSize } from '@/models/ui';
+import { MemberBioData } from '@/models/ui/member';
 
 function ProfileCard(props: { member: MemberBioData; size: ScreenSize }) {
 	return (

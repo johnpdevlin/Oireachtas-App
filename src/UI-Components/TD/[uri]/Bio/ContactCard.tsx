@@ -10,7 +10,7 @@ import {
 	Stack,
 } from '@mui/material';
 
-import ProfileImage from '../_utils/ProfileImg';
+import ProfileImage from '../../_utils/ProfileImg';
 import Address from '@/UI-Components/_utils/Contact/Address';
 import PhoneNumber from '@/UI-Components/_utils/Contact/PhoneNumber';
 import Email from '@/UI-Components/_utils/Contact/Email';

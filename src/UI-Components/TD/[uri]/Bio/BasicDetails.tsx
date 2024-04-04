@@ -15,17 +15,17 @@ import {
 	CropSquareRounded,
 	Work,
 } from '@mui/icons-material';
-import HoverableFootnote from '../../_utils/HoverableFootnote';
+import HoverableFootnote from '../../../_utils/HoverableFootnote';
 
 import {
 	calculateYearsAndMonthsSinceDate,
 	formatDateToString,
 } from '@/functions/_utils/dates';
 import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/constituency';
-import { capitaliseFirstLetters } from '../../../functions/_utils/strings';
+import { capitaliseFirstLetters } from '../../../../functions/_utils/strings';
 import { MemberParty } from '@/models/member';
 import { ScreenSize } from '@/models/ui';
-import { MemberBioData } from '@/functions/processes/td/_agg_td_details_by_house';
+import { MemberBioData } from '@/models/ui/member';
 
 function BasicDetails(props: { member: MemberBioData; size: ScreenSize }) {
 	const {

@@ -1,12 +1,12 @@
 /** @format */
 
 import { Grid, Stack } from '@mui/material';
-import ContactCard from '../../[uri]/ContactCard';
+import ContactCard from '../../[uri]/Bio/ContactCard';
 import MemberMenu from '../../[uri]/MemberMenu';
-import ProfileCard from '../../[uri]/ProfileCard';
-import CommitteesCard from '../../[uri]/CommitteesCard';
-import FormerPositions from '../../[uri]/FormerPositions';
-import CommitteeAttendanceChart from '../../[uri]/AttendanceChart';
+import ProfileCard from '../../[uri]/Bio/ProfileCard';
+import CommitteesCard from '../../[uri]/Bio/CommitteesCard';
+import FormerPositions from '../../[uri]/Bio/FormerPositions';
+import CommitteeAttendanceChart from '../../[uri]/Attendance/AttendanceChart';
 import { MemberBioData } from '@/models/ui/member';
 
 export default function LargeTDlayout(props: {

@@ -3,7 +3,7 @@
 import { Box } from '@mui/material';
 import ProfileHeader from '../../[uri]/ProfileHeader';
 import ProfileImage from '../../_utils/ProfileImg';
-import BasicDetails from '../../[uri]/BasicDetails';
+import BasicDetails from '../../[uri]/Bio/BasicDetails';
 import { MemberBioData } from '@/models/ui/member';
 
 export default function MobileTDlayout(props: {
