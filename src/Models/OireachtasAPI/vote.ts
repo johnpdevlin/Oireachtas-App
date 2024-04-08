@@ -40,7 +40,7 @@ export type RawVote = {
 		pdf: { uri: string } | null;
 		xml: { uri: string } | null;
 	};
-	memberTally?: VoteMember;
+	memberTally?: { showAs: String } & VoteMember;
 	outcome: string;
 	subject: { showAs: string; uri: string | null };
 	tellers: string;
