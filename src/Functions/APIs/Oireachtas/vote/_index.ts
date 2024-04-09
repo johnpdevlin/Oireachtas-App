@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export default async function fetchVotes(
 	props: VoteRequest
-): Promise<RawVote[] | undefined> {
+): Promise<RawVote[]> {
 	// url to execute API request
 	const url = `https://api.oireachtas.ie/v1/divisions?${
 		props.chamber_type ? `chamber_type=${props.chamber_type}` : ''
@@ -29,5 +29,6 @@ export default async function fetchVotes(
 		});
 	} catch (error) {
 		console.error(`Error fetching data from URL: ${url}`, error);
+		return [];
 	}
 }
