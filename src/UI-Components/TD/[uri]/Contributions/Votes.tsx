@@ -6,18 +6,13 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-// import StyleOutcome from '../../Components/Tools/Styling/StyleOutcome';
-
-// INTERNAL TOOLS
 import fetchVotes from '@/functions/APIs/Oireachtas/vote/_index';
 import { RawVote } from '@/models/oireachtasApi/vote';
 import { dateToYMDstring } from '../../../../functions/_utils/dates';
-import { Card, Typography } from '@mui/material';
-import { randomUUID } from 'crypto';
-import { purple } from '@mui/material/colors';
+import { Typography } from '@mui/material';
 
 const Item = styled(Paper)(({ theme }) => ({
-	backgroundColor: theme.palette.mode === 'dark' ? '#1A3027' : '#fff',
+	backgroundColor: theme.palette.mode === 'dark' ? '#1A3027' : '#F0F4F8',
 	...theme.typography.body2,
 	padding: theme.spacing(1),
 	textAlign: 'center',
@@ -25,7 +20,10 @@ const Item = styled(Paper)(({ theme }) => ({
 	color: theme.palette.text.secondary,
 }));
 
-export default function TdVotes(props: { member: string; selectedDate: Date }) {
+export default function VotesComp(props: {
+	member: string;
+	selectedDate: Date;
+}) {
 	const [votes, setVotes] = useState<RawVote[]>([]); // questions on date selected
 
 	const handleCalendarChange = async () => {
@@ -66,7 +64,7 @@ export default function TdVotes(props: { member: string; selectedDate: Date }) {
 								<Grid item xs={12} key={index}>
 									<Grid container rowSpacing={1} columnSpacing={1} mb={5}>
 										<Grid item xs={12} sm={12} md={6.6} lg={8}>
-											<Item sx={{ backgroundColor: '#eceff1' }}>
+											<Item>
 												<Typography variant='subtitle1'>
 													{v.chamber.showAs}
 												</Typography>
@@ -85,7 +83,7 @@ export default function TdVotes(props: { member: string; selectedDate: Date }) {
 											</Item>
 										</Grid>
 										<Grid item xs={4} sm={4} md={2.0} lg={1.8}>
-											<Item sx={{ backgroundColor: '#f5f5f5' }}>
+											<Item>
 												<Typography variant='subtitle2'>Voted:</Typography>
 												<Typography variant='h3'>
 													{styleVote(v.memberTally!.showAs as string)}
@@ -93,7 +91,7 @@ export default function TdVotes(props: { member: string; selectedDate: Date }) {
 											</Item>
 										</Grid>
 										<Grid item xs={8} sm={8} md={3.4} lg={2.2}>
-											<Item sx={{ backgroundColor: '#f5f5f5' }}>
+											<Item>
 												<Typography variant='subtitle2'>Outcome:</Typography>
 												<Typography variant='h3'>
 													{styleVote(v.outcome)}
