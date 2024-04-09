@@ -38,7 +38,7 @@ export default function AttendanceChart({
 		if (breakpoint === 'xl') relativeWidth = 1200 - sidebarWidth!;
 		else if (breakpoint === 'lg') relativeWidth = 1050 - sidebarWidth!;
 		else if (breakpoint === 'md') relativeWidth = 900 - sidebarWidth!;
-		else if (breakpoint === 'sm') relativeWidth = 625;
+		else if (breakpoint === 'sm') relativeWidth = 595;
 		else if (breakpoint === 'xs') {
 			relativeWidth = 380;
 			heightMutiplier = 0.45;
