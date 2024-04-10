@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 
 import {
 	Breakpoint,
+	Grid,
 	Stack,
 	Table,
 	TableBody,
@@ -46,6 +47,8 @@ function BasicDetails(props: { member: MemberBioData; size: Breakpoint }) {
 		isActiveSenator,
 		committees,
 	} = props.member;
+
+	console.info(props.member.constituencies);
 
 	const formattedBirthdate = birthdate
 		? formatDateToString(birthdate)
@@ -97,44 +100,49 @@ function BasicDetails(props: { member: MemberBioData; size: Breakpoint }) {
 	const formerOffices = offices?.filter((off) => off.dateRange.end!) ?? [];
 
 	const firstElected = () => {
-		if (isActiveTD!)
-			return formatDateToString(
-				constituencies!.dail!.at(-1)?.dateRange.start as string
-			);
-		else if (isActiveSenator!)
-			return formatDateToString(
-				constituencies!.seanad!.at(-1)?.dateRange.start as string
-			);
+		const dail = formatDateToString(
+			constituencies!.dail!.at(-1)?.dateRange.start as string
+		);
+		const seanad = formatDateToString(
+			constituencies!.seanad!.at(-1)?.dateRange.start as string
+		);
+		return {
+			dail: dail !== 'Invalid Date' ? dail : undefined,
+			seanad: seanad !== 'Invalid Date' ? seanad : undefined,
+		};
 	};
 
+	console.info(firstElected());
 	return (
 		<>
 			<Table size='small'>
 				<TableBody>
-					<TableRow>
-						<TableCell>
-							<Stack direction='row'>
-								<Cake fontSize='small' />
-								<Typography
-									variant='body2'
-									align='left'
-									sx={{ ml: 0.5, mt: 0.1 }}>
-									Born:
+					{formattedBirthdate && birthplace && (
+						<TableRow>
+							<TableCell>
+								<Stack direction='row'>
+									<Cake fontSize='small' />
+									<Typography
+										variant='body2'
+										align='left'
+										sx={{ ml: 0.5, mt: 0.1 }}>
+										Born:
+									</Typography>
+								</Stack>
+							</TableCell>
+							<TableCell>
+								<Typography variant='body2' align='left'>
+									<b>{formattedBirthdate}</b> (age {age()})
+									<br />
+									<small>
+										<i>
+											{birthplace}, {birthCountry}
+										</i>
+									</small>
 								</Typography>
-							</Stack>
-						</TableCell>
-						<TableCell>
-							<Typography variant='body2' align='left'>
-								<b>{formattedBirthdate}</b> (age {age()})
-								<br />
-								<small>
-									<i>
-										{birthplace}, {birthCountry}
-									</i>
-								</small>
-							</Typography>
-						</TableCell>
-					</TableRow>
+							</TableCell>
+						</TableRow>
+					)}
 					{/** Education Data needs to be researched etc.*/}
 					{/* <TableRow>
 						<TableCell>
@@ -226,33 +234,37 @@ function BasicDetails(props: { member: MemberBioData; size: Breakpoint }) {
 							</Typography>
 						</TableCell>
 					</TableRow>
-					{props.size !== 'lg' && (
-						<TableRow>
-							<TableCell sx={{ verticalAlign: 'top' }}>
-								<Stack direction='row' sx={{ verticalAlign: 'top' }}>
-									<Groups fontSize='small' />
-									<Typography
-										variant='body2'
-										align='left'
-										sx={{ ml: 0.5, mt: 0.1 }}>
-										Committees:
-									</Typography>
-								</Stack>
-							</TableCell>
-							<TableCell>
-								{committees.current.map((c) => {
-									return (
-										<Stack direction='row' gap={0.5} key={c.committeeURI}>
-											<CropSquareRounded fontSize='inherit' sx={{ mt: 0.4 }} />
-											<Typography variant='subtitle2' align='left'>
-												{c.name}
-											</Typography>
-										</Stack>
-									);
-								})}
-							</TableCell>
-						</TableRow>
-					)}
+					{props.size !== 'lg' &&
+						(committees.current.length > 0 || committees.past.length > 0) && (
+							<TableRow>
+								<TableCell sx={{ verticalAlign: 'top' }}>
+									<Stack direction='row' sx={{ verticalAlign: 'top' }}>
+										<Groups fontSize='small' />
+										<Typography
+											variant='body2'
+											align='left'
+											sx={{ ml: 0.5, mt: 0.1 }}>
+											Committees:
+										</Typography>
+									</Stack>
+								</TableCell>
+								<TableCell>
+									{committees.current.map((c) => {
+										return (
+											<Stack direction='row' gap={0.5} key={c.committeeURI}>
+												<CropSquareRounded
+													fontSize='inherit'
+													sx={{ mt: 0.4 }}
+												/>
+												<Typography variant='subtitle2' align='left'>
+													{c.name}
+												</Typography>
+											</Stack>
+										);
+									})}
+								</TableCell>
+							</TableRow>
+						)}
 					{props.size !== 'lg' && formerOffices.length > 0 && (
 						<TableRow>
 							<TableCell sx={{ verticalAlign: 'top' }}>
@@ -294,7 +306,23 @@ function BasicDetails(props: { member: MemberBioData; size: Breakpoint }) {
 						</TableCell>
 						<TableCell>
 							<Typography variant='body2' align='left'>
-								<b>{firstElected()}</b>
+								<Grid container gap={2}>
+									<Grid item>
+										{firstElected().dail !== undefined && (
+											<b>{firstElected().dail}</b>
+										)}
+										{firstElected().dail !== undefined &&
+											firstElected().seanad !== undefined && <br />}
+										{firstElected().seanad !== undefined && (
+											<b>{firstElected().seanad}</b>
+										)}
+									</Grid>
+									<Grid item>
+										{firstElected().dail! && <small>(Dáil)</small>}
+										{firstElected().dail! && firstElected().seanad! && <br />}
+										{firstElected().seanad! && <small>(Seanad)</small>}
+									</Grid>
+								</Grid>
 							</Typography>
 						</TableCell>
 					</TableRow>
