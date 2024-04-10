@@ -32,7 +32,7 @@ export type AttendanceRecord = {
 	present: Date[][];
 	absent: Date[][];
 	also_present: Date[][];
-	presentPercentage?: {
+	present_percentage?: {
 		overall: number | undefined;
 		months: (number | undefined)[];
 	};
@@ -49,7 +49,7 @@ export type CommitteeAttendance = CommitteeDebateRecord & {
 	type: string;
 	present: URIpair[];
 	absent: URIpair[];
-	alsoPresent: URIpair[];
+	also_present: URIpair[];
 };
 
 export type IndCommiteeAttendanceRecord = {

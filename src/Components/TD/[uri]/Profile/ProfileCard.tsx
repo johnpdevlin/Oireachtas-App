@@ -1,11 +1,14 @@
 /** @format */
-import { Stack } from '@mui/material';
-import ProfileHeader from '../ProfileHeader';
-import BasicDetails from './BasicDetails';
-import { ScreenSize } from '@/models/ui';
-import { MemberBioData } from '@/models/ui/member';
 
-function ProfileCard(props: { member: MemberBioData; size: ScreenSize }) {
+import { MemberBioData } from '@/models/ui/member';
+import { Breakpoint, Stack } from '@mui/material';
+import BasicDetails from './BasicDetails';
+import ProfileHeader from './ProfileHeader';
+
+export default function ProfileCard(props: {
+	member: MemberBioData;
+	size: Breakpoint;
+}) {
 	return (
 		<>
 			<Stack direction='column' sx={{ ml: 1.5, mr: 2 }}>
@@ -21,5 +24,3 @@ function ProfileCard(props: { member: MemberBioData; size: ScreenSize }) {
 		</>
 	);
 }
-
-export default ProfileCard;

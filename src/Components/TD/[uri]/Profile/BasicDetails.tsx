@@ -3,7 +3,14 @@ import * as React from 'react';
 
 import Typography from '@mui/material/Typography';
 
-import { Stack, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import {
+	Breakpoint,
+	Stack,
+	Table,
+	TableBody,
+	TableCell,
+	TableRow,
+} from '@mui/material';
 import {
 	Cake,
 	HistoryEdu,
@@ -24,10 +31,9 @@ import {
 import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/constituency';
 import { capitaliseFirstLetters } from '../../../../functions/_utils/strings';
 import { MemberParty } from '@/models/member';
-import { ScreenSize } from '@/models/ui';
 import { MemberBioData } from '@/models/ui/member';
 
-function BasicDetails(props: { member: MemberBioData; size: ScreenSize }) {
+function BasicDetails(props: { member: MemberBioData; size: Breakpoint }) {
 	const {
 		birthdate,
 		birthplace,
@@ -236,7 +242,7 @@ function BasicDetails(props: { member: MemberBioData; size: ScreenSize }) {
 							<TableCell>
 								{committees.current.map((c) => {
 									return (
-										<Stack direction='row' gap={0.5}>
+										<Stack direction='row' gap={0.5} key={c.committeeURI}>
 											<CropSquareRounded fontSize='inherit' sx={{ mt: 0.4 }} />
 											<Typography variant='subtitle2' align='left'>
 												{c.name}

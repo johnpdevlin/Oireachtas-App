@@ -1,13 +1,13 @@
 /** @format */
 import { Box, FormControl, FormLabel, Grid, Stack } from '@mui/material';
-import Header from '@/Components/Header';
-import MultipleSelect from '@/Components/_utils/Select/MultiSelect';
-import { memo, useEffect, useState } from 'react';
+
+import { useEffect, useState } from 'react';
 import { PartyAPI } from '@/models/oireachtasApi/party';
 import { ConstituencyAPI } from '@/models/oireachtasApi/constituency';
 import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
 import TDcard from '../_utils/TDcard';
 import { useViewport } from '@/hooks/viewportProvider';
+import MultipleSelect from '@/Components/_utils/Select/MultiSelect';
 type Option = {
 	name: string;
 	id: string;

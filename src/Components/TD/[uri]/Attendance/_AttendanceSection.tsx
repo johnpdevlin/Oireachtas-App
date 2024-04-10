@@ -1,12 +1,12 @@
 /** @format */
 import { Box, Grid, Stack, Typography } from '@mui/material';
-import AttendanceChart from '@/UI-Components/TD/[uri]/Attendance/AttendanceChart';
+import AttendanceChart from '@/Components/TD/[uri]/Attendance/AttendanceChart';
 import { MemberPageData } from '@/models/ui/member';
 import { useViewport } from '@/hooks/viewportProvider';
 import { getPartyColor } from '@/functions/_utils/parties';
 import { PartyCode } from '@/models/_utils';
-import ColoredBox from '@/UI-Components/_utils/ColoredBox';
-import GroupedSelect from '@/UI-Components/_utils/Select/GroupedSelect';
+import ColoredBox from '@/Components/_utils/ColoredBox';
+import GroupedSelect from '@/Components/_utils/Select/GroupedSelect';
 import { useEffect, useState } from 'react';
 
 export default function AttendanceSection({ bio, attendance }: MemberPageData) {

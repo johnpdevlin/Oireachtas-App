@@ -11,11 +11,11 @@ import {
 } from '@mui/material';
 
 import ProfileImage from '../../_utils/ProfileImg';
-import Address from '@/UI-Components/_utils/Contact/Address';
-import PhoneNumber from '@/UI-Components/_utils/Contact/PhoneNumber';
-import Email from '@/UI-Components/_utils/Contact/Email';
+import Address from '@/Components/_utils/Contact/Address';
+import PhoneNumber from '@/Components/_utils/Contact/PhoneNumber';
+import Email from '@/Components/_utils/Contact/Email';
 import { WebsitePair } from '@/functions/oireachtas_pages/td/profile/td_profile';
-import SocialIcon from '@/UI-Components/_utils/SocialIcon';
+import SocialIcon from '@/Components/_utils/SocialIcon';
 
 export default function ContactCard(props: {
 	uri: string;
@@ -41,8 +41,8 @@ export default function ContactCard(props: {
 				</Stack>
 			</CardContent>
 
-			<CardActions>
-				<Stack direction='row' sx={{ m: 2 }} spacing={2}>
+			<CardActions sx={{ justifyContent: 'center' }}>
+				<Stack direction='row' sx={{ m: 2 }} spacing={2} textAlign='center'>
 					{props.webpages.map((page, _) => (
 						<SocialIcon key={_} page={page} color={'DarkSlateBlue'} />
 					))}

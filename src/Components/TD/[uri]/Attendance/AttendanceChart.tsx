@@ -54,11 +54,9 @@ export default function AttendanceChart({
 				setLabels(getYearLabels(data));
 				setSeriesData(getOverallSeriesData(data));
 			} else if (data && year !== '0') {
-				// console.info(getMonthLabels());
 				setSeriesData(getYearSeriesData(year, data));
 				setLabels(getMonthLabels(data));
 			}
-			console.info(seriesData);
 		}
 	}, [data, year]);
 

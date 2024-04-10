@@ -38,7 +38,6 @@ export default function Calendar(props: {
 					loading={isLoading}
 					disableFuture={true}
 					orientation='landscape'
-					inputFormat='yyyy-MM-dd'
 					value={props.selectedDate}
 					minDate={props.minDate}
 					maxDate={props.maxDate}
@@ -48,16 +47,6 @@ export default function Calendar(props: {
 						}
 					}}
 					onMonthChange={handleMonthChange}
-					renderInput={(
-						params: JSX.IntrinsicAttributes & {
-							variant?: TextFieldVariants | undefined;
-						} & Omit<
-								| FilledTextFieldProps
-								| OutlinedTextFieldProps
-								| StandardTextFieldProps,
-								'variant'
-							>
-					) => <TextField {...params} />}
 					shouldDisableDate={isSitting}
 				/>
 			</LocalizationProvider>

@@ -1,16 +1,19 @@
 /** @format */
-import { Box } from '@mui/material';
-import LargeTDlayout from './lg';
-import MobileTDlayout from './xs-mobile';
-import SmalllTDlayout from './sm';
-import MediumTDlayout from './md';
-import AttendanceChart from '@/UI-Components/TD/[uri]/AttendanceChart';
-import { MemberPageData } from '@/models/ui/member';
 
-export default function TDlayout({ bio, attendance }: MemberPageData) {
+import { Box } from '@mui/material';
+import { MemberBioData } from '@/models/ui/member';
+import XS_ProfileLayout from '../../Layouts/[uri]/Profile/xs';
+import SM_ProfileLayout from '../../Layouts/[uri]/Profile/sm';
+import MD_ProfileLayout from '../../Layouts/[uri]/Profile/md';
+import LG_ProfileLayout from '../../Layouts/[uri]/Profile/lg';
+
+type BioProps = {
+	bio: MemberBioData;
+};
+
+export default function MemberProfile({ bio }: BioProps) {
 	return (
-		<>
-			<AttendanceChart width={0} height={0} data={attendance.house} />
+		<Box marginBottom={9}>
 			<Box
 				sx={{
 					display: {
@@ -21,7 +24,7 @@ export default function TDlayout({ bio, attendance }: MemberPageData) {
 						xl: 'none',
 					},
 				}}>
-				<MobileTDlayout bio={bio} />
+				<XS_ProfileLayout bio={bio} />
 			</Box>
 			<Box
 				sx={{
@@ -33,7 +36,7 @@ export default function TDlayout({ bio, attendance }: MemberPageData) {
 						xl: 'none',
 					},
 				}}>
-				<SmalllTDlayout bio={bio} />
+				<SM_ProfileLayout bio={bio} />
 			</Box>
 			<Box
 				sx={{
@@ -45,7 +48,7 @@ export default function TDlayout({ bio, attendance }: MemberPageData) {
 						xl: 'none',
 					},
 				}}>
-				<MediumTDlayout bio={bio} />
+				<MD_ProfileLayout bio={bio} />
 			</Box>
 
 			<Box
@@ -58,8 +61,8 @@ export default function TDlayout({ bio, attendance }: MemberPageData) {
 						xl: 'block',
 					},
 				}}>
-				<LargeTDlayout bio={bio} />
+				<LG_ProfileLayout bio={bio} />
 			</Box>
-		</>
+		</Box>
 	);
 }
