@@ -1,13 +1,13 @@
 /** @format */
 
-import fetchNames from '../../APIs/Irish_Names/fetch_names_';
+import fetchNames from '../../APIs/Irish_Names/fetch_names';
 import getAllMembersAPIdetails from '../../APIs/Oireachtas/member/formatted/_multi_member_details';
 import getAllMembersOirData from '@/functions/oireachtas_pages/td/multi_TDs';
 import { WikiTDProfileDetails } from '@/models/wiki_td';
 import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
 import getTDsWikiData from '@/functions/wikipedia_pages/td/page/multi_td_page';
 import similarity from 'string-similarity';
-import checkGender from '../../APIs/Irish_Names/index_';
+import checkGender from '../../APIs/Irish_Names/_index';
 import { MemberOirProfile } from '@/functions/oireachtas_pages/td/profile/td_profile';
 import { MemberBioData } from '@/models/ui/member';
 
@@ -42,7 +42,13 @@ async function getAggregatedTDsDetailsByHouse(house_no: number) {
 	);
 
 	// Function to merge / bind all data together to create objects
-	const mergedData = await bindAllData(uris, oirData, wikiDetails, apiData);
+	const mergedData = await bindAllData(
+		house_no,
+		uris,
+		oirData,
+		wikiDetails,
+		apiData
+	);
 
 	console.info('Process to get all member details completed.');
 
@@ -51,6 +57,7 @@ async function getAggregatedTDsDetailsByHouse(house_no: number) {
 }
 
 async function bindAllData(
+	house_no: number,
 	uris: string[],
 	oirData: MemberOirProfile[],
 	wikiData: WikiTDProfileDetails[],
@@ -84,7 +91,14 @@ async function bindAllData(
 			}
 
 			// Get gender by name match
-			const gender = await checkGender(api!.firstName, boyNames, girlNames);
+			let gender = await checkGender(
+				api!.firstName,
+				boyNames,
+				girlNames,
+				'dail',
+				house_no
+			);
+
 			const websites = () => {
 				const wikipedia = {
 					website: 'wikipedia',
