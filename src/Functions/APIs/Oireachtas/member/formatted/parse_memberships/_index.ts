@@ -124,7 +124,7 @@ function destructureMemberships(
 					constits.seanad.push({ house, ...represent.represent });
 				else constits.dail.push({ house, ...represent.represent });
 			});
-		else if (mem.parties?.length > 0)
+		if (mem.parties?.length > 0)
 			mem.parties.forEach((p) =>
 				parties.push({
 					...p.party,
