@@ -1,6 +1,6 @@
 /** @format */
 
-import { MonthChar, OirDate } from '@/models/dates';
+import { DateRange, MonthChar, OirDate } from '@/models/dates';
 
 /** @format */
 export function convertDMYdate2YMD(dateStr: string): string {
@@ -341,6 +341,38 @@ export function calculateYearsAndMonthsSinceDate(input: Date | string): {
 
 	return { years: yearsDiff, months: monthsDiff };
 }
+
+export function convertDaysToYearsAndMonths(days: number) {
+	// Define the average number of days in a month
+	const avgDaysInMonth = 30.4166666667;
+
+	// Calculate years and remaining days
+	const years = Math.floor(days / 365);
+	const remainingDays = days % 365;
+
+	// Calculate months from remaining days
+	const months = Math.floor(remainingDays / avgDaysInMonth);
+
+	return { years, months };
+}
+
+export function calculateRawDaysBetweenDates(dateRange: DateRange) {
+	// Destructure start and end dates from dateRange
+	const { start, end } = dateRange;
+
+	// Convert start and end dates to milliseconds
+	const startDate = new Date(start).getTime();
+	const endDate = end ? new Date(end).getTime() : Date.now(); // Use current date if end is undefined
+
+	// Calculate duration in milliseconds
+	const durationInMs = endDate - startDate;
+
+	// Convert milliseconds to days
+	const days = Math.floor(durationInMs / (1000 * 60 * 60 * 24));
+
+	return days;
+}
+
 export function aggregateDatesToMonthsArray(
 	dates: (string | undefined | Date)[]
 ): Date[][] {
