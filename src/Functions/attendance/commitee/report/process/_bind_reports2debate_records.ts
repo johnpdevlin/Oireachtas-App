@@ -51,7 +51,7 @@ export async function bindReportsToDebateRecords(
 				uri: committee.uri,
 				present: report.present,
 				absent: report.absent,
-				alsoPresent: report.alsoPresent,
+				also_present: report.alsoPresent,
 			});
 
 			if (committee.uri === 'seanad_public_consultation_committee') {

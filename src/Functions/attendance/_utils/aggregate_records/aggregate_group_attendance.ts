@@ -52,7 +52,7 @@ function aggregateGroupAttendance(
 		// Update summary for each member status.
 		record.present.forEach((member) => updateSummary(member, 'present'));
 		record.absent?.forEach((member) => updateSummary(member, 'absent'));
-		record.alsoPresent?.forEach((member) =>
+		record.also_present?.forEach((member) =>
 			updateSummary(member, 'alsoPresent')
 		);
 	});

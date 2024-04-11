@@ -41,10 +41,10 @@ async function verifyAttendanceReports(
 					}
 				});
 
-				rec.alsoPresent.forEach((as) => {
+				rec.also_present.forEach((as) => {
 					if (memberAndEarliest[as.uri] <= rec.date) {
 						rec.present.push(as);
-						rec.alsoPresent = rec.alsoPresent.filter(
+						rec.also_present = rec.also_present.filter(
 							(also) => also.uri !== as.uri
 						);
 					}
@@ -71,7 +71,7 @@ function findAdditionalAbsentMembers(
 		(member) =>
 			!record.absent.some((absent) => absent.uri === member.uri) &&
 			!record.present.some((present) => present.uri === member.uri) &&
-			!record.alsoPresent.some((alsoPresent) => alsoPresent.uri === member.uri)
+			!record.also_present.some((alsoPresent) => alsoPresent.uri === member.uri)
 	);
 }
 
