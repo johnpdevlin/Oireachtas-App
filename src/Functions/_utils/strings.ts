@@ -302,5 +302,5 @@ export function normaliseString(input: string): string {
 }
 
 export function splitCamelCase(str: string): string[] {
-	return str.split(/(?<=[a-z])(?=[A-Z])/).map((part) => part.toLowerCase());
+	return str.split(/(?<=[a-z])(?=[A-Z])/).map((part) => part);
 }
