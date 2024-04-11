@@ -3,13 +3,11 @@
 export type WikiTDProfileDetails = {
 	wikiName?: string;
 	wikiURI: string;
-	birthdate?: Date | string;
-	birthplace?: string;
+	birthDate?: Date | string;
+	birthPlace?: string;
 	birthCountry?: string;
-	education?: string;
-	educationWikiID?: string;
-	almaMater?: string;
-	almaMaterWikiID?: string;
+	education?: { name: string; wikiURI: string | undefined }[];
+	almaMater?: { name: string; wikiURI: string | undefined }[];
 	marriageDetails?: string;
 	numOfChildren?: number;
 	websiteUrl?: string;

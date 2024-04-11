@@ -4,19 +4,18 @@ import * as cheerio from 'cheerio';
 import {
 	getInfoBoxHref,
 	getInfoBoxText,
-	getInfoBoxTitle,
 	removeSquareFootnotes,
 } from '../../_utils/_utils';
 import {
 	getTextAfterLastComma,
 	getTextAfterLastParentheses,
-	startsWithNumber,
 } from '@/functions/_utils/strings';
 import { extractDateFromYMDstring } from '@/functions/_utils/dates';
 import { OirDate } from '@/models/dates';
 import { WikiTDProfileDetails } from '@/models/wiki_td';
+import extractEducation from './extract_education';
 
-// Scrapes the Wikipedia profile of Niamh Smyth.
+// Scrapes the Wikipedia profile of TD
 export default async function scrapeTDWikiPage(
 	wikiURI: string
 ): Promise<WikiTDProfileDetails> {
@@ -29,33 +28,29 @@ export default async function scrapeTDWikiPage(
 		// Extract the birth information
 		const wikiName = $('h1').text();
 		const bornThElement = $('th:contains("Born")').next().text();
-		const birthdate = extractDateFromYMDstring(bornThElement as OirDate);
-		const birthplace = removeSquareFootnotes(
+		const birthDate = extractDateFromYMDstring(bornThElement as OirDate);
+		const birthPlace = removeSquareFootnotes(
 			getTextAfterLastParentheses(bornThElement)! // extracts the birthplace from the string
 		);
-		const birthCountry = birthplace
-			? getTextAfterLastComma(birthplace)
+		const birthCountry = birthPlace
+			? getTextAfterLastComma(birthPlace)
 			: undefined;
 
 		// Extract the education, alma mater, and website information from the info box
-		const education = getInfoBoxText($, 'Education');
-		const educationWikiID = getInfoBoxHref($, 'Education');
-		const almaMater = getInfoBoxTitle($, 'Alma mater');
-		const almaMaterWikiID = getInfoBoxHref($, 'Alma mater');
+		const education = extractEducation($, 'Education') ?? [];
+		const almaMater = extractEducation($, 'Alma mater') ?? [];
 		const websiteUrl = getInfoBoxHref($, 'Website');
 
 		// Extracts the number of children from the info box
 		const numOfChildren = (): number | undefined => {
 			const num = getInfoBoxText($, 'Children');
-			if (num === undefined) return undefined;
-			return startsWithNumber(num) ? parseInt(num!) : 0;
+			if (!num) return undefined;
+			else return parseInt(num) ?? 0;
 		};
 
 		const marriageDetails = (): string | undefined => {
 			let spouse = getInfoBoxText($, 'Spouse');
-			if (!spouse) {
-				spouse = getInfoBoxText($, 'Spouse(s)');
-			}
+			if (!spouse) spouse = getInfoBoxText($, 'Spouse(s)');
 			if (!spouse?.startsWith('.')) return spouse;
 		};
 
@@ -63,13 +58,11 @@ export default async function scrapeTDWikiPage(
 		const wikiProfileDetails: WikiTDProfileDetails = {
 			wikiName,
 			wikiURI,
-			birthdate,
-			birthplace,
+			birthDate,
+			birthPlace,
 			birthCountry,
 			education,
-			educationWikiID,
 			almaMater,
-			almaMaterWikiID,
 			marriageDetails: marriageDetails(),
 			numOfChildren: numOfChildren(),
 			websiteUrl,

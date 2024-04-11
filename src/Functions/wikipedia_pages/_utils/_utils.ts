@@ -28,6 +28,19 @@ export function getInfoBoxHref(
 	return element.attr('href');
 }
 
+export function getMultipleInfoBoxHrefs(
+	$: cheerio.CheerioAPI,
+	target: string
+): string[] {
+	const parentElement = $(`th:contains("${target}")`).next(); // Get the parent element containing the list
+	const elements = parentElement.find('ul li a'); // Find <a> tags within <li> tags within <ul> tags
+	const hrefs: string[] = [];
+	elements.each((index, element) => {
+		hrefs.push($(element).attr('href') || '');
+	});
+	return hrefs;
+}
+
 export function removeSquareFootnotes(
 	input: string | undefined
 ): string | undefined {
