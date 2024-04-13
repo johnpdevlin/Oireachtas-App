@@ -1,7 +1,7 @@
 /** @format */
 import { aggregateMemberAttendance } from './agggregate/overrall';
 import { aggregateMemberCommAttendance } from './agggregate/committee';
-import { RawMember } from '@/models/oireachtasApi/member';
+import { RawMember } from '@/models/oireachtas_api/member';
 import {
 	AttendanceRecord,
 	CommitteeAttendance,

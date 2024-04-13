@@ -1,6 +1,6 @@
 /** @format */
 
-import { RawMember } from '@/models/oireachtasApi/member';
+import { RawMember } from '@/models/oireachtas_api/member';
 import { aggregateMemberAttendance } from './aggregate_attendance';
 import { filterMemberCommitteeRecordsByHouse } from './filter_by_house';
 import { AttendanceRecord, GroupAttendanceRecord } from '@/models/attendance';

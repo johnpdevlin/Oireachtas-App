@@ -5,7 +5,7 @@ import { SittingDaysRecord } from '@/models/attendance';
 import fetchMembers from '../../../APIs/Oireachtas/member/raw/_member_details';
 import reportURLs from '@/Data/attendance-reports-URLs.json';
 import { matchMemberURIsToReports } from './match_reports_to_uri';
-import { RawMember } from '@/models/oireachtasApi/member';
+import { RawMember } from '@/models/oireachtas_api/member';
 
 // Function to scrape sitting reports for a specific chamber and legislative term
 async function processSittingReportsByTerm(

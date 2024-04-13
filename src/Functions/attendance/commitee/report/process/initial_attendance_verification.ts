@@ -2,10 +2,10 @@
 
 import { removeDuplicateObjects } from '@/functions/_utils/arrays';
 import { assignMemberURIsAndNames } from '@/functions/_utils/memberURIs';
-import { RawMember } from '@/models/oireachtasApi/member';
+import { RawMember } from '@/models/oireachtas_api/member';
 import { URIpair } from '@/models/_utils';
 import { getMembersAndNonMembers } from './handle_members';
-import { RawCommittee } from '@/models/oireachtasApi/committee';
+import { RawCommittee } from '@/models/oireachtas_api/committee';
 
 type AttendanceResult = {
 	present: URIpair[];

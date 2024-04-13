@@ -14,9 +14,12 @@ export const exportRecordToFirestore = async (
 			group_type: record.group_type,
 			date_range: record.dateRange,
 			year: record.year,
-			present_percentage: record.presentPercentage,
-			present: formatAttDates(record.present, record.presentPercentage?.months),
-			absent: formatAttDates(record.absent, record.presentPercentage?.months),
+			present_percentage: record.present_percentage,
+			present: formatAttDates(
+				record.present,
+				record.present_percentage?.months
+			),
+			absent: formatAttDates(record.absent, record.present_percentage?.months),
 			also_present: formatAlsoDates(record.also_present),
 		});
 	} catch (error) {

@@ -37,7 +37,9 @@ export const writeObjToFirestore = async (
 			} else {
 				// Retry logic
 				console.error(`Request failed, ${retries} retries left. Retrying...`);
+				if (error == '431') console.error(data);
 				retries--;
+				setTimeout(() => {}, 10000);
 			}
 		}
 	}

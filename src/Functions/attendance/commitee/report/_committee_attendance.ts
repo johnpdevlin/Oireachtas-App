@@ -1,13 +1,13 @@
 /** @format */
 
-import { RawMember } from '@/models/oireachtasApi/member';
+import { RawMember } from '@/models/oireachtas_api/member';
 import { CommitteeAttendance } from '@/models/attendance';
 import fetchDebates from '../../../APIs/Oireachtas/debate/_index';
 import { bindReportsToDebateRecords } from '@/functions/attendance/commitee/report/process/_bind_reports2debate_records';
 import { getDateTwoWeeksAgo, dateToYMDstring } from '@/functions/_utils/dates';
-import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
+import { CommitteeDebateRecord } from '@/models/oireachtas_api/debate';
 import { getAllRawMembers } from '../../../_utils/all_members_by_dail_no';
-import { RawCommittee } from '@/models/oireachtasApi/committee';
+import { RawCommittee } from '@/models/oireachtas_api/committee';
 
 /** 
 	Fetches from Orieachtas API: debates, members

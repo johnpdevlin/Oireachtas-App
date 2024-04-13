@@ -5,7 +5,7 @@ import { CommitteeAttendance } from '@/models/attendance';
 import {
 	RawCommittee,
 	RawCommitteeMember,
-} from '@/models/oireachtasApi/committee';
+} from '@/models/oireachtas_api/committee';
 
 // Does additional verifications to offset incorrect/incomplete data from external API
 async function verifyAttendanceReports(

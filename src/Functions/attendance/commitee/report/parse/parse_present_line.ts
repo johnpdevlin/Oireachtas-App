@@ -1,6 +1,6 @@
 /** @format */
 
-import { RawMember } from '@/models/oireachtasApi/member';
+import { RawMember } from '@/models/oireachtas_api/member';
 import { normalisePresentStr } from './normalise_present_str';
 
 export function parsePresentLine(

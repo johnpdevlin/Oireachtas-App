@@ -3,7 +3,7 @@
 import { initializeAttendanceSummary } from '@/functions/attendance/_utils/init_attendance_summary';
 
 import { AttendanceRecord, GroupAttendanceRecord } from '@/models/attendance';
-import { RawMember } from '@/models/oireachtasApi/member';
+import { RawMember } from '@/models/oireachtas_api/member';
 import { addPresentPercentage } from '../add_percentage_calculations';
 import { BinaryChamber, GroupType } from '@/models/_utils';
 import { getHouseCode } from '@/functions/APIs/Oireachtas/_utils/get_house_code';

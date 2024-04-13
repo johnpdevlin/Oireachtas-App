@@ -2,13 +2,15 @@
 
 import scrapeDailSessionPage from '@/functions/wikipedia_pages/dail/dail_session';
 import scrapeTDWikiPage from '@/functions/wikipedia_pages/td/page/td_page';
-import { WikiTDProfileDetails } from '@/models/wiki_td';
+
 import { URIpair } from '@/models/_utils';
+import { WikiMemberProfileDetails } from '../../../../models/member/wiki_profile';
 
 export default async function getTDsWikiData(
 	dailNo?: number,
 	tdWikiURIs?: URIpair[]
 ) {
+	console.info('Scraping and parsing data from Members` wikipedia pages...');
 	if (dailNo! && !tdWikiURIs) {
 		tdWikiURIs = (await scrapeDailSessionPage(dailNo!)).tdWikiUris as URIpair[];
 	}
@@ -28,5 +30,5 @@ export default async function getTDsWikiData(
 		console.error(failures);
 	}
 
-	return successes.map((result) => result.value) as WikiTDProfileDetails[];
+	return successes.map((result) => result.value) as WikiMemberProfileDetails[];
 }

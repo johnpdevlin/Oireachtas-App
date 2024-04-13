@@ -12,13 +12,13 @@ import {
 } from '@/functions/_utils/strings';
 import { extractDateFromYMDstring } from '@/functions/_utils/dates';
 import { OirDate } from '@/models/dates';
-import { WikiTDProfileDetails } from '@/models/wiki_td';
 import extractEducation from './extract_education';
+import { WikiMemberProfileDetails } from '@/models/member/wiki_profile';
 
 // Scrapes the Wikipedia profile of TD
 export default async function scrapeTDWikiPage(
 	wikiURI: string
-): Promise<WikiTDProfileDetails> {
+): Promise<WikiMemberProfileDetails> {
 	const url = `https://en.wikipedia.org${wikiURI}`;
 
 	try {
@@ -28,7 +28,9 @@ export default async function scrapeTDWikiPage(
 		// Extract the birth information
 		const wikiName = $('h1').text();
 		const bornThElement = $('th:contains("Born")').next().text();
-		const birthDate = extractDateFromYMDstring(bornThElement as OirDate);
+		let birthDate =
+			(extractDateFromYMDstring(bornThElement as OirDate) as Date) ?? undefined;
+
 		const birthPlace = removeSquareFootnotes(
 			getTextAfterLastParentheses(bornThElement)! // extracts the birthplace from the string
 		);
@@ -55,7 +57,7 @@ export default async function scrapeTDWikiPage(
 		};
 
 		// Construct and return the WikiProfileDetails object
-		const wikiProfileDetails: WikiTDProfileDetails = {
+		const wikiProfileDetails: WikiMemberProfileDetails = {
 			wikiName,
 			wikiURI,
 			birthDate,

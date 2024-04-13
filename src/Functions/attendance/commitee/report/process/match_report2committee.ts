@@ -1,7 +1,7 @@
 /** @format */
 
 import similarity from 'string-similarity';
-import { RawCommittee } from '@/models/oireachtasApi/committee';
+import { RawCommittee } from '@/models/oireachtas_api/committee';
 
 // Matches a report URI to a committee based on similarity and date.
 export function matchReport2Committee(

@@ -3,13 +3,13 @@
 import fetchNames from '../../APIs/Irish_Names/fetch_names';
 import getAllMembersAPIdetails from '../../APIs/Oireachtas/member/formatted/_multi_member_details';
 import getAllMembersOirData from '@/functions/oireachtas_pages/td/multi_TDs';
-import { WikiTDProfileDetails } from '@/models/wiki_td';
-import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
+import { MemberAPIdetails } from '@/models/oireachtas_api/Formatted/Member/member';
 import getTDsWikiData from '@/functions/wikipedia_pages/td/page/multi_td_page';
 import similarity from 'string-similarity';
 import checkGender from '../../APIs/Irish_Names/_index';
-import { MemberOirProfile } from '@/functions/oireachtas_pages/td/profile/td_profile';
-import { MemberBioData } from '@/models/ui/member';
+import { MemberOirProfileData } from '@/models/member/oir_profile';
+import { WikiMemberProfileDetails } from '@/models/member/wiki_profile';
+import { AllMemberBioData } from '@/models/member/_all_bio_data';
 
 /**
  * Fetches all member data
@@ -52,17 +52,16 @@ async function getAggregatedTDsDetailsByHouse(house_no: number) {
 
 	console.info('Process to get all member details completed.');
 
-	console.log(mergedData);
 	return mergedData;
 }
 
 async function bindAllData(
 	house_no: number,
 	uris: string[],
-	oirData: MemberOirProfile[],
-	wikiData: WikiTDProfileDetails[],
+	oirData: MemberOirProfileData[],
+	wikiData: WikiMemberProfileDetails[],
 	apiData: MemberAPIdetails[]
-): Promise<MemberBioData[]> {
+): Promise<AllMemberBioData[]> {
 	const boyNames = await fetchNames('boy');
 	const girlNames = await fetchNames('girl');
 
@@ -75,7 +74,7 @@ async function bindAllData(
 
 			// Find Wiki Data by name
 			let wiki = wikiData.find(
-				(data: WikiTDProfileDetails) =>
+				(data: WikiMemberProfileDetails) =>
 					data.wikiName!.toLowerCase().includes(api!.lastName!.toLowerCase()) &&
 					data.wikiName!.toLowerCase().includes(api!.firstName!.toLowerCase())
 			);
@@ -125,7 +124,7 @@ async function bindAllData(
 		})
 	);
 
-	return bound as MemberBioData[];
+	return bound as AllMemberBioData[];
 }
 
 const isParty = (website: string): boolean => {

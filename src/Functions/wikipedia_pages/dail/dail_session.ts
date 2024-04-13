@@ -26,6 +26,7 @@ export default async function scrapeWikiDailSession(
 
 	try {
 		// Make the HTTP request to fetch the page HTML
+		console.info('Scraping dail session  data from Wikipedia.');
 		let response = (await axios.get(`api/webscrape?url=${url}`)).data.text;
 		let $ = cheerio.load(response);
 
@@ -68,6 +69,8 @@ export default async function scrapeWikiDailSession(
 		) {
 			throw new Error('Error scraping wiki page: missing required details');
 		}
+
+		console.info('Data scraped and parsed from Dáil session.');
 
 		// Return the scraped details
 		return {

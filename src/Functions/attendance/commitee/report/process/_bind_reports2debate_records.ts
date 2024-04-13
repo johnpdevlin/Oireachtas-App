@@ -1,10 +1,10 @@
 /** @format */
 
-import { RawMember } from '@/models/oireachtasApi/member';
-import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
+import { RawMember } from '@/models/oireachtas_api/member';
+import { CommitteeDebateRecord } from '@/models/oireachtas_api/debate';
 import parseCommitteeReport from '../parse/_parse_committee_attendance';
 import { CommitteeAttendance } from '@/models/attendance';
-import { RawCommittee } from '@/models/oireachtasApi/committee';
+import { RawCommittee } from '@/models/oireachtas_api/committee';
 import { matchReport2Committee } from './match_report2committee';
 import { verifyAttendanceReports } from './final_attendance_verification';
 

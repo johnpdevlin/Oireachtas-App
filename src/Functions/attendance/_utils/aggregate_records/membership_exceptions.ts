@@ -1,9 +1,9 @@
 /** @format */
-import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/constituency';
+import { MemberConstituency } from '@/models/oireachtas_api/Formatted/Member/constituency';
 import { MembershipType } from './_constits+parties';
 import { AttendanceRecord, GroupAttendanceRecord } from '@/models/attendance';
 import { initializeAttendanceSummary } from '@/functions/attendance/_utils/init_attendance_summary';
-import { RawMemberParty } from '@/models/oireachtasApi/member';
+import { RawMemberParty } from '@/models/oireachtas_api/member';
 
 // Deal with cases where membships overlap in same year
 function handleMembershipExceptions(

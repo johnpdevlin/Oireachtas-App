@@ -1,6 +1,6 @@
 /** @format */
 
-import { RawMember } from '@/models/oireachtasApi/member';
+import { RawMember } from '@/models/oireachtas_api/member';
 import { filterMemberCommitteeRecordsByHouse } from './filter_by_house';
 import parseMemberships from '@/functions/APIs/Oireachtas/member/formatted/parse_memberships/_index';
 import { BinaryChamber } from '@/models/_utils';

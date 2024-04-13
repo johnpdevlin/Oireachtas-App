@@ -1,9 +1,9 @@
 /** @format */
 
-import { RawMember } from '@/models/oireachtasApi/member';
+import { RawMember } from '@/models/oireachtas_api/member';
 import { parseLine } from './parse_line';
 import { splitStringIntoLines } from '../../../../_utils/strings';
-import { RawCommittee } from '@/models/oireachtasApi/committee';
+import { RawCommittee } from '@/models/oireachtas_api/committee';
 import { fetchRawTextFromUrlWithRetry } from '@/functions/_utils/fetch_raw_text_from_url';
 import { verifyInitialAttendance } from '../process/initial_attendance_verification';
 

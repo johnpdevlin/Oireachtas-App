@@ -2,7 +2,7 @@
 
 import { filterMembersByHouse } from '@/functions/_utils/all_members_by_dail_no';
 import { AttendanceRecord } from '@/models/attendance';
-import { RawMember } from '@/models/oireachtasApi/member';
+import { RawMember } from '@/models/oireachtas_api/member';
 
 function filterMemberCommitteeRecordsByHouse(
 	records: AttendanceRecord[],

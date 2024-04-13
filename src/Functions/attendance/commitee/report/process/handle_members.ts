@@ -5,8 +5,8 @@ import { DateRangeStr } from '@/models/dates';
 import {
 	RawCommittee,
 	RawCommitteeMember,
-} from '@/models/oireachtasApi/committee';
-import { RawMember } from '@/models/oireachtasApi/member';
+} from '@/models/oireachtas_api/committee';
+import { RawMember } from '@/models/oireachtas_api/member';
 
 function getMembersAndNonMembers(
 	committee: RawCommittee,
