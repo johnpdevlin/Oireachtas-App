@@ -4,9 +4,9 @@ import {
 	CommitteeName,
 	RawCommittee,
 	RawCommitteeMember,
-} from '@/models/oireachtasApi/committee';
+} from '@/models/oireachtas_api/committee';
 import fetchMembers from '../../member/raw/_member_details';
-import { RawMemberCommittee } from '@/models/oireachtasApi/member';
+import { RawMemberCommittee } from '@/models/oireachtas_api/member';
 import { excludeProperties } from '@/functions/_utils/objects';
 import similarity from 'string-similarity';
 

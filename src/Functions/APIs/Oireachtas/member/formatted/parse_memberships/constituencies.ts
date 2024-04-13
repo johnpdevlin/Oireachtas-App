@@ -2,7 +2,7 @@
 import { getEndDateStr } from '@/functions/_utils/dates';
 import { groupObjectsByProperty } from '@/functions/_utils/objects';
 import { RawMemberConstituency } from './_index';
-import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/constituency';
+import { MemberConstituency } from '@/models/oireachtas_api/Formatted/Member/constituency';
 import { BinaryChamber } from '@/models/_utils';
 
 /*  

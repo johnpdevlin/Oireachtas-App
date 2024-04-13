@@ -1,7 +1,9 @@
 /** @format */
 
 import { DateRange, MonthChar, OirDate } from '@/models/dates';
+import { isDate } from 'date-fns';
 
+export const YMDdateRegex = /\d{4}-\d{2}-\d{2}/; // Regex pattern for "YYYY-MM-DD" format
 /** @format */
 export function convertDMYdate2YMD(dateStr: string): string {
 	const parts = dateStr.split(/[/|-]/);
@@ -128,12 +130,11 @@ export function extractDateFromYMDstring(input: string): Date | undefined {
 	// Extracts a date string in "YYYY-MM-DD" format from the input string and
 	// Returns it as a Date object.
 
-	const regex = /\d{4}-\d{2}-\d{2}/; // Regex pattern for "YYYY-MM-DD" format
-	const match = input.match(regex); // Find the date string in the input
+	const match = input.match(YMDdateRegex); // Find the date string in the input
 
 	if (match) {
-		const date = new Date(match[0]); // Convert the matched string to a Date object
-		return date;
+		// Convert the matched string to a Date object
+		return new Date(match[0]) ?? undefined;
 	}
 
 	// Return undefined if no date string was found

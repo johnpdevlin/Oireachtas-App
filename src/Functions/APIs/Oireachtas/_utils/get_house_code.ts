@@ -1,5 +1,5 @@
 /** @format */
-import { RawOuterMembership } from '@/models/oireachtasApi/member';
+import { RawOuterMembership } from '@/models/oireachtas_api/member';
 import { BinaryChamber } from '@/models/_utils';
 
 // Parses memberships to find relevant housecode

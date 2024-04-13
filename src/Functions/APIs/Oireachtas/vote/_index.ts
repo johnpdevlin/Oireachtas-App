@@ -1,5 +1,5 @@
 /** @format */
-import { VoteRequest, RawVote } from '@/models/oireachtasApi/vote';
+import { VoteRequest, RawVote } from '@/models/oireachtas_api/vote';
 import axios from 'axios';
 
 export default async function fetchVotes(

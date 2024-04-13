@@ -1,23 +1,23 @@
 /** @format */
 
 import {
-	RawMemberCommittee,
 	RawMemberHouse,
 	RawMemberParty,
 	RawMemberRepresent,
 	RawOuterMembership,
-} from '@/models/oireachtasApi/member';
+} from '@/models/oireachtas_api/member';
 import parseAndFormatOffices from './offices';
-import { RawMemberOffice } from '@/models/oireachtasApi/member';
+import { RawMemberOffice } from '@/models/oireachtas_api/member';
 import parseAndFormatConstituencies from './constituencies';
 import parseAndFormatParties from './parties';
 import { BinaryChamber } from '@/models/_utils';
-import { DateRangeObj, DateRangeStr, OirDate } from '@/models/dates';
-import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/constituency';
-import { MemberOffice } from '@/models/oireachtasApi/Formatted/Member/office';
-import { MemberParty } from '@/models/oireachtasApi/Formatted/Member/party';
+import { DateRangeObj, DateRangeStr } from '@/models/dates';
+import { MemberConstituency } from '@/models/oireachtas_api/Formatted/Member/constituency';
+import { MemberOffice } from '@/models/oireachtas_api/Formatted/Member/office';
+import { MemberParty } from '@/models/oireachtas_api/Formatted/Member/party';
 import { parseAndFormatCommittees } from './committees';
-import { MemberCommittee } from '@/models/oireachtasApi/Formatted/Member/committee';
+import { MemberCommittee } from '@/models/oireachtas_api/Formatted/Member/committee';
+import { RawMemberCommittee } from '../../../../../../models/oireachtas_api/committee';
 
 type MembershipResponse = {
 	constituencies: {
@@ -30,7 +30,7 @@ type MembershipResponse = {
 	offices: MemberOffice[];
 	committees: { current: MemberCommittee[]; past: MemberCommittee[] };
 	isActiveSeniorMinister: boolean;
-	isActiveJunior: boolean;
+	isActiveJuniorMinister: boolean;
 };
 
 /*
@@ -47,32 +47,24 @@ function parseMemberships(
 
 	const { isActiveSenator, isActiveTD } = constits;
 	const constituencies = {
-		dail: constits.dail,
-		seanad: constits.seanad,
+		dail: constits.dail ?? [],
+		seanad: constits.seanad ?? [],
 	};
 
 	const parties = parseAndFormatParties(destructured.parties);
 	const offices = parseAndFormatOffices(destructured.offices as RawMoffice[]);
-	const rawCommittees = memberships
-		.flat()
-		.map((mem) => mem.membership.committees)
-		.flat();
-	const committees = parseAndFormatCommittees(rawCommittees);
+	const committees = parseAndFormatCommittees(destructured.committees);
 
 	return {
 		constituencies,
 		isActiveSenator,
 		isActiveTD,
 		parties,
-		offices: offices.offices,
-		...(offices.offices.length > 0
-			? {
-					isActiveSeniorMinister: offices.isActiveSeniorMinister,
-					isActiveJunior: offices.isActiveJunior,
-			  }
-			: { isActiveJunior: false, isActiveSeniorMinister: false }),
+		offices: offices.offices ?? [],
+		isActiveSeniorMinister: offices.isActiveSeniorMinister,
+		isActiveJuniorMinister: offices.isActiveJuniorMinister,
 		committees,
-	} as MembershipResponse;
+	};
 }
 
 type House = RawMemberHouse & { dateRange: DateRangeStr };
@@ -90,6 +82,7 @@ type RawMembershipsObj = {
 	offices?: RawMoffice[];
 	constits: { dail: RawMemberConstituency[]; seanad: RawMemberConstituency[] };
 	parties: RawMparty[];
+	committees: RawMemberCommittee[];
 };
 // Destructures and formats so can be easily processed / compared
 function destructureMemberships(
@@ -104,6 +97,7 @@ function destructureMemberships(
 		seanad: [],
 	};
 	const parties: RawMparty[] = [];
+	const committees: RawMemberCommittee[] = [];
 
 	memberships.forEach((membership) => {
 		const mem = membership.membership;
@@ -132,9 +126,10 @@ function destructureMemberships(
 					chamber: house.houseCode,
 				} as RawMparty)
 			);
+		if (mem.committees?.length > 0) committees.push(...mem.committees);
 	});
 
-	return { offices, parties, constits };
+	return { offices, parties, constits, committees };
 }
 
 export default parseMemberships;

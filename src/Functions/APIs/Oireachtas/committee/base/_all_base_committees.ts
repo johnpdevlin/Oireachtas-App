@@ -1,6 +1,6 @@
 /** @format */
 
-import { DebateRecord } from '@/models/oireachtasApi/debate';
+import { DebateRecord } from '@/models/oireachtas_api/debate';
 import fetchDebates from '../../debate/_index';
 import fetchHouses from '../../house/_index';
 async function fetchAllBaseCommittees() {

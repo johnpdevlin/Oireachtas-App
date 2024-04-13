@@ -3,7 +3,7 @@
 import fetchHouses from '@/functions/APIs/Oireachtas/house/_index';
 import fetchMembers from '@/functions/APIs/Oireachtas/member/raw/_member_details';
 import { dateToYMDstring } from '@/functions/_utils/dates';
-import { RawMember } from '@/models/oireachtasApi/member';
+import { RawMember } from '@/models/oireachtas_api/member';
 
 async function getAllRawMembers(house_no: number): Promise<RawMember[]> {
 	// Get house for date references

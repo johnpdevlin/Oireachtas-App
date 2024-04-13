@@ -2,10 +2,10 @@
 import {
 	ConstituencyOrPanel,
 	ConstituencyRequest,
-} from '@/models/oireachtasApi/constituency';
+} from '@/models/oireachtas_api/constituency';
 
 import axios from 'axios';
-import { ConstituencyAPI } from '@/models/oireachtasApi/constituency';
+import { ConstituencyAPI } from '@/models/oireachtas_api/constituency';
 
 export default async function fetchConstituencies(
 	props: ConstituencyRequest // Props object with request parameters

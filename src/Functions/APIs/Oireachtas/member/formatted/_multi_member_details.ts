@@ -1,7 +1,7 @@
 /** @format */
 
-import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
-import { MemberRequest } from '@/models/oireachtasApi/member';
+import { MemberAPIdetails } from '@/models/oireachtas_api/Formatted/Member/member';
+import { MemberRequest } from '@/models/oireachtas_api/member';
 import fetchMembers from '../raw/_member_details';
 import getMemberAPIdetails from './_member_details';
 

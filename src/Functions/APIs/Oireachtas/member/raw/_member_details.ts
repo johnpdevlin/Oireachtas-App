@@ -3,7 +3,7 @@ import {
 	MemberRequest,
 	RawMember,
 	RawOuterMember,
-} from '@/models/oireachtasApi/member';
+} from '@/models/oireachtas_api/member';
 import axios from 'axios';
 
 export default async function fetchMembers(

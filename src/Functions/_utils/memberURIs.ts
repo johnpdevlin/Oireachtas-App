@@ -2,7 +2,7 @@
 
 import { BinaryChamber, MemberBaseKeys, URIpair } from '@/models/_utils';
 import similarity, { BestMatch } from 'string-similarity';
-import { RawMember } from '@/models/oireachtasApi/member';
+import { RawMember } from '@/models/oireachtas_api/member';
 import fetchMembers from '../APIs/Oireachtas/member/raw/_member_details';
 
 export async function getMemberUrisAndNames(

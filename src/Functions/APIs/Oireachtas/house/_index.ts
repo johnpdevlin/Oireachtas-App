@@ -1,6 +1,6 @@
 /** @format */
 
-import { House, HouseRequest } from '@/models/oireachtasApi/house';
+import { House, HouseRequest } from '@/models/oireachtas_api/house';
 import axios from 'axios';
 
 export default async function fetchHouses(

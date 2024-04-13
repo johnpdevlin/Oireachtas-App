@@ -4,7 +4,7 @@ import {
 	PartyRequest,
 	PartyResult,
 	PartyAPI,
-} from '@/models/oireachtasApi/party';
+} from '@/models/oireachtas_api/party';
 import axios from 'axios';
 
 export default async function fetchParties(

@@ -1,6 +1,6 @@
 /** @format */
 
-import { Question, QuestionRequest } from '@/models/oireachtasApi/question';
+import { Question, QuestionRequest } from '@/models/oireachtas_api/question';
 import axios from 'axios';
 
 export default async function fetchQuestions(

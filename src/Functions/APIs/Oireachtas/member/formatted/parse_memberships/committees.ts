@@ -1,9 +1,9 @@
 /** @format */
 
 import { DateRangeStr } from '@/models/dates';
-import { MemberCommittee } from '@/models/oireachtasApi/Formatted/Member/committee';
-import { CommitteeName } from '@/models/oireachtasApi/committee';
-import { RawMemberCommittee } from '@/models/oireachtasApi/member';
+import { MemberCommittee } from '@/models/oireachtas_api/Formatted/Member/committee';
+import { CommitteeName } from '@/models/oireachtas_api/committee';
+import { RawMemberCommittee } from '@/models/oireachtas_api/committee';
 
 function parseAndFormatCommittees(committees: RawMemberCommittee[]): {
 	current: MemberCommittee[];
@@ -21,16 +21,17 @@ function parseAndFormatCommittees(committees: RawMemberCommittee[]): {
 function parseAndFormatCommittee(
 	committee: RawMemberCommittee
 ): MemberCommittee {
-	const uri = committee.committeeURI!;
+	if (!committee.committeeName || committee.committeeName.length == 0)
+		console.info(committee);
+
 	const { name, nameGa, formerNames } = extractNames(committee.committeeName);
 	return {
-		uri,
+		uri: committee.uri,
 		name,
 		nameGa,
 		formerNames,
 		expiryType: committee.expiryType,
 		houseNo: committee.houseNo,
-		altCommitteeURIs: committee.altCommitteeURIs,
 		committeeCode: committee.committeeCode,
 		committeeType: committee.committeeType,
 		committeeID: committee.committeeID,
@@ -43,13 +44,14 @@ function parseAndFormatCommittee(
 
 function extractNames(names: CommitteeName[]) {
 	const currentName = extractCurrent(names);
-	const formerNames = names.filter(
-		(name) =>
-			currentName[0].nameEn !== name.nameEn ||
-			currentName[0].nameGa !== name.nameGa
-	);
+	const formerNames =
+		names.filter(
+			(name) =>
+				currentName[0].nameEn !== name.nameEn ||
+				currentName[0].nameGa !== name.nameGa
+		) ?? [];
 	const name = currentName[0].nameEn;
-	const nameGa = currentName[0].nameGa;
+	const nameGa = currentName[0].nameGa ?? undefined;
 	return { name, nameGa, formerNames };
 }
 

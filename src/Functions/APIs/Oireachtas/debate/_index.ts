@@ -1,9 +1,9 @@
 /** @format */
-import { DebateRecord, DebateRequest } from '@/models/oireachtasApi/debate';
+import { DebateRecord, DebateRequest } from '@/models/oireachtas_api/debate';
 
 import { removeOuterObjects } from '@/functions/_utils/objects';
 import axios from 'axios';
-import { CommitteeDebateRecord } from '@/models/oireachtasApi/debate';
+import { CommitteeDebateRecord } from '@/models/oireachtas_api/debate';
 import formatCommitteeDebates from './format/committee_debates';
 
 export default async function fetchDebates(

@@ -1,72 +1,98 @@
 /** @format */
-import { getEndDateStr } from '@/functions/_utils/dates';
 import { BinaryChamber } from '@/models/_utils';
-import { DateRangeStr } from '@/models/dates';
 import { RawMoffice } from './_index';
-
 import {
 	MemberOffice,
 	OfficeType,
-} from '@/models/oireachtasApi/Formatted/Member/office';
+} from '@/models/oireachtas_api/Formatted/Member/office';
+import { groupObjectsByProperty } from '../../../../../_utils/objects';
 
-export default function parseAndFormatOffices(offices: RawMoffice[]): {
+type ParsedOffices = {
 	offices: MemberOffice[];
 	isActiveSeniorMinister: boolean;
-	isActiveJunior: boolean;
-} {
-	let parsed: MemberOffice[] = [];
-	offices.forEach((off) => {
-		const office = {
+	isActiveJuniorMinister: boolean;
+};
+
+export default function parseAndFormatOffices(
+	offices: RawMoffice[]
+): ParsedOffices {
+	const processedOffices: MemberOffice[] = [];
+
+	const formattedOffices = offices.map((off) => {
+		return {
 			name: off.officeName.showAs,
 			type: parseOfficeType(off.officeName.showAs),
 			chamber: off.house.houseCode as BinaryChamber,
-			houseNo: parseInt(off.house.houseNo),
+			houseNos: [parseInt(off.house.houseNo)],
 			chamberStr: off.house.showAs,
-			dateRange: {
-				start: off.dateRange.start,
-				end: getEndDateStr(off.dateRange.end!),
-			} as DateRangeStr,
+			dateRange: off.dateRange,
 		};
-		parsed.push(office);
-	});
+	}) as MemberOffice[];
+	const groupedOffices = groupObjectsByProperty(formattedOffices, 'name');
 
-	// Sort so current and most recent offices are at start of array
-	parsed = parsed.filter(Boolean).sort((a, b) => {
-		// Check for undefined or null dateRange.end values
-		if (!a.dateRange.end && !b.dateRange.end) {
-			return 0; // Both are undefined or null, so they are considered equal
-		}
-		if (!a.dateRange.end) {
-			return -1; // a comes first as it has an undefined or null end date
-		}
-		if (!b.dateRange.end) {
-			return 1; // b comes first as it has an undefined or null end date
-		}
-
-		// Compare dateRange.start for all other cases
-		return (
-			new Date(b.dateRange.start).getTime() -
-			new Date(a.dateRange.start).getTime()
+	for (const offs of groupedOffices) {
+		const sorted = offs.toSorted(
+			(a, b) =>
+				new Date(a.dateRange.start).getTime() -
+				new Date(b.dateRange.start).getTime()
 		);
-	});
+
+		let currentOffice: MemberOffice | null = null;
+		// console.info(sorted);
+		sorted.forEach((off) => {
+			if (!currentOffice) {
+				currentOffice = off;
+			} else if (checkIsContinuous(currentOffice, off) === true) {
+				currentOffice.dateRange.end = off.dateRange.end ?? undefined;
+				currentOffice.houseNos.push(...off.houseNos);
+			} else {
+				processedOffices.push({ ...currentOffice }); // Push a new copy of currentParty
+				currentOffice = off;
+			}
+		});
+
+		if (currentOffice) {
+			processedOffices.push(currentOffice); // Push the last currentParty
+		}
+	}
+
+	console.info(processedOffices);
 
 	const isActiveSeniorMinister =
-		parsed[0] &&
-		(parsed[0].dateRange.end === undefined ||
-			parsed[0].dateRange.end === null) &&
-		parsed[0].type === 'senior'
-			? true
-			: false;
-	const isActiveJunior =
-		!isActiveSeniorMinister &&
-		parsed[0] &&
-		(parsed[0].dateRange.end === undefined || parsed[0].dateRange.end === null)
+		processedOffices[0] &&
+		processedOffices[0].type === 'senior' &&
+		!processedOffices[0].dateRange.end
 			? true
 			: false;
 
-	return { offices: parsed, isActiveSeniorMinister, isActiveJunior };
+	const isActiveJuniorMinister =
+		!isActiveSeniorMinister &&
+		processedOffices[0] &&
+		!processedOffices[0].dateRange.end
+			? true
+			: false;
+
+	return {
+		offices: processedOffices ?? [],
+		isActiveSeniorMinister,
+		isActiveJuniorMinister,
+	};
 }
 
+function checkIsContinuous(
+	currentOffice: MemberOffice,
+	newOffice: MemberOffice
+): boolean {
+	const start = new Date(newOffice.dateRange.start);
+	const end = new Date(currentOffice.dateRange.end!);
+	const thirtyDaysInMillis = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+
+	// Check if the start date of the new office is within 30 days of the end date of the current office
+	return (
+		currentOffice.name === newOffice.name &&
+		start.getTime() - end.getTime() <= thirtyDaysInMillis
+	);
+}
 function parseOfficeType(office: string): OfficeType {
 	if (office.toLowerCase().includes('of state')) return 'junior';
 	else return 'senior';
