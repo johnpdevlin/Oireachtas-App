@@ -1,8 +1,11 @@
 /** @format */
 
 import { DateRangeStr } from '@/models/dates';
-import { CommitteeMainStatus, CommitteeName } from '../../committee';
-import { RawMemberCommittee } from '../../member';
+import {
+	CommitteeMainStatus,
+	CommitteeName,
+	RawMemberCommittee,
+} from '../../committee';
 
 export type MemberCommittee = Omit<
 	RawMemberCommittee,

@@ -1,6 +1,8 @@
 /** @format */
 
-import { Chamber, ChamberType, Outcome } from '@/models/_utils';
+import { Chamber, ChamberType } from '@/models/_utils';
+
+export type Outcome = 'carried' | 'lost';
 
 export type VoteRequest = {
 	member_id?: string;

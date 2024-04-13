@@ -2,7 +2,7 @@
 
 import { CommitteeType, GroupType, URIpair } from './_utils';
 import { DateRangeObj } from './dates';
-import { CommitteeDebateRecord } from './oireachtasApi/debate';
+import { CommitteeDebateRecord } from './oireachtas_api/debate';
 
 export type SittingDays = {
 	name?: string;

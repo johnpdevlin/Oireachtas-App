@@ -1,6 +1,8 @@
 /** @format */
 
-import { Chamber, RepresentType } from '../_utils';
+import { Chamber } from '../_utils';
+
+export type RepresentType = 'constituency' | 'panel';
 
 export type ConstituencyAPI = {
 	type: RepresentType;

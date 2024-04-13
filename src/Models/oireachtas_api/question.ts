@@ -1,8 +1,10 @@
 /** @format */
 
+export type QuestionType = 'oral' | 'written';
+
 export type QuestionRequest = {
 	member_id?: string;
-	qType?: 'oral' | 'written';
+	qType?: QuestionType;
 	date_start?: string | Date;
 	date_end?: string | Date;
 	limit?: number;
@@ -12,7 +14,7 @@ export type QuestionRequest = {
 
 export type Question = {
 	member_uri: string;
-	type: string;
+	type: QuestionType;
 	addressedTo: string;
 	topic: string;
 	content: string;

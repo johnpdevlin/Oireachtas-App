@@ -1,9 +1,9 @@
 /** @format */
 
-export type WikiTDProfileDetails = {
+export type WikiMemberProfileDetails = {
 	wikiName?: string;
 	wikiURI: string;
-	birthDate?: Date | string;
+	birthDate?: Date;
 	birthPlace?: string;
 	birthCountry?: string;
 	education?: { name: string; wikiURI: string | undefined }[];

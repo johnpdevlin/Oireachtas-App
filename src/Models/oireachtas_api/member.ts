@@ -2,7 +2,7 @@
 
 import { BinaryChamber, ChamberType } from '../_utils';
 import { DateRangeStr } from '../dates';
-import { RawCommittee, RawCommitteeMember } from './committee';
+import { RawMemberCommittee } from './committee';
 
 export type MemberRequest = {
 	uri?: string;
@@ -41,9 +41,6 @@ export type RawMemberParty = {
 export type RawOuterMembership = {
 	membership: RawMembership;
 };
-
-export type RawMemberCommittee = Omit<RawCommittee, 'members'> &
-	RawCommitteeMember & { committeeURI?: string };
 
 export type RawMemberHouse = {
 	houseCode: BinaryChamber;

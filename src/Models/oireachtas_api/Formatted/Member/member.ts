@@ -1,9 +1,9 @@
 /** @format */
 
-import { MemberCommittee } from '@/models/oireachtasApi/Formatted/Member/committee';
-import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/constituency';
-import { MemberOffice } from '@/models/oireachtasApi/Formatted/Member/office';
-import { MemberParty } from '@/models/oireachtasApi/Formatted/Member/party';
+import { MemberCommittee } from '@/models/oireachtas_api/Formatted/Member/committee';
+import { MemberConstituency } from '@/models/oireachtas_api/Formatted/Member/constituency';
+import { MemberOffice } from '@/models/oireachtas_api/Formatted/Member/office';
+import { MemberParty } from '@/models/oireachtas_api/Formatted/Member/party';
 
 export type MemberAPIdetails = {
 	uri: string;
@@ -21,5 +21,5 @@ export type MemberAPIdetails = {
 	offices?: MemberOffice[];
 	committees: { current: MemberCommittee[]; past: MemberCommittee[] };
 	isActiveSeniorMinister: boolean;
-	isActiveJunior: boolean;
+	isActiveJuniorMinister: boolean;
 };

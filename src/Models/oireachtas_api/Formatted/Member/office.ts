@@ -8,8 +8,16 @@ export type OfficeType = 'junior' | 'senior';
 export type MemberOffice = {
 	name: string;
 	type: OfficeType;
-	chamber: BinaryChamber;
-	houseNo: number;
-	chamberStr: string;
+	houseNos: number[];
 	dateRange: DateRangeStr;
 };
+
+export type UnchangingSeniorMinistries =
+	| 'for Finance'
+	| 'Public Expenditure'
+	| 'for Foreign Affairs'
+	| 'for Justice'
+	| 'for Health'
+	| 'for Defense'
+	| 'for Education'
+	| 'for Agriculture';
