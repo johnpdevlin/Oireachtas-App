@@ -8,51 +8,20 @@ import {
 	Typography,
 	Stack,
 } from '@mui/material';
-import {
-	CropSquare,
-	CropSquareRounded,
-	Groups,
-	Square,
-} from '@mui/icons-material';
+import { CropSquareRounded, Groups } from '@mui/icons-material';
 import { green } from '@mui/material/colors';
-import { MemberCommittee } from '@/models/oireachtasApi/Formatted/Member/committee';
-
-function formatCommittee(committee: MemberCommittee) {
-	const key = committee.name; // You can use committee.name as the key
-	return (
-		<div key={key}>
-			{/* Assign a unique key */}
-			<Stack direction='row' gap={1}>
-				<CropSquareRounded fontSize='small' />
-				<Typography variant='body2' color='text.secondary'>
-					{committee.name}
-					<small>
-						<i>
-							{committee.dateRange.end !== undefined &&
-								committee.dateRange.end !== null &&
-								` (${new Date(
-									committee.dateRange.start
-								).getFullYear()}-${new Date(
-									committee.dateRange.end as unknown as string
-								).getFullYear()})`}
-						</i>
-					</small>
-				</Typography>
-			</Stack>
-		</div>
-	);
-}
+import { MemberPageMembership } from '@/models/pages/member/member';
 
 export default function CommitteesCard(props: {
 	committees: {
-		current: MemberCommittee[];
-		past: MemberCommittee[];
+		current?: MemberPageMembership[];
+		past?: MemberPageMembership[];
 	};
 }) {
-	const formattedCommittees = props.committees.current.map((com) =>
+	const formattedCommittees = props.committees.current?.map((com) =>
 		formatCommittee(com)
 	);
-	const formattedPastCommittees = props.committees.past.map((com) =>
+	const formattedPastCommittees = props.committees.past?.map((com) =>
 		formatCommittee(com)
 	);
 	return (
@@ -69,11 +38,34 @@ export default function CommitteesCard(props: {
 
 				<CardContent sx={{ paddingTop: 0 }}>
 					<Stack direction='column'>
-						{formattedCommittees}
-						{formattedPastCommittees}
+						{formattedCommittees ?? ''}
+						{formattedPastCommittees ?? ''}
 					</Stack>
 				</CardContent>
 			</Card>
 		</>
+	);
+}
+
+function formatCommittee(committee: MemberPageMembership) {
+	const key = committee.name; // You can use committee.name as the key
+	return (
+		<Stack direction='row' gap={1} key={key}>
+			<CropSquareRounded fontSize='small' />
+			<Typography variant='body2' color='text.secondary'>
+				{committee.name}
+				<small>
+					<i>
+						{committee.dateRange.end !== undefined &&
+							committee.dateRange.end !== null &&
+							` (${new Date(
+								committee.dateRange.start
+							).getFullYear()}-${new Date(
+								committee.dateRange.end as unknown as string
+							).getFullYear()})`}
+					</i>
+				</small>
+			</Typography>
+		</Stack>
 	);
 }

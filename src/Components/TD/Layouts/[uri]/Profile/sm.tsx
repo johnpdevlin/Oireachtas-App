@@ -7,11 +7,11 @@ import Address from '@/Components/_utils/Contact/Address';
 import PhoneNumber from '@/Components/_utils/Contact/PhoneNumber';
 import SocialIcon from '@/Components/_utils/SocialIcon';
 import Email from '@/Components/_utils/Contact/Email';
-import { MemberBioData } from '@/models/ui/member';
+import { MemberPageBioData } from '@/models/pages/member/member';
 import { Box, Divider, Grid, Typography, Stack } from '@mui/material';
 
 type ProfileLayoutProps = {
-	bio: MemberBioData;
+	bio: MemberPageBioData;
 };
 
 export default function SM_ProfileLayout({

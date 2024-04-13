@@ -36,9 +36,9 @@ export default function RecordsTabs(props: {
 					display: 'flex',
 					flexDirection: 'column',
 				}}>
-				<Grid container mb={2}>
+				<Grid container>
 					{/* CALENDAR */}
-					<Grid item xs={4} sm={4} md={3.5} lg={3.2} xl={4} ml={2.5} mt={2}>
+					<Grid item xs={4} sm={4} md={3.5} lg={3.2} xl={4} mt={2}>
 						<Calendar
 							selectedDate={selectedDate}
 							setSelectedDate={setSelectedDate}
@@ -54,12 +54,14 @@ export default function RecordsTabs(props: {
 								iconPosition='start'
 								label='Votes'
 								value='Votes'
+								sx={{ paddingRight: 10 }}
 							/>
 							<Tab
 								icon={<ContactSupportSharpIcon />}
 								iconPosition='start'
 								label='Questions'
 								value='Questions'
+								sx={{ paddingRight: 10 }}
 							/>
 							{/* <Tab
 									icon={<RecordVoiceOverSharpIcon />}

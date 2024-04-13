@@ -1,15 +1,21 @@
 /** @format */
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import AttendanceChart from '@/Components/TD/[uri]/Attendance/AttendanceChart';
-import { MemberPageData } from '@/models/ui/member';
+import { MemberPageBioData } from '@/models/pages/member/member';
 import { useViewport } from '@/hooks/viewportProvider';
 import { getPartyColor } from '@/functions/_utils/parties';
 import { PartyCode } from '@/models/_utils';
 import ColoredBox from '@/Components/_utils/ColoredBox';
 import GroupedSelect from '@/Components/_utils/Select/GroupedSelect';
 import { useEffect, useState } from 'react';
+import { AttendanceData } from '@/models/pages/attendance';
 
-export default function AttendanceSection({ bio, attendance }: MemberPageData) {
+type SectionProps = {
+	bio: MemberPageBioData;
+	attendance: AttendanceData;
+};
+
+export default function AttendanceSection({ bio, attendance }: SectionProps) {
 	const membershipKeys = [
 		{ uri: 'member', name: bio.fullName, color: '#FF1493' },
 		{
@@ -114,7 +120,11 @@ export default function AttendanceSection({ bio, attendance }: MemberPageData) {
 
 	return (
 		<>
-			<Grid container justifyContent='space-evenly' flexDirection='row-reverse'>
+			<Grid
+				container
+				display='flex'
+				justifyContent='space-evenly'
+				flexDirection='row-reverse'>
 				<Grid item display='flex' alignItems='start'>
 					<Stack flexDirection={sidebarDirection} gap={2} id={'chart-sidebar'}>
 						<GroupedSelect
@@ -139,7 +149,7 @@ export default function AttendanceSection({ bio, attendance }: MemberPageData) {
 					</Stack>
 				</Grid>
 				<Grid item>
-					<Stack direction='column' gap={5}>
+					<Stack direction='column' gap={5} alignItems='center'>
 						<Box>
 							<Stack direction='column'>
 								<Typography variant='h4' textAlign='center'>
@@ -161,7 +171,7 @@ export default function AttendanceSection({ bio, attendance }: MemberPageData) {
 									Committee Attendance
 								</Typography>
 								<AttendanceChart
-									breakpoint={breakpoint}
+									breakpoint={breakpoint ?? 'xs'}
 									sidebarWidth={sidebarWidth}
 									data={attendance.committee}
 									chartType={'member'}

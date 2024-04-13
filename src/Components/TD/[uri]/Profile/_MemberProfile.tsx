@@ -1,19 +1,19 @@
 /** @format */
 
 import { Box } from '@mui/material';
-import { MemberBioData } from '@/models/ui/member';
+import { MemberPageBioData } from '@/models/pages/member/member';
 import XS_ProfileLayout from '../../Layouts/[uri]/Profile/xs';
 import SM_ProfileLayout from '../../Layouts/[uri]/Profile/sm';
 import MD_ProfileLayout from '../../Layouts/[uri]/Profile/md';
 import LG_ProfileLayout from '../../Layouts/[uri]/Profile/lg';
 
 type BioProps = {
-	bio: MemberBioData;
+	bio: MemberPageBioData;
 };
 
 export default function MemberProfile({ bio }: BioProps) {
 	return (
-		<Box marginBottom={9}>
+		<Box marginBottom={15}>
 			<Box
 				sx={{
 					display: {

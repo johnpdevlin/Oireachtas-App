@@ -2,9 +2,9 @@
 import { Box, FormControl, FormLabel, Grid, Stack } from '@mui/material';
 
 import { useEffect, useState } from 'react';
-import { PartyAPI } from '@/models/oireachtasApi/party';
-import { ConstituencyAPI } from '@/models/oireachtasApi/constituency';
-import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
+import { PartyAPI } from '@/models/oireachtas_api/party';
+import { ConstituencyAPI } from '@/models/oireachtas_api/constituency';
+import { MemberAPIdetails } from '@/models/oireachtas_api/Formatted/Member/member';
 import TDcard from '../_utils/TDcard';
 import { useViewport } from '@/hooks/viewportProvider';
 import MultipleSelect from '@/Components/_utils/Select/MultiSelect';

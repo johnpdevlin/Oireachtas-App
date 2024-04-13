@@ -6,14 +6,13 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import WorkIcon from '@mui/icons-material/Work';
-
 import { DateRangeStr } from '@/models/dates';
-import { MemberOffice } from '@/models/oireachtasApi/Formatted/Member/office';
+import { MemberPageMembership } from '@/models/pages/member/member';
 
-export default function FormerPositions(props: { offices: MemberOffice[] }) {
-	const formerOffices = props.offices.filter((o) => o.dateRange.end!);
-	console.log(formerOffices);
-	const formattedOffices = formerOffices.map((o, key) => {
+export default function FormerPositions(props: {
+	offices: MemberPageMembership[];
+}) {
+	const formattedOffices = props.offices.map((o, key) => {
 		return (
 			<OfficeItem title={o.name} dateRange={o.dateRange} note={''} key={key} />
 		);

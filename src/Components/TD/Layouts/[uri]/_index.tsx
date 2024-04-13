@@ -1,54 +1,45 @@
 /** @format */
-
-import { MemberPageData } from '@/models/ui/member';
-import { useViewport } from '@/hooks/viewportProvider';
-import { getPartyColor } from '@/functions/_utils/parties';
-import { PartyCode } from '@/models/_utils';
 import AttendanceSection from '../../[uri]/Attendance/_AttendanceSection';
 import RecordsTabs from '../../[uri]/Participation/_RecordsTabs';
 import MemberProfile from '../../[uri]/Profile/_MemberProfile';
+import { Grid, Stack } from '@mui/material';
+import { MemberPageBioData } from '@/models/pages/member/member';
 
-export default function TDlayout({ bio, attendance }: MemberPageData) {
-	const membershipKeys = [
-		{ uri: 'member', name: bio.fullName, color: '#FF1493' },
-		{
-			uri: 'party',
-			name: bio.parties[0].name,
-			color: getPartyColor(bio.parties[0].uri as PartyCode),
-		},
-		{
-			uri: 'constituency',
-			name: bio.constituencies.dail![0].name,
-			color:
-				bio.constituencies.dail![0].uri ===
-				('Independents_4_Change' || 'Workers_and_Unemployed_Action')
-					? '#4fc3f7'
-					: '#ffb74d',
-		},
-		{ uri: 'dail', name: 'Dáil', color: '#000000' },
-	];
+import { AttendanceData } from '@/models/pages/attendance';
 
-	const { width, height, breakpoint } = useViewport();
+type LayoutProps = {
+	bio: MemberPageBioData;
+	attendance: AttendanceData;
+};
 
+export default function TDlayout({ bio, attendance }: LayoutProps) {
 	const firstElected = (): Date => {
-		if (bio.isActiveTD!)
-			return new Date(
-				bio.constituencies!.dail!.at(-1)!.dateRange.start! as string
-			)!;
-		else if (bio.isActiveSenator!)
-			return new Date(
-				bio.constituencies!.seanad!.at(-1)!.dateRange.start! as string
-			)!;
+		const dailStart = bio.constituencies.dail?.at(-1)?.dateRange.start;
+		const seanadStart = bio.constituencies.seanad?.at(-1)?.dateRange.start;
+
+		if (dailStart! && seanadStart!) {
+			if (new Date(dailStart) < new Date(seanadStart))
+				return new Date(dailStart);
+		} else if (dailStart!) return new Date(dailStart);
+
+		return new Date(seanadStart!);
 	};
 	return (
 		<>
 			<MemberProfile bio={bio} />
-			<AttendanceSection bio={bio} attendance={attendance} />
-			<RecordsTabs
-				minDate={firstElected()}
-				maxDate={new Date()}
-				member={bio.uri}
-			/>
+			<Grid container>
+				<Grid item lg={1} />
+				<Grid item lg={11}>
+					<Stack gap={8}>
+						<AttendanceSection bio={bio} attendance={attendance} />
+						<RecordsTabs
+							minDate={firstElected()}
+							maxDate={new Date()}
+							member={bio.uri}
+						/>
+					</Stack>
+				</Grid>
+			</Grid>
 		</>
 	);
 }

@@ -1,6 +1,6 @@
 /** @format */
 
-import { MemberBioData } from '@/models/ui/member';
+import { MemberBioData } from '@/models/pages/member/member';
 import { Breakpoint, Stack } from '@mui/material';
 import BasicDetails from './BasicDetails';
 import ProfileHeader from './ProfileHeader';

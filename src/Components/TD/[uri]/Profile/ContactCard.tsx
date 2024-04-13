@@ -33,9 +33,10 @@ export default function ContactCard(props: {
 			<CardContent>
 				<Address label='Constitunecy Address' address={props.address} />
 
-				<Stack direction='column' sx={{ mt: 1 }}>
+				<Stack direction='column' mt={1}>
 					<Typography variant='body1'>Contact Details </Typography>
 					<Divider />
+
 					<PhoneNumber number={props.phoneNumber} />
 					<Email email={props.email} />
 				</Stack>

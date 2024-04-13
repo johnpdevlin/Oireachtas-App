@@ -5,11 +5,11 @@ import CommitteesCard from '@/Components/TD/[uri]/Profile/CommitteesCard';
 import FormerPositions from '@/Components/TD/[uri]/Profile/FormerPositions';
 import ProfileCard from '@/Components/TD/[uri]/Profile/ProfileCard';
 import ContactCard from '@/Components/TD/[uri]/Profile/ContactCard';
-import { MemberBioData } from '@/models/ui/member';
+import { MemberPageBioData } from '@/models/pages/member/member';
 import { Grid, Stack } from '@mui/material';
 
 type ProfileLayoutProps = {
-	bio: MemberBioData;
+	bio: MemberPageBioData;
 };
 
 export default function LG_ProfileLayout({
@@ -40,12 +40,10 @@ export default function LG_ProfileLayout({
 
 							<Grid item lg={3}>
 								<Stack direction='column' spacing={1} sx={{ mt: 2, mr: 1 }}>
-									{bio.committees.current.length > 0 && (
+									{bio.committees! && (
 										<CommitteesCard committees={bio.committees} />
 									)}
-									{bio.offices?.length! > 0 && (
-										<FormerPositions offices={bio.offices!} />
-									)}
+									{bio.offices! && <FormerPositions offices={bio.offices!} />}
 								</Stack>
 							</Grid>
 						</Grid>

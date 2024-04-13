@@ -22,23 +22,26 @@ import {
 	Groups,
 	CropSquareRounded,
 	Work,
+	AccessTime,
+	WorkHistory,
 } from '@mui/icons-material';
 import HoverableFootnote from '../../../_utils/HoverableFootnote';
-
 import {
+	calculateRawDaysBetweenDates,
 	calculateYearsAndMonthsSinceDate,
+	convertDaysToYearsAndMonths,
 	formatDateToString,
 } from '@/functions/_utils/dates';
-import { MemberConstituency } from '@/models/oireachtasApi/Formatted/Member/constituency';
+import { MemberConstituency } from '@/models/oireachtas_api/Formatted/Member/constituency';
 import { capitaliseFirstLetters } from '../../../../functions/_utils/strings';
-import { MemberParty } from '@/models/member';
-import { MemberBioData } from '@/models/ui/member';
+import { MemberParty } from '@/models/member/_all_bio_data';
+import { MemberBioData } from '@/models/pages/member/member';
 
 function BasicDetails(props: { member: MemberBioData; size: Breakpoint }) {
 	const {
-		birthdate,
-		birthplace,
-		birthCountry,
+		birthDate,
+		birthPlace,
+		education,
 		almaMater,
 		parties,
 		offices,
@@ -48,14 +51,12 @@ function BasicDetails(props: { member: MemberBioData; size: Breakpoint }) {
 		committees,
 	} = props.member;
 
-	console.info(props.member.constituencies);
-
-	const formattedBirthdate = birthdate
-		? formatDateToString(birthdate)
+	const formattedBirthdate = birthDate
+		? formatDateToString(birthDate)
 		: undefined;
 
 	const age = () => {
-		return calculateYearsAndMonthsSinceDate(birthdate!).years;
+		return calculateYearsAndMonthsSinceDate(birthDate!).years;
 	};
 	const formerDailConstituencies = () => {
 		if (constituencies.dail!.length >= 1) {
@@ -112,115 +113,96 @@ function BasicDetails(props: { member: MemberBioData; size: Breakpoint }) {
 		};
 	};
 
-	console.info(firstElected());
+	const duration = () => {
+		let dailDays = 0;
+		let seanadDays = 0;
+
+		const { dail, seanad } = constituencies;
+		dail?.forEach(
+			(d) => (dailDays += calculateRawDaysBetweenDates(d.dateRange))
+		);
+		seanad?.forEach(
+			(s) => (seanadDays += calculateRawDaysBetweenDates(s.dateRange))
+		);
+
+		const overallPeriod = convertDaysToYearsAndMonths(dailDays + seanadDays);
+
+		return overallPeriod;
+	};
+
 	return (
 		<>
 			<Table size='small'>
 				<TableBody>
-					{formattedBirthdate && birthplace && (
-						<TableRow>
-							<TableCell>
-								<Stack direction='row'>
-									<Cake fontSize='small' />
-									<Typography
-										variant='body2'
-										align='left'
-										sx={{ ml: 0.5, mt: 0.1 }}>
-										Born:
-									</Typography>
-								</Stack>
-							</TableCell>
-							<TableCell>
-								<Typography variant='body2' align='left'>
+					{formattedBirthdate && birthPlace && (
+						<RowComponent
+							title='Born'
+							icon={<Cake fontSize='small' />}
+							data={
+								<>
 									<b>{formattedBirthdate}</b> (age {age()})
 									<br />
 									<small>
-										<i>
-											{birthplace}, {birthCountry}
-										</i>
+										<i>{birthPlace}</i>
 									</small>
-								</Typography>
-							</TableCell>
-						</TableRow>
+								</>
+							}
+						/>
 					)}
-					{/** Education Data needs to be researched etc.*/}
-					{/* <TableRow>
-						<TableCell>
-							<Stack direction='row'>
-								<HistoryEdu fontSize='small' />
-								<Typography
-									variant='body2'
-									align='left'
-									sx={{ ml: 0.5, mt: 0.1 }}>
-									Education:
-								</Typography>
-							</Stack>
-						</TableCell>
-						<TableCell>
-							<Typography variant='body2' align='left'>
-								<b>The King's Hospital </b>
-
-								<small>
-									<i>(private)</i>
-								</small>
-							</Typography>
-						</TableCell>
-					</TableRow> */}
-					{almaMater && (
-						<TableRow>
-							<TableCell>
-								<Stack direction='row'>
-									<School fontSize='small' />
-									<Typography
-										variant='body2'
-										align='left'
-										sx={{ ml: 0.5, mt: 0.1 }}>
-										Alma Mater:
-									</Typography>
-								</Stack>
-							</TableCell>
-							<TableCell>
-								<Typography variant='body2' align='left'>
-									<b> {almaMater}</b>
-								</Typography>
-							</TableCell>
-						</TableRow>
-					)}
-					<TableRow>
-						<TableCell>
-							<Stack direction='row'>
-								<HowToVote fontSize='small' />
-								<Typography
-									variant='body2'
-									align='left'
-									sx={{ ml: 0.5, mt: 0.1 }}>
-									Party:
-								</Typography>
-							</Stack>
-						</TableCell>
-						<TableCell>
-							<Typography variant='body2' align='left'>
+					<RowComponent
+						title='First Elected'
+						icon={<HourglassEmpty fontSize='small' />}
+						data={
+							<Grid container gap={1}>
+								<Grid item>
+									{firstElected().dail !== undefined && (
+										<b>{firstElected().dail}</b>
+									)}
+									{firstElected().dail !== undefined &&
+										firstElected().seanad !== undefined && <br />}
+									{firstElected().seanad !== undefined && (
+										<b>{firstElected().seanad}</b>
+									)}
+								</Grid>
+								<Grid item>
+									{firstElected().dail! && <small>(Dáil)</small>}
+									{firstElected().dail! && firstElected().seanad! && <br />}
+									{firstElected().seanad! && <small>(Seanad)</small>}
+								</Grid>
+							</Grid>
+						}
+					/>
+					<RowComponent
+						title='Duration in Oireachtas'
+						icon={<WorkHistory fontSize='small' />}
+						data={
+							<Grid container gap={2}>
+								<Grid item>
+									<b>
+										{duration().years} years, {duration().months} months
+									</b>{' '}
+									~
+								</Grid>
+							</Grid>
+						}
+					/>
+					<RowComponent
+						title='Party'
+						icon={<HowToVote fontSize='small' />}
+						data={
+							<>
 								<b>{parties[0].name}</b>
 								{formerParties! && (
 									<HoverableFootnote name=' [note]' text={formerParties} />
 								)}
-							</Typography>
-						</TableCell>
-					</TableRow>
-					<TableRow>
-						<TableCell>
-							<Stack direction='row'>
-								<Place fontSize='small' />
-								<Typography
-									variant='body2'
-									align='left'
-									sx={{ ml: 0.5, mt: 0.1 }}>
-									Constituency:
-								</Typography>
-							</Stack>
-						</TableCell>
-						<TableCell>
-							<Typography variant='body2' align='left'>
+							</>
+						}
+					/>
+					<RowComponent
+						title='Constituency'
+						icon={<Place fontSize='small' />}
+						data={
+							<>
 								<b>
 									{isActiveTD! && constituencies!.dail[0]!.name!}
 									{isActiveSenator! && constituencies!.seanad[0]!.name!}
@@ -231,105 +213,136 @@ function BasicDetails(props: { member: MemberBioData; size: Breakpoint }) {
 										text={formerConstituencies()!}
 									/>
 								)}
-							</Typography>
-						</TableCell>
-					</TableRow>
+							</>
+						}
+					/>
+
 					{props.size !== 'lg' &&
 						(committees.current.length > 0 || committees.past.length > 0) && (
-							<TableRow>
-								<TableCell sx={{ verticalAlign: 'top' }}>
-									<Stack direction='row' sx={{ verticalAlign: 'top' }}>
-										<Groups fontSize='small' />
-										<Typography
-											variant='body2'
-											align='left'
-											sx={{ ml: 0.5, mt: 0.1 }}>
-											Committees:
-										</Typography>
-									</Stack>
-								</TableCell>
-								<TableCell>
-									{committees.current.map((c) => {
-										return (
-											<Stack direction='row' gap={0.5} key={c.committeeURI}>
-												<CropSquareRounded
-													fontSize='inherit'
-													sx={{ mt: 0.4 }}
-												/>
-												<Typography variant='subtitle2' align='left'>
-													{c.name}
-												</Typography>
-											</Stack>
-										);
-									})}
-								</TableCell>
-							</TableRow>
+							<RowComponent
+								title='Committees'
+								icon={<Groups fontSize='small' />}
+								data={
+									<>
+										{' '}
+										{committees.current.map((c, index) => {
+											return (
+												<Stack
+													direction='row'
+													gap={0.5}
+													key={`${index}-${c.committeeID}`}>
+													<CropSquareRounded
+														fontSize='inherit'
+														sx={{ mt: 0.4 }}
+													/>
+													<Typography variant='subtitle2' align='left'>
+														{c.name}
+													</Typography>
+												</Stack>
+											);
+										})}
+									</>
+								}
+							/>
 						)}
 					{props.size !== 'lg' && formerOffices.length > 0 && (
-						<TableRow>
-							<TableCell sx={{ verticalAlign: 'top' }}>
-								<Stack direction='row' sx={{ verticalAlign: 'top' }}>
-									<Work fontSize='inherit' />
-									<Typography
-										variant='body2'
-										align='left'
-										sx={{ ml: 0.5, mt: 0.1 }}>
-										Former Positions:
-									</Typography>
-								</Stack>
-							</TableCell>
-							<TableCell>
-								{formerOffices.map((c) => {
-									return (
+						<RowComponent
+							title='Former Positions'
+							icon={<Work fontSize='inherit' />}
+							data={
+								<>
+									{formerOffices.map((c) => (
 										<Stack direction='row' gap={0.5}>
 											<CropSquareRounded fontSize='inherit' sx={{ mt: 0.4 }} />
 											<Typography variant='subtitle2' align='left'>
 												{c.name}
 											</Typography>
 										</Stack>
-									);
-								})}
-							</TableCell>
-						</TableRow>
+									))}
+								</>
+							}
+						/>
 					)}
-					<TableRow>
-						<TableCell>
-							<Stack direction='row'>
-								<HourglassEmpty fontSize='small' />
-								<Typography
-									variant='body2'
-									align='left'
-									sx={{ ml: 0.5, mt: 0.1 }}>
-									First Elected:
-								</Typography>
-							</Stack>
-						</TableCell>
-						<TableCell>
-							<Typography variant='body2' align='left'>
-								<Grid container gap={2}>
-									<Grid item>
-										{firstElected().dail !== undefined && (
-											<b>{firstElected().dail}</b>
-										)}
-										{firstElected().dail !== undefined &&
-											firstElected().seanad !== undefined && <br />}
-										{firstElected().seanad !== undefined && (
-											<b>{firstElected().seanad}</b>
-										)}
-									</Grid>
-									<Grid item>
-										{firstElected().dail! && <small>(Dáil)</small>}
-										{firstElected().dail! && firstElected().seanad! && <br />}
-										{firstElected().seanad! && <small>(Seanad)</small>}
-									</Grid>
-								</Grid>
-							</Typography>
-						</TableCell>
-					</TableRow>
+
+					{education && (
+						<RowComponent
+							title='Education'
+							icon={<HistoryEdu fontSize='small' />}
+							data={
+								<>
+									{education.map((ed) => (
+										<b key={ed.wikiURI}>{ed.name}</b>
+									))}
+								</>
+							}
+						/>
+					)}
+					{almaMater && (
+						<RowComponent
+							title='Alma Mater'
+							icon={<School fontSize='small' />}
+							data={
+								<>
+									{almaMater.map((am) => (
+										<b key={am.name}>{am.name}</b>
+									))}
+								</>
+							}
+						/>
+					)}
 				</TableBody>
 			</Table>
 		</>
 	);
 }
+const RowComponent = (props: {
+	title: string;
+	icon: JSX.Element;
+	data: JSX.Element | string | JSX.Element[];
+}): JSX.Element => {
+	const renderData = () => {
+		if (typeof props.data === 'string') {
+			return (
+				<Typography variant='body1' align='left'>
+					{props.data}
+				</Typography>
+			);
+		} else if (Array.isArray(props.data)) {
+			return (
+				<>
+					{props.data.map((item, index) => (
+						<Typography variant='body1' align='left' key={index}>
+							{item}
+						</Typography>
+					))}
+				</>
+			);
+		} else {
+			return props.data;
+		}
+	};
+
+	return (
+		<TableRow
+			sx={{
+				borderBottom: '0.5px #CDD7E1 solid',
+			}}>
+			<TableCell
+				sx={{
+					display: 'flex',
+					alignItems: 'flex-start',
+					borderBottom: 'none',
+				}}>
+				<Stack direction='row' alignItems='flex-start' spacing={1}>
+					{props.icon}
+					<Typography variant='body1' align='left'>
+						{props.title}:
+					</Typography>
+				</Stack>
+			</TableCell>
+			<TableCell sx={{ borderBottom: 'none' }}>{renderData()}</TableCell>
+		</TableRow>
+	);
+};
 
 export default BasicDetails;

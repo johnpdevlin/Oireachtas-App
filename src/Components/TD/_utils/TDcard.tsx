@@ -1,6 +1,6 @@
 /** @format */
 
-import { MemberAPIdetails } from '@/models/oireachtasApi/Formatted/Member/member';
+import { MemberAPIdetails } from '@/models/oireachtas_api/Formatted/Member/member';
 import { Box, Paper, Typography } from '@mui/material';
 import Link from 'next/link';
 import ProfileImage from './ProfileImg';

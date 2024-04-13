@@ -3,24 +3,18 @@
 import getDocFromDB from '../single/[uri]';
 import getDocsBatchFromDB from '../multiple/batch';
 import { GroupType } from '@/models/_utils';
-import {
-	MemberBioData,
-	MemberPageBioData,
-	MemberPageData,
-} from '@/models/pages/member/member';
+import { MemberPageBioData } from '@/models/pages/member/member';
 import { AttendanceData } from '@/models/pages/attendance';
 import { AttendanceRecord } from '@/models/attendance';
 
-export default async function fetchTDpageData(
-	uri: string
-): Promise<MemberPageData> {
+export default async function fetchTDpageData(uri: string) {
 	const bioData = (await getDocFromDB(
 		'td',
 		uri
 	)) as unknown as MemberPageBioData;
 
-	const party = bioData.parties[0].uri;
-	const constituency = bioData.constituencies!.dail![0].uri;
+	const party = bioData.parties[0].uri! as string;
+	const constituency = bioData.constituencies!.dail![0].uri! as string;
 
 	const attendanceData = await getAttendanceData(uri, party, constituency);
 

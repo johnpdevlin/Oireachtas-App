@@ -1,11 +1,10 @@
 /** @format */
 import { useEffect, useState } from 'react';
-import Divider from '@mui/material/Divider';
 import { Box, Typography, styled, Paper } from '@mui/material';
 import { format } from 'date-fns';
 import fetchQuestions from '@/functions/APIs/Oireachtas/question/_index';
 import { capitaliseFirstLetters } from '@/functions/_utils/strings';
-import { Question } from '@/models/oireachtasApi/question';
+import { Question } from '@/models/oireachtas_api/question';
 
 const Item = styled(Paper)(({ theme }) => ({
 	backgroundColor: theme.palette.mode === 'dark' ? '#1A3027' : '#F0F4F8',

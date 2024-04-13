@@ -5,7 +5,7 @@ import ProfileImage from '@/Components/TD/_utils/ProfileImg';
 import Address from '@/Components/_utils/Contact/Address';
 import PhoneNumber from '@/Components/_utils/Contact/PhoneNumber';
 import SocialIcon from '@/Components/_utils/SocialIcon';
-import { MemberBioData } from '@/models/ui/member';
+import { MemberPageBioData } from '@/models/pages/member/member';
 import Email from '@/Components/_utils/Contact/Email';
 import {
 	Grid,
@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 
 type ProfileLayoutProps = {
-	bio: MemberBioData;
+	bio: MemberPageBioData;
 };
 
 export default function MD_ProfileLayout({
