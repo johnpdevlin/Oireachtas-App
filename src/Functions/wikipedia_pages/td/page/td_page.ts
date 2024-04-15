@@ -14,6 +14,7 @@ import { extractDateFromYMDstring } from '@/functions/_utils/dates';
 import { OirDate } from '@/models/dates';
 import extractEducation from './extract_education';
 import { WikiMemberProfileDetails } from '@/models/member/wiki_profile';
+import { parseWikiPositions } from '../position/_parse_positions';
 
 // Scrapes the Wikipedia profile of TD
 export default async function scrapeTDWikiPage(
@@ -24,6 +25,10 @@ export default async function scrapeTDWikiPage(
 	try {
 		let response = (await axios.get(`api/webscrape?url=${url}`)).data.text;
 		const $ = cheerio.load(response);
+
+		// Extract positions (party, constit, gov etc.)
+		const infobox = $('.infobox tbody').first();
+		const positions = parseWikiPositions(infobox);
 
 		// Extract the birth information
 		const wikiName = $('h1').text();
@@ -50,11 +55,17 @@ export default async function scrapeTDWikiPage(
 			else return parseInt(num) ?? 0;
 		};
 
-		const marriageDetails = (): string | undefined => {
-			let spouse = getInfoBoxText($, 'Spouse');
-			if (!spouse) spouse = getInfoBoxText($, 'Spouse(s)');
-			if (!spouse?.startsWith('.')) return spouse;
-		};
+		// const marriageDetails = (): string | undefined => {
+		// 	let spouse = getInfoBoxText($, 'Spouse');
+		// 	if (!spouse) spouse = getInfoBoxText($, 'Spouse(s)');
+		// 	if (!spouse?.startsWith('.')) return spouse;
+		// };
+
+		// const domesticPartner = (): string | undefined => {
+		// 	let partner = getInfoBoxText($, 'Partner');
+		// 	if (!partner) partner = getInfoBoxText($, 'Domestic partner');
+		// 	return partner;
+		// };
 
 		// Construct and return the WikiProfileDetails object
 		const wikiProfileDetails: WikiMemberProfileDetails = {
@@ -63,9 +74,11 @@ export default async function scrapeTDWikiPage(
 			birthDate,
 			birthPlace,
 			birthCountry,
+			positions,
 			education,
 			almaMater,
-			marriageDetails: marriageDetails(),
+			// marriageDetails: marriageDetails(),
+			// domesticPartner: domesticPartner(),
 			numOfChildren: numOfChildren(),
 			websiteUrl,
 		};
