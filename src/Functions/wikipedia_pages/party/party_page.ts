@@ -24,10 +24,7 @@ import {
 	splitByLowerUpperCase,
 	validateStandardFullName,
 } from '@/functions/_utils/strings';
-import {
-	isArrayOnlyValues,
-	removeDuplicateObjects,
-} from '@/functions/_utils/arrays';
+import { isArrayOnlyValues } from '@/functions/_utils/arrays';
 
 export type ElectionData = {
 	election: number | string;

@@ -6,8 +6,8 @@ import {
 	splitByLowerUpperCase,
 	validateStandardFullName,
 } from '@/functions/_utils/strings';
-import { removeSquareFootnotes } from '@/Functions/_util/_util';
 import { extractNumberFromString } from '../../../_utils/strings';
+import { removeSquareFootnotes } from '../_utils';
 
 export function parseDailElectionTable(html: string): DailElectionData[] {
 	// HMTL Table structure is awkward to parse
