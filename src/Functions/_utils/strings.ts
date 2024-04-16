@@ -304,3 +304,8 @@ export function normaliseString(input: string): string {
 export function splitCamelCase(str: string): string[] {
 	return str.split(/(?<=[a-z])(?=[A-Z])/).map((part) => part);
 }
+
+export function removeNumbersFromStr(text: string): string {
+	// Use a regular expression to replace all numeric characters with an empty string
+	return text.replace(/\d/g, '');
+}
