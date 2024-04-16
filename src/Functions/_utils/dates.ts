@@ -401,3 +401,40 @@ export function aggregateDatesToMonthsArray(
 
 	return aggregated;
 }
+
+// Formats and records / compensates for incomplete dates or just years recorded
+export function formatIncompleteDate(dateStr: string | undefined): {
+	date: Date | undefined;
+	isIncomplete: boolean;
+} {
+	let isIncomplete = false;
+	let date: Date | undefined = undefined;
+
+	if (dateStr) {
+		dateStr = dateStr.trim();
+
+		// Check if the string starts with a digit (assumes it's a year)
+		if (!isNaN(parseInt(dateStr[0]))) {
+			// If the length is 4, assume it's just a year
+			if (dateStr.length === 4) {
+				dateStr = '1 January ' + dateStr;
+				isIncomplete = true;
+			}
+		} else {
+			// If the string doesn't start with a digit, prepend '1'
+			dateStr = '1 ' + dateStr;
+			isIncomplete = true;
+		}
+
+		// Attempt to create a Date object from the formatted string
+		const parsedDate = new Date(dateStr);
+
+		// Check if the parsed date is valid
+		if (!isNaN(parsedDate.getTime())) date = parsedDate;
+	}
+
+	return {
+		date: date,
+		isIncomplete: isIncomplete,
+	};
+}
