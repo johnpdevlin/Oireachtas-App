@@ -41,6 +41,7 @@ export default function parseWikiPositionType(
 		else if (title.includes('dáil')) return 'party dáil leader';
 		else if (title.includes('seanad'))
 			if (title.includes('deputy')) return 'seanad deputy leader';
+			else if (title.includes('party')) return 'party seanad leader';
 			else return 'seanad leader';
 		else if (title.includes('deputy') || title.includes('vice'))
 			return 'party deputy leader';
@@ -50,9 +51,13 @@ export default function parseWikiPositionType(
 	// Mayor
 	if (title.includes('mayor')) return 'mayor';
 
-	// Party Chair
-	if (title.includes('chair') && title.includes('party')) return 'party chair';
-
+	// Party Chairs
+	if (title.includes('chair')) {
+		if (title.includes('parliamentary')) return 'parliamentary party chair';
+		else if (title.includes('deputy') || title.includes('vice'))
+			return 'party deputy chair';
+		else return 'party chair';
+	}
 	// Councillor
 	if (
 		title.includes('councillor') ||
