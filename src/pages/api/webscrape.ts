@@ -17,7 +17,7 @@ export default async function webscrapeHandler(
 
 	try {
 		// Set timeout and maximum retries
-		const timeout = 10000; // 10 seconds
+		const timeout = 15000; // 15 seconds
 		const maxRetries = 5;
 
 		// Perform retries

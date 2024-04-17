@@ -56,8 +56,6 @@ export default function parseAndFormatOffices(
 		}
 	}
 
-	console.info(processedOffices);
-
 	const isActiveSeniorMinister =
 		processedOffices[0] &&
 		processedOffices[0].type === 'senior' &&
