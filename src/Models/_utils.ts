@@ -3,6 +3,20 @@ export type ChamberType = 'house' | 'committee';
 export type BinaryChamber = 'dail' | 'seanad';
 export type Chamber = BinaryChamber | 'dail & seanad';
 
+export type SocialMediaType =
+	| 'facebook'
+	| 'twitter'
+	| 'x'
+	| 'youtube'
+	| 'oireachtas'
+	| 'wikipedia'
+	| 'linkedin';
+
+export type WebsitePair = {
+	website: SocialMediaType | 'personal' | string | undefined;
+	url: string;
+};
+
 export type MemberBaseKeys = { house_code: BinaryChamber } & URIpair;
 export type URIpair = {
 	name: string;
