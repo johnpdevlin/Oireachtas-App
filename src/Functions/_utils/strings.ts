@@ -265,26 +265,6 @@ export function getStringBeforeFirstTargetPoint(
 	return str.slice(0, index);
 }
 
-export function extractWebsiteDomainName(
-	url: string,
-	name?: string
-): string | undefined {
-	const regex = /^(?:https?:\/\/)?(?:www\.)?([^./]+)/i;
-	const match = url.match(regex);
-
-	if (match && match[1]) {
-		if (name! && match[1].includes(name.toLowerCase()))
-			// Check if its possibly a personal page
-			return 'website';
-		else if (url.includes('/ie.')) {
-			const newURL = url.replace('ie.', '');
-			return extractWebsiteDomainName(newURL);
-		} else return match[1];
-	}
-
-	return undefined;
-}
-
 // Splits into lines and removes empty lines
 export function splitStringIntoLines(block: string): string[] {
 	return block
