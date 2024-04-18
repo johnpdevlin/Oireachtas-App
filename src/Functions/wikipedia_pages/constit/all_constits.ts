@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { getNextTableElAfterH2text } from '../_utils/_utils';
+import { getNextTableElAfterH2text } from '../_utils/utils';
 import scrapeOneWikiConstituency from './constit';
 
 interface RawWikiConstituency {

@@ -10,7 +10,7 @@ import {
 	getNextTableElAfterH2text,
 	getNextTableElAfterH3text,
 	getNextTableElAfterH4text,
-} from '../_utils/_utils';
+} from '../_utils/utils';
 
 import { extractDateFromDmonthYstring } from '@/functions/_utils/dates';
 import {

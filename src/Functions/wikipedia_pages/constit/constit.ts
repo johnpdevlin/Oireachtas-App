@@ -1,7 +1,7 @@
 /** @format */
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { getInfoBoxText } from '../_utils/_utils';
+import { getInfoBoxText } from '../_utils/utils';
 import { splitByLowerUpperCase } from '@/functions/_utils/strings';
 
 /**

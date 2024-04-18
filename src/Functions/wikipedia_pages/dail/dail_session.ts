@@ -3,7 +3,7 @@
 import { addOrdinalSuffix } from '@/functions/_utils/strings';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { getInfoBoxTitle, removeSquareFootnotes } from '../_utils/_utils';
+import { getInfoBoxTitle, removeSquareFootnotes } from '../_utils/utils';
 
 export type WikiDailDetails = {
 	[x: string]: any;
