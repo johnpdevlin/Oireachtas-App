@@ -1,35 +1,35 @@
 /** @format */
+
 import { MemberRequest, RawMember } from '@/models/oireachtas_api/member';
 import fetchMembers from '../../../APIs/Oireachtas/member/raw/_member_details';
 import scrapeMemberOirProfile from './td_profile';
-import { MemberOirProfileData } from '@/models/member/oir_profile';
+import { retryScrapingWithBackoff } from '@/functions/_utils/web_scrape';
 
-export default async function getMultiMembersOirdetails(
+export default async function getMultiMembersOirDetails(
 	uris?: string[],
 	request?: MemberRequest
-): Promise<MemberOirProfileData[] | void> {
+) {
 	try {
-		if (!uris && request!) {
+		if (!uris && request)
 			uris = (await fetchMembers(request))?.map(
 				(member: RawMember) => member.uri
 			);
-			if (uris!) {
-				const results = Promise.all(
-					uris.map((uri) => {
-						return scrapeMemberOirProfile(uri);
-					})
-				) as Promise<MemberOirProfileData[]>;
-			}
-		} else if (uris!) {
-			return Promise.all(
-				uris!.map((uri) => {
-					return scrapeMemberOirProfile(uri);
-				})
-			) as Promise<MemberOirProfileData[]>;
-		} else {
-			console.error('no uris or request parameters provided.');
+
+		if (!uris || uris.length === 0) {
+			console.error('No URIs provided.');
+			return;
 		}
-	} catch (err) {
-		console.log(err);
+
+		const failedURIs: string[] = [];
+		const results = await retryScrapingWithBackoff(
+			uris,
+			failedURIs,
+			scrapeMemberOirProfile
+		);
+
+		return results;
+	} catch (error) {
+		console.error('An error occurred:', error);
+		return;
 	}
 }

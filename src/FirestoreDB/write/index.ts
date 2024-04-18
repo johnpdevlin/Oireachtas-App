@@ -1,6 +1,8 @@
 /** @format */
 
 import axios from 'axios';
+import { NextApiResponse } from 'next';
+import { ConsoleMessage } from 'puppeteer';
 
 type FirestoreData = {
 	[key: string]: any; // Define the structure of your data
@@ -13,9 +15,11 @@ export const writeObjToFirestore = async (
 	id_field?: string,
 	overwrite?: boolean
 ): Promise<any> => {
-	let retries = 5;
+	let retryCount = 0;
+	const MAX_RETRY_ATTEMPTS = 5;
+	const BASE_TIMEOUT_MS = 2000; // Initial timeout in milliseconds
 
-	while (retries > 0) {
+	while (retryCount > MAX_RETRY_ATTEMPTS) {
 		try {
 			const token = process.env.API_SECRET;
 
@@ -29,17 +33,32 @@ export const writeObjToFirestore = async (
 
 			const response = await axios.post(url);
 
-			return response.data;
+			return response;
 		} catch (error) {
-			if (retries === 1) {
+			if (retryCount === 0) {
 				// If this was the last retry, throw the error
+				console.error(
+					'Failed to export data obj to Firestore after ',
+					MAX_RETRY_ATTEMPTS,
+					' attemps'
+				);
 				throw error;
 			} else {
 				// Retry logic
-				console.error(`Request failed, ${retries} retries left. Retrying...`);
+				console.error(
+					`Error exporting data to Firestore. Retrying... (${retryCount}/${MAX_RETRY_ATTEMPTS} attempts)`
+				);
+
+				if (retryCount < MAX_RETRY_ATTEMPTS) {
+					const timeoutMs = BASE_TIMEOUT_MS * Math.pow(2, retryCount);
+					console.info(
+						`Waiting ${timeoutMs / 1000} seconds before retrying... `
+					);
+					await new Promise((resolve) => setTimeout(resolve, timeoutMs));
+				}
+				retryCount++;
+
 				if (error == '431') console.error(data);
-				retries--;
-				setTimeout(() => {}, 10000);
 			}
 		}
 	}

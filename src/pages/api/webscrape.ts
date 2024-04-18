@@ -16,25 +16,13 @@ export default async function webscrapeHandler(
 	const url = req.query.url as string;
 
 	try {
-		// Set timeout and maximum retries
-		const timeout = 15000; // 15 seconds
-		const maxRetries = 5;
-
-		// Perform retries
-		let retryCount = 0;
-		let response;
-
-		while (retryCount < maxRetries)
-			try {
-				response = await axios.get(url, { timeout });
-				break; // Break out of the loop if successful
-			} catch (error) {
-				console.warn(`Attempt ${retryCount + 1} failed:`, error);
-				retryCount++;
-			}
-
-		// If all retries fail, throw an error
-		if (!response) throw new Error('All retries failed');
+		const axiosConfig = {
+			headers: {
+				'User-Agent':
+					'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+			},
+		};
+		const response = await axios.get(url, axiosConfig);
 
 		// Send a response with a success message and the parsed text from the PDF file
 		res.status(200).json({
