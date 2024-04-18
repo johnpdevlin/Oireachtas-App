@@ -1,15 +1,17 @@
 /** @format */
 
-import fetchNames from '../../APIs/Irish_Names/fetch_names';
-import getAllMembersAPIdetails from '../../APIs/Oireachtas/member/formatted/_multi_member_details';
+import fetchNames from '../../../APIs/Irish_Names/fetch_names';
+import getAllMembersAPIdetails from '../../../APIs/Oireachtas/member/formatted/_multi_member_details';
 import getAllMembersOirData from '@/functions/oireachtas_pages/td/multi_TDs';
 import { MemberAPIdetails } from '@/models/oireachtas_api/Formatted/Member/member';
-import getTDsWikiData from '@/functions/wikipedia_pages/td/page/multi_td_page';
+import getTDsWikiData from '@/functions/wikipedia_pages/td/_page/multi_td_page';
 import similarity from 'string-similarity';
-import checkGender from '../../APIs/Irish_Names/_index';
+import checkGender from '../../../APIs/Irish_Names/_index';
 import { MemberOirProfileData } from '@/models/member/oir_profile';
 import { WikiMemberProfileDetails } from '@/models/member/wiki_profile';
 import { AllMemberBioData } from '@/models/member/_all_bio_data';
+import { isPartyWebsite } from '@/functions/_utils/urls';
+import { consolidateMemberships } from './consolidate_memberships';
 
 /**
  * Fetches all member data
@@ -24,7 +26,7 @@ async function getAggregatedTDsDetailsByHouse(house_no: number) {
 	})) as MemberAPIdetails[];
 
 	// Gets all URIs
-	const uris = apiData!.map((member: { uri: string }) => member.uri);
+	const uris = apiData.map((member: { uri: string }) => member.uri);
 	console.info(
 		'Member data retrieved, parsed and processed from Oireachtas API.'
 	);
@@ -37,16 +39,13 @@ async function getAggregatedTDsDetailsByHouse(house_no: number) {
 
 	// Gets data from Wikipedia
 	const wikiDetails = await getTDsWikiData(33);
-	console.info(
-		'Member data scraped, parsed and processed from Wikipedia profile.'
-	);
 
 	// Function to merge / bind all data together to create objects
 	const mergedData = await bindAllData(
 		house_no,
 		uris,
 		oirData,
-		wikiDetails,
+		wikiDetails!,
 		apiData
 	);
 
@@ -98,56 +97,55 @@ async function bindAllData(
 				house_no
 			);
 
-			const websites = () => {
-				const wikipedia = {
-					website: 'wikipedia',
-					url: `https://en.wikipedia.org${wiki?.wikiURI}`,
-				};
-				const oireachtas = {
-					website: 'oireachtas',
-					url: `https://www.oireachtas.ie/en/members/member/${oir?.uri}`,
-				};
-				const webpages = oir!.webpages.map((w) => {
-					if (isParty(w.website!)) return { website: 'party', url: w.url };
-					else return w;
-				});
-				return [...webpages, wikipedia, oireachtas];
-			};
+			const constitsAndPositions =
+				consolidateMemberships(api!.constituencies!, wiki?.positions ?? []) ??
+				api?.constituencies;
 
-			return {
+			delete wiki?.positions;
+
+			const webpages = getWebpages(wiki!, oir!, uri);
+
+			const aggregated = {
 				...oir,
 				...wiki,
 				...api,
-				webpages: websites(),
+				...constitsAndPositions,
+				webpages,
 				gender,
 			};
+
+			return aggregated;
 		})
 	);
 
 	return bound as AllMemberBioData[];
 }
 
-const isParty = (website: string): boolean => {
-	const possibleParties = [
-		'sinnfein',
-		'finegael',
-		'fiannafail',
-		'pbp',
-		'greenparty',
-		'labour',
-		'socialdemocrats',
-		'letusrise',
-		'solidarity',
-		'independentireland',
-		'aontu',
-		'righttochange',
-		'hdalliance',
-		'anrabhartaglas',
-		'wuag',
-		'workersparty',
-		'republicansinnfein',
-	];
-	if (possibleParties.includes(website)) return true;
-	else return false;
-};
+function getWebpages(
+	wiki: WikiMemberProfileDetails,
+	oir: MemberOirProfileData,
+	uri: string
+) {
+	const wikipedia = {
+		website: 'wikipedia',
+		url: `https://en.wikipedia.org${wiki?.wikiURI}`,
+	};
+	const oireachtas = {
+		website: 'oireachtas',
+		url: `https://www.oireachtas.ie/en/members/member/${uri}`,
+	};
+
+	// add personal website url if in wiki and not in oir data
+	wiki?.websiteUrl! &&
+		!oir!.webpages.find((w) => w.website === 'personal') &&
+		oir?.webpages.push({ website: 'personsl', url: wiki?.websiteUrl });
+
+	const webpages = oir?.webpages.map((w) => {
+		if (isPartyWebsite(w.website)!) return { website: 'party', url: w.url };
+		else return w;
+	})!;
+
+	return [...webpages, oireachtas, wikipedia];
+}
+
 export default getAggregatedTDsDetailsByHouse;

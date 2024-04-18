@@ -42,10 +42,13 @@ export type MemberPageBioData = Omit<AllMemberBioData, ExcludeKeys> & {
 	constituencies: {
 		dail?: MemberPageMembership[];
 		seanad?: MemberPageMembership[];
+		other?: MemberPageMembership[];
 	};
 	parties: MemberPageMembership[];
 	offices?: MemberPageMembership[];
 	// WIKI
+	partyPositions?: MemberPageMembership[];
+	otherPositions?: MemberPageMembership[];
 	birthDate?: string;
 	education?: string[];
 	almaMater?: string[];

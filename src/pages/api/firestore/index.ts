@@ -16,7 +16,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 				...data,
 				created: new Date().toISOString(),
 			});
-			res.status(200).json({ id: newDocRef.id });
+			res.status(200).json({
+				id: newDocRef.id,
+				message: `${newDocRef.id}\nWritten successfully.`,
+			});
 		} else if (req.method === 'PUT') {
 			await db
 				.collection(collection as string)

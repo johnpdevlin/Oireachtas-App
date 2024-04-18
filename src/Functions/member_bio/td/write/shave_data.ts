@@ -1,9 +1,10 @@
 /** @format */
 
-import { dateToYMDstring } from '../../_utils/dates';
+import { dateToYMDstring } from '../../../_utils/dates';
 import { isDate } from 'date-fns';
 import { DateRangeStr } from '@/models/dates';
 import { AllMemberBioData } from '@/models/member/_all_bio_data';
+import { WikiPosition } from '../../../../models/member/wiki_profile';
 import {
 	MemberPageBioData,
 	MemberPageMembership,
@@ -22,6 +23,8 @@ export default function shaveUnneccessaryBioData(
 		birthPlace,
 		parties,
 		constituencies,
+		partyPositions,
+		otherPositions,
 		webpages,
 		education,
 		almaMater,
@@ -33,6 +36,7 @@ export default function shaveUnneccessaryBioData(
 
 	const dailConstits = constituencies.dail! ?? [];
 	const seanadConstits = constituencies.seanad! ?? [];
+	const otherConstits = constituencies.other! ?? [];
 	const shavedConstituencies = {
 		...(dailConstits.length > 0 && {
 			dail: dailConstits.map((dc) =>
@@ -44,15 +48,32 @@ export default function shaveUnneccessaryBioData(
 				shaveMembershipData(sc, [{ key: 'uri', value: sc.uri }])
 			),
 		}),
+		...(otherConstits.length > 0 && {
+			other: otherConstits.map((sc) => {
+				return {
+					name: sc.title.name,
+					dateRange: {
+						start: dateToYMDstring(sc.dateRange.start),
+						end: dateToYMDstring(sc.dateRange.end!) ?? undefined,
+					},
+				};
+			}) as MemberPageMembership[],
+		}),
 	};
 
 	const shavedParties = parties.map((p) =>
 		shaveMembershipData(p, [{ key: 'uri', value: p.uri }])
-	);
+	) as MemberPageMembership[];
 
 	const shavedOffices = offices?.map((o) =>
 		shaveMembershipData(o, [{ key: 'type', value: o.type }])
-	);
+	) as MemberPageMembership[];
+	const shavedPartyPositions = partyPositions?.map((pp) =>
+		shaveWikiPositionData(pp)
+	) as MemberPageMembership[];
+	const shavedOtherPositions = otherPositions?.map((op) =>
+		shaveWikiPositionData(op)
+	) as MemberPageMembership[];
 	const shavedBirthDate = () => {
 		const formattedBirthDate = isDate(birthDate)
 			? (birthDate as Date)
@@ -70,22 +91,30 @@ export default function shaveUnneccessaryBioData(
 		address,
 		gender,
 		contactNumbers,
-		email,
+		email: email,
 		...(shavedBirthDate! && { birthDate: shavedBirthDate() }),
 		...(birthPlace && { birthPlace }),
-		parties: shavedParties,
 		constituencies: shavedConstituencies,
 		...(committees &&
 			(committees.current.length > 0 || committees.past.length > 0) && {
 				committees: shavedCommittees,
 			}),
+		parties: shavedParties,
 		...(offices && offices.length > 0 && { offices: shavedOffices }),
+		...(shavedPartyPositions &&
+			shavedPartyPositions.length > 0 && {
+				partyPositions: shavedPartyPositions,
+			}),
+		...(shavedOtherPositions &&
+			shavedOtherPositions.length > 0 && {
+				otherPositions: shavedOtherPositions,
+			}),
 		...(education! &&
 			education.length > 0 && { education: education?.map((edu) => edu.name) }),
 		...(almaMater! &&
 			almaMater.length > 0 && { almaMater: almaMater?.map((am) => am.name) }),
-		webpages,
-	};
+		webpages: webpages,
+	} as MemberPageBioData;
 }
 
 function shaveCommitteesData<
@@ -101,6 +130,26 @@ function shaveCommitteesData<
 				past: committees.past.map((com) => shaveMembershipData(com)),
 			}),
 	};
+}
+
+function shaveWikiPositionData(
+	mem: WikiPosition,
+	additional?: { key: string; value: string }[]
+): MemberPageMembership {
+	const output: MemberPageMembership = {
+		name: mem.title.name,
+		dateRange: {
+			start: dateToYMDstring(mem.dateRange.start),
+			end: mem.dateRange.end! ? dateToYMDstring(mem.dateRange.end!) : undefined,
+		},
+	};
+
+	additional &&
+		additional.forEach((ad) => {
+			output[ad.key] = ad.value;
+		});
+
+	return output;
 }
 
 function shaveMembershipData<
