@@ -1,11 +1,10 @@
 /** @format */
-
-import getDocFromDB from '../single/[uri]';
 import getDocsBatchFromDB from '../multiple/batch';
 import { GroupType } from '@/models/_utils';
 import { MemberPageBioData } from '@/models/pages/member/member';
 import { AttendanceData } from '@/models/pages/attendance';
 import { AttendanceRecord } from '@/models/attendance';
+import getDocFromDB from '../single/[uri]';
 
 export default async function fetchTDpageData(uri: string) {
 	const bioData = (await getDocFromDB(

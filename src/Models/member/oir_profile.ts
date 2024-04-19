@@ -1,6 +1,6 @@
 /** @format */
 
-import { WebsitePair } from '@/functions/oireachtas_pages/td/profile/td_profile';
+import { WebsitePair } from '../_utils';
 
 export type MemberOirProfileData = {
 	uri: string;

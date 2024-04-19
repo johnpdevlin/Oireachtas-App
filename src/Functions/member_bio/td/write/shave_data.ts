@@ -114,7 +114,7 @@ export default function shaveUnneccessaryBioData(
 		...(almaMater! &&
 			almaMater.length > 0 && { almaMater: almaMater?.map((am) => am.name) }),
 		webpages: webpages,
-	} as MemberPageBioData;
+	} as unknown as MemberPageBioData;
 }
 
 function shaveCommitteesData<
