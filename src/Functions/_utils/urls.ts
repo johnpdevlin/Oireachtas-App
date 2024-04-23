@@ -55,3 +55,12 @@ export const isPartyWebsite = (website: string): boolean => {
 	if (possibleParties.includes(website)) return true;
 	else return false;
 };
+
+export function formatURL(url: string) {
+	// Check if the URL already starts with a protocol (e.g., http:// or https://)
+	if (!/^https?:\/\//i.test(url)) {
+		// If not, prepend 'http://' to the URL
+		url = 'https://' + url;
+	}
+	return url;
+}
