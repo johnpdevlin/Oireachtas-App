@@ -14,8 +14,8 @@ import ProfileImage from '../../_utils/ProfileImg';
 import Address from '@/Components/_utils/Contact/Address';
 import PhoneNumber from '@/Components/_utils/Contact/PhoneNumber';
 import Email from '@/Components/_utils/Contact/Email';
-import { WebsitePair } from '@/functions/oireachtas_pages/td/profile/td_profile';
 import SocialIcon from '@/Components/_utils/SocialIcon';
+import { WebsitePair } from '@/models/_utils';
 
 export default function ContactCard(props: {
 	uri: string;
@@ -25,6 +25,7 @@ export default function ContactCard(props: {
 	email: string;
 	webpages: WebsitePair[];
 }) {
+	console.info(props.webpages);
 	return (
 		<Card sx={{ mt: 2.5 }}>
 			<CardMedia sx={{ mb: 0, width: '100%' }}>

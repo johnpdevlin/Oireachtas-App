@@ -1,23 +1,34 @@
 /** @format */
 import { capitaliseFirstLetters } from '@/functions/_utils/strings';
-import { MemberOffice } from '@/models/oireachtas_api/Formatted/Member/office';
 import { MemberPageMembership } from '@/models/pages/member/member';
 import { Stack, Typography } from '@mui/material';
+
 export default function ProfileHeader(props: {
 	name: string;
 	offices?: MemberPageMembership[];
+	partyPositions?: MemberPageMembership[];
+	otherPositions?: MemberPageMembership[];
 	textAlign: string;
 }): JSX.Element {
-	const formattedOffices = (): string | undefined => {
-		if (props.offices!)
-			return props.offices
-				?.filter((o) => !o.dateRange.end)
-				.map((o, key) => {
-					return capitaliseFirstLetters(o.name);
-				})
-				.join(', ');
+	const { name, offices, partyPositions, otherPositions, textAlign } = props;
+	const formatPositions = (
+		positions: MemberPageMembership[]
+	): string | undefined => {
+		return positions
+			?.filter((o) => !o.dateRange.end)
+			.map((o, key) => {
+				return capitaliseFirstLetters(o.name);
+			})
+			.join(', ');
+	};
 
-		return;
+	const formattedPositions = () => {
+		const memberships = [];
+		if (offices!) memberships.push(...offices);
+		if (partyPositions!) memberships.push(...partyPositions);
+		if (otherPositions!) memberships.push(...otherPositions);
+
+		return formatPositions(memberships);
 	};
 
 	return (
@@ -25,20 +36,20 @@ export default function ProfileHeader(props: {
 			<Stack direction='column'>
 				<Typography
 					variant='h2'
-					sx={{ whiteSpace: 'nowrap', textAlign: `${props.textAlign}` }}
-					title={props.name}>
-					{props.name}
+					color='secondary'
+					sx={{ whiteSpace: 'nowrap', textAlign: `${textAlign}` }}
+					title={name}>
+					{name}
 				</Typography>
-				{/* REQUIRES F()s to be fully implemented */}
-				{formattedOffices! && (
+
+				{(offices || partyPositions || otherPositions) && (
 					<Typography
 						variant='h6'
-						sx={{ whiteSpace: 'pre-line', textAlign: `${props.textAlign}` }}
+						sx={{ whiteSpace: 'pre-line', textAlign: `${textAlign}` }}
 						title={'Member current offices and party role(s)'}>
-						{formattedOffices()}
+						{formattedPositions()}
 					</Typography>
 				)}
-				{/* REQUIRES F()s to be fully implemented */}
 			</Stack>
 		</>
 	);

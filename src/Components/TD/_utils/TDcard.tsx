@@ -10,7 +10,6 @@ import { useViewport } from '@/hooks/viewportProvider';
 export default function TDcard(props: { member: MemberAPIdetails }) {
 	const imgUrl = `https://data.oireachtas.ie/ie/oireachtas/member/id/${props.member.uri}/image/large`;
 	const offices = props.member.offices;
-
 	const party = props.member.parties[0];
 	const constituency = props.member.constituencies.dail![0];
 	const [minHeight, setMinHeight] = useState<number>();
@@ -31,25 +30,25 @@ export default function TDcard(props: { member: MemberAPIdetails }) {
 	return (
 		<>
 			<Paper sx={{ minHeight: minHeight }}>
-				<Link href={`/td/${props.member.uri}`}>
-					<ProfileImage
-						uri={props.member.uri}
-						size={220}
-						name={props.member.fullName}
-					/>
+				<ProfileImage
+					uri={props.member.uri}
+					size={220}
+					name={props.member.fullName}
+				/>
 
-					<Box>
+				<Box>
+					<Link href={`/td/${props.member.uri}`}>
 						<Typography variant='h5' color='primary' align='center'>
 							{props.member.fullName}
 						</Typography>
-						<Typography variant='body2' color='text.secondary' align='center'>
-							<b>{party?.name}</b>
-						</Typography>
-						<Typography variant='body2' color='text.secondary' align='center'>
-							<b>{constituency?.name}</b>
-						</Typography>
-					</Box>
-				</Link>
+					</Link>
+					<Typography variant='body2' color='text.secondary' align='center'>
+						<b>{party?.name}</b>
+					</Typography>
+					<Typography variant='body2' color='text.secondary' align='center'>
+						<b>{constituency?.name}</b>
+					</Typography>
+				</Box>
 			</Paper>
 		</>
 	);

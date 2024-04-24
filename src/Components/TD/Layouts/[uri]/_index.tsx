@@ -14,13 +14,13 @@ type LayoutProps = {
 
 export default function TDlayout({ bio, attendance }: LayoutProps) {
 	const firstElected = (): Date => {
-		const dailStart = bio.constituencies.dail?.at(-1)?.dateRange.start;
-		const seanadStart = bio.constituencies.seanad?.at(-1)?.dateRange.start;
+		const dailStart = bio.constituencies.dail?.at(-1)!.dateRange!.start!;
+		const seanadStart = bio.constituencies.seanad?.at(-1)?.dateRange!.start!;
 
 		if (dailStart! && seanadStart!) {
-			if (new Date(dailStart) < new Date(seanadStart))
-				return new Date(dailStart);
-		} else if (dailStart!) return new Date(dailStart);
+			if (new Date(dailStart!) < new Date(seanadStart!))
+				return new Date(dailStart!);
+		} else if (dailStart!) return new Date(dailStart!);
 
 		return new Date(seanadStart!);
 	};
@@ -31,7 +31,9 @@ export default function TDlayout({ bio, attendance }: LayoutProps) {
 				<Grid item lg={1} />
 				<Grid item lg={11}>
 					<Stack gap={8}>
-						<AttendanceSection bio={bio} attendance={attendance} />
+						{attendance.house.member.length > 0 && (
+							<AttendanceSection bio={bio} attendance={attendance} />
+						)}
 						<RecordsTabs
 							minDate={firstElected()}
 							maxDate={new Date()}

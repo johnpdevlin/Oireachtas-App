@@ -1,12 +1,12 @@
 /** @format */
 
-import { MemberBioData } from '@/models/pages/member/member';
 import { Breakpoint, Stack } from '@mui/material';
 import BasicDetails from './BasicDetails';
 import ProfileHeader from './ProfileHeader';
+import { MemberPageBioData } from '@/models/pages/member/member';
 
 export default function ProfileCard(props: {
-	member: MemberBioData;
+	member: MemberPageBioData;
 	size: Breakpoint;
 }) {
 	return (
@@ -16,6 +16,8 @@ export default function ProfileCard(props: {
 					<ProfileHeader
 						name={props.member.fullName}
 						offices={props.member.offices}
+						partyPositions={props.member.partyPositions}
+						otherPositions={props.member.otherPositions}
 						textAlign='left'
 					/>
 				</Stack>

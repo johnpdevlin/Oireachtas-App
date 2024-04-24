@@ -1,55 +1,47 @@
 /** @format */
 
 import { Stack, Tooltip, Typography } from '@mui/material';
+import { capitaliseFirstLetters } from '../../functions/_utils/strings';
+import { WebsitePair } from '@/models/_utils';
+
+// Import icons
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import XIcon from '@mui/icons-material/x';
-import Link from 'next/link';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
-import { WebsitePair } from '@/functions/oireachtas_pages/td/profile/td_profile';
-import { capitaliseFirstLetters } from '../../functions/_utils/strings';
+import Link from 'next/link';
+import { formatURL } from '../../functions/_utils/urls';
 
 function SocialIcon(props: {
 	page: WebsitePair;
 	color: string;
 	includeText?: boolean;
 }) {
+	const { page, color, includeText } = props;
 	const websiteIcons = {
-		default: {
-			icon: <LinkOutlinedIcon sx={{ color: props.color }} />,
-			title: capitaliseFirstLetters(props.page.website!),
-		},
 		facebook: {
-			icon: <FacebookOutlinedIcon sx={{ color: props.color }} />,
+			icon: <FacebookOutlinedIcon sx={{ color: color }} />,
 			title: 'Facebook',
 		},
-		twitter: {
-			icon: <XIcon sx={{ color: props.color }} />,
-			title: 'Twitter / X',
-		},
-		x: { icon: <XIcon sx={{ color: props.color }} />, title: 'X / Twitter' },
-		youtube: {
-			icon: <YouTubeIcon sx={{ color: props.color }} />,
-			title: 'Youtube',
-		},
+		twitter: { icon: <XIcon sx={{ color: color }} />, title: 'Twitter / X' },
+		youtube: { icon: <YouTubeIcon sx={{ color: color }} />, title: 'Youtube' },
 		linkedin: {
-			icon: <LinkedInIcon sx={{ color: props.color }} />,
+			icon: <LinkedInIcon sx={{ color: color }} />,
 			title: 'LinkedIn',
 		},
-		website: {
-			icon: <LinkOutlinedIcon sx={{ color: props.color }} />,
+		personal: {
+			icon: <LinkOutlinedIcon sx={{ color: color }} />,
 			title: 'Personal Website',
 		},
-
 		party: {
-			icon: <GroupsOutlinedIcon sx={{ color: props.color }} />,
+			icon: <GroupsOutlinedIcon sx={{ color: color }} />,
 			title: 'Party Profile',
 		},
 		oireachtas: {
-			icon: <AccountBalanceOutlinedIcon sx={{ color: props.color }} />,
+			icon: <AccountBalanceOutlinedIcon sx={{ color: color }} />,
 			title: 'Oireachtas Profile',
 		},
 		wikipedia: {
@@ -69,29 +61,21 @@ function SocialIcon(props: {
 		},
 	};
 
+	const websiteIcon = websiteIcons[page.website] || websiteIcons.default;
+
 	return (
-		<>
-			{
-				<Tooltip
-					title={
-						websiteIcons[props.page.website].title ??
-						websiteIcons['default'].title
-					}>
-					<Link href={props.page.url}>
-						<Stack direction='row' gap={0.5}>
-							{websiteIcons[props.page.website].icon ??
-								websiteIcons['default'].icon}
-							{props.includeText && (
-								<Typography variant='subtitle1' color={props.color}>
-									{websiteIcons[props.page.website].title ??
-										websiteIcons['default'].title}
-								</Typography>
-							)}
-						</Stack>
-					</Link>
-				</Tooltip>
-			}
-		</>
+		<Tooltip title={page.website}>
+			<Link href={formatURL(page.url)}>
+				<Stack direction='row' gap={0.5}>
+					{websiteIcon.icon}
+					{includeText && (
+						<Typography variant='subtitle1' color={color}>
+							{capitaliseFirstLetters(websiteIcon.title)}
+						</Typography>
+					)}
+				</Stack>
+			</Link>
+		</Tooltip>
 	);
 }
 

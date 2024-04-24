@@ -1,8 +1,6 @@
 /** @format */
 import * as React from 'react';
-
 import Typography from '@mui/material/Typography';
-
 import {
 	Breakpoint,
 	Grid,
@@ -22,7 +20,6 @@ import {
 	Groups,
 	CropSquareRounded,
 	Work,
-	AccessTime,
 	WorkHistory,
 } from '@mui/icons-material';
 import HoverableFootnote from '../../../_utils/HoverableFootnote';
@@ -32,22 +29,25 @@ import {
 	convertDaysToYearsAndMonths,
 	formatDateToString,
 } from '@/functions/_utils/dates';
-import { MemberConstituency } from '@/models/oireachtas_api/Formatted/Member/constituency';
 import { capitaliseFirstLetters } from '../../../../functions/_utils/strings';
-import { MemberParty } from '@/models/member/_all_bio_data';
-import { MemberBioData } from '@/models/pages/member/member';
+import {
+	MemberPageBioData,
+	MemberPageMembership,
+} from '@/models/pages/member/member';
+import { getCurrentAndPastMemberships } from '@/functions/_utils/memberships';
 
-function BasicDetails(props: { member: MemberBioData; size: Breakpoint }) {
+function BasicDetails(props: { member: MemberPageBioData; size: Breakpoint }) {
 	const {
 		birthDate,
 		birthPlace,
+		gender,
 		education,
 		almaMater,
 		parties,
 		offices,
 		constituencies,
-		isActiveTD,
-		isActiveSenator,
+		partyPositions,
+		otherPositions,
 		committees,
 	} = props.member;
 
@@ -58,23 +58,9 @@ function BasicDetails(props: { member: MemberBioData; size: Breakpoint }) {
 	const age = () => {
 		return calculateYearsAndMonthsSinceDate(birthDate!).years;
 	};
-	const formerDailConstituencies = () => {
-		if (constituencies.dail!.length >= 1) {
-			if (isActiveTD! && constituencies.dail!.length > 1)
-				return constituencies.dail!.slice(1);
-			else if (isActiveSenator!) return constituencies.dail!;
-		} else return [];
-	};
-	const formerSeanadConstituencies = () => {
-		if (constituencies.seanad!.length >= 1) {
-			if (isActiveSenator! && constituencies.seanad!.length > 1)
-				return constituencies.seanad!.slice(1);
-			else if (isActiveTD!) return constituencies.seanad!;
-		} else return [];
-	};
 
 	const formatFormerMemberships = (
-		memberships: MemberConstituency[] | MemberParty[]
+		memberships: MemberPageMembership[]
 	): string => {
 		const mapped = memberships.map((m, key) => {
 			return `${capitaliseFirstLetters(m.name)} (${new Date(
@@ -84,29 +70,60 @@ function BasicDetails(props: { member: MemberBioData; size: Breakpoint }) {
 		return mapped.join(', ');
 	};
 
-	const formerConstituencies = () => {
-		let arr: MemberConstituency[] = [];
-		if (formerDailConstituencies()!)
-			arr.push(...(formerDailConstituencies() as MemberConstituency[]));
-		if (formerSeanadConstituencies()!)
-			arr.push(...(formerSeanadConstituencies() as MemberConstituency[]));
-
-		if (arr.length > 0) return formatFormerMemberships(arr);
-		else return undefined;
-	};
-
 	const formerParties =
 		parties.length > 1 && formatFormerMemberships(parties.slice(1));
 
-	const formerOffices = offices?.filter((off) => off.dateRange.end!) ?? [];
+	const formattedConstituencies = () => {
+		// Merge all arrays into one, handling undefined arrays
+		const allItems = [
+			...(constituencies.dail || []),
+			...(constituencies.seanad || []),
+			...(constituencies.other || []),
+		];
+		// Apply getCurrentAndPastItems function to all items
+		let processedItems = getCurrentAndPastMemberships(allItems);
+
+		// If there are no current items, return the most recent item from dail if it's defined
+		if (processedItems.current.length === 0) {
+			// Get the first item from the defined array
+			if (constituencies.dail && constituencies.dail.length > 0) {
+				processedItems.current = constituencies.dail[0];
+				processedItems.past =
+					processedItems.past.filter(
+						(item) => item.uri !== constituencies!.dail![0].uri
+					) ?? undefined;
+			} else if (constituencies.seanad && constituencies.seanad.length > 0) {
+				processedItems.current = constituencies.seanad[0];
+				processedItems.past = processedItems.past.filter(
+					(item) => item.uri !== constituencies!.seanad![0].uri
+				);
+			}
+		}
+		if (processedItems.past.length === 0) processedItems.past = undefined;
+		return processedItems;
+	};
+
+	const formerOffices =
+		offices?.filter((off) => off.dateRange.end!) ??
+		([] as MemberPageMembership[]);
+	const formerPartyPositions =
+		partyPositions?.filter((pos) => pos.dateRange.end!) ??
+		([] as MemberPageMembership[]);
+	const formerOtherPositions =
+		otherPositions?.filter((pos) => pos.dateRange.end!) ??
+		([] as MemberPageMembership[]);
 
 	const firstElected = () => {
-		const dail = formatDateToString(
-			constituencies!.dail!.at(-1)?.dateRange.start as string
-		);
-		const seanad = formatDateToString(
-			constituencies!.seanad!.at(-1)?.dateRange.start as string
-		);
+		const dail =
+			constituencies.dail &&
+			formatDateToString(
+				constituencies?.dail!.at(-1)?.dateRange.start as string
+			);
+		const seanad =
+			constituencies.seanad &&
+			formatDateToString(
+				constituencies?.seanad!.at(-1)?.dateRange.start as string
+			);
 		return {
 			dail: dail !== 'Invalid Date' ? dail : undefined,
 			seanad: seanad !== 'Invalid Date' ? seanad : undefined,
@@ -203,34 +220,55 @@ function BasicDetails(props: { member: MemberBioData; size: Breakpoint }) {
 						icon={<Place fontSize='small' />}
 						data={
 							<>
-								<b>
-									{isActiveTD! && constituencies!.dail[0]!.name!}
-									{isActiveSenator! && constituencies!.seanad[0]!.name!}
-								</b>
-								{formerConstituencies! && (
+								<b>{formattedConstituencies().current[0].name}</b>
+								{formattedConstituencies()!.past! && (
 									<HoverableFootnote
 										name={' [note]'}
-										text={formerConstituencies()!}
+										text={formatFormerMemberships(
+											formattedConstituencies().past
+										)}
 									/>
 								)}
 							</>
 						}
 					/>
 
+					{props.size !== 'lg' && committees?.current && (
+						<RowComponent
+							title='Committees'
+							icon={<Groups fontSize='small' />}
+							data={
+								<>
+									{committees.current.map((c, index) => {
+										return (
+											<Stack
+												direction='row'
+												gap={0.5}
+												key={`${index}-${c.name}`}>
+												<CropSquareRounded
+													fontSize='inherit'
+													sx={{ mt: 0.4 }}
+												/>
+												<Typography variant='subtitle2' align='left'>
+													{c.name}
+												</Typography>
+											</Stack>
+										);
+									})}
+								</>
+							}
+						/>
+					)}
 					{props.size !== 'lg' &&
-						(committees.current.length > 0 || committees.past.length > 0) && (
+						(formerOffices || formerPartyPositions || formerOtherPositions) && (
 							<RowComponent
-								title='Committees'
-								icon={<Groups fontSize='small' />}
+								title='Former Positions'
+								icon={<Work fontSize='inherit' />}
 								data={
 									<>
-										{' '}
-										{committees.current.map((c, index) => {
-											return (
-												<Stack
-													direction='row'
-													gap={0.5}
-													key={`${index}-${c.committeeID}`}>
+										{formerOffices &&
+											formerOffices.map((c, _) => (
+												<Stack direction='row' gap={0.5} key={_}>
 													<CropSquareRounded
 														fontSize='inherit'
 														sx={{ mt: 0.4 }}
@@ -239,30 +277,35 @@ function BasicDetails(props: { member: MemberBioData; size: Breakpoint }) {
 														{c.name}
 													</Typography>
 												</Stack>
-											);
-										})}
+											))}
+										{formerPartyPositions &&
+											formerPartyPositions.map((pp, _) => (
+												<Stack direction='row' gap={0.5} key={_}>
+													<CropSquareRounded
+														fontSize='inherit'
+														sx={{ mt: 0.4 }}
+													/>
+													<Typography variant='subtitle2' align='left'>
+														{pp.name}
+													</Typography>
+												</Stack>
+											))}
+										{formerOtherPositions &&
+											formerOtherPositions.map((op, _) => (
+												<Stack direction='row' gap={0.5} key={_}>
+													<CropSquareRounded
+														fontSize='inherit'
+														sx={{ mt: 0.4 }}
+													/>
+													<Typography variant='subtitle2' align='left'>
+														{op.name}
+													</Typography>
+												</Stack>
+											))}
 									</>
 								}
 							/>
 						)}
-					{props.size !== 'lg' && formerOffices.length > 0 && (
-						<RowComponent
-							title='Former Positions'
-							icon={<Work fontSize='inherit' />}
-							data={
-								<>
-									{formerOffices.map((c) => (
-										<Stack direction='row' gap={0.5}>
-											<CropSquareRounded fontSize='inherit' sx={{ mt: 0.4 }} />
-											<Typography variant='subtitle2' align='left'>
-												{c.name}
-											</Typography>
-										</Stack>
-									))}
-								</>
-							}
-						/>
-					)}
 
 					{education && (
 						<RowComponent
@@ -270,8 +313,8 @@ function BasicDetails(props: { member: MemberBioData; size: Breakpoint }) {
 							icon={<HistoryEdu fontSize='small' />}
 							data={
 								<>
-									{education.map((ed) => (
-										<b key={ed.wikiURI}>{ed.name}</b>
+									{education.map((name) => (
+										<b key={name}>{name}</b>
 									))}
 								</>
 							}
@@ -283,8 +326,8 @@ function BasicDetails(props: { member: MemberBioData; size: Breakpoint }) {
 							icon={<School fontSize='small' />}
 							data={
 								<>
-									{almaMater.map((am) => (
-										<b key={am.name}>{am.name}</b>
+									{almaMater.map((name) => (
+										<b key={name}>{name}</b>
 									))}
 								</>
 							}
