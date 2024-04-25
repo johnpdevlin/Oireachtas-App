@@ -25,7 +25,6 @@ export default function ContactCard(props: {
 	email: string;
 	webpages: WebsitePair[];
 }) {
-	console.info(props.webpages);
 	return (
 		<Card sx={{ mt: 2.5 }}>
 			<CardMedia sx={{ mb: 0, width: '100%' }}>

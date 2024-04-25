@@ -54,7 +54,10 @@ export default function AttendanceChart({
 				setLabels(getYearLabels(data));
 				setSeriesData(getOverallSeriesData(data));
 			} else if (data && year !== '0') {
-				setSeriesData(getYearSeriesData(year, data));
+				const yearData = getYearSeriesData(year, data);
+				if (yearData[0] && yearData[0]?.data?.length > 0)
+					setSeriesData(yearData);
+				else setSeriesData([]);
 				setLabels(getMonthLabels(data));
 			}
 		}
@@ -64,6 +67,7 @@ export default function AttendanceChart({
 		data: Record<GroupType, AttendanceRecord[]>
 	): number[] {
 		return data[chartType]
+			.filter((d) => d.present.flat().filter(Boolean).length > 0)
 			.map((d) => d.year!)
 			.sort()
 			.map((d) => d);
@@ -75,7 +79,9 @@ export default function AttendanceChart({
 		const yearData = data[chartType].find((dat) => dat.year === parseInt(year));
 		if (!yearData) return []; // Return empty array if no data for selected year
 
-		const months = yearData.present_percentage?.months || [];
+		const months = yearData.present_percentage?.overall
+			? yearData.present_percentage?.months
+			: [];
 		const relevantMonths: number[] = [];
 		months.forEach((value: number | undefined | null, index: number) => {
 			if (value !== undefined && value !== null) relevantMonths.push(index + 1);
@@ -108,7 +114,7 @@ export default function AttendanceChart({
 			const relevantData: number[] = relevantMonths.map((month) => {
 				return groupMonthData[month - 1] !== undefined &&
 					groupMonthData[month - 1] !== null
-					? Number(groupMonthData[month - 1].toFixed(1))
+					? Number(groupMonthData[month - 1]?.toFixed(1))
 					: 0;
 			});
 
@@ -122,6 +128,7 @@ export default function AttendanceChart({
 
 	// If Overall, resets data to aggregated years
 	function getOverallSeriesData(data: Record<GroupType, AttendanceRecord[]>) {
+		const years = getYearLabels(data);
 		return Object.values(data).map((value: AttendanceRecord[]) => {
 			const length = data[chartType].length;
 			const key =
@@ -132,9 +139,12 @@ export default function AttendanceChart({
 			return {
 				label: key!.name,
 				data: value
+					.filter(
+						(val) =>
+							val.present_percentage?.overall! && years.includes(val.year!)
+					)
 					.toSorted((a, b) => a.year! - b.year!)
-					.map((val) => Number(val.present_percentage?.overall.toFixed(1)))
-					.slice(value[0].group_type !== chartType ? length : 0),
+					.map((val) => Number(val.present_percentage?.overall?.toFixed(1))),
 				color: key?.color,
 			};
 		});
@@ -161,9 +171,7 @@ export default function AttendanceChart({
 					yAxis={[
 						{
 							label: '%',
-
 							max: 100,
-
 							maxTicks: 10,
 						},
 					]}

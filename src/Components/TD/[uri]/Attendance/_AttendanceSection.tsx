@@ -37,35 +37,38 @@ export default function AttendanceSection({ bio, attendance }: SectionProps) {
 
 	const groupings = () => {
 		const groupingsObj = [];
-		const years = attendance.house.member.map((member) => {
-			return {
-				dateRange: member.dateRange,
-				year: member.year,
-			};
-		});
+		const years: number[] = [];
+		[...attendance.house.member, ...attendance.committee.member].forEach(
+			(member) => {
+				if (!years.includes(member.year!)) {
+					years.push(member.year);
+				}
+			}
+		);
 
 		const dail33 = {
 			category: '33rd Dáil',
 			groups: years
-				.filter((year) => year.year! >= 2020 && year.year! > 2025)
-				.map((group) => {
-					return { label: group.year?.toString()!, value: group.year! };
+				.filter((year) => year! >= 2020 && year! < 2025)
+				.map((year) => {
+					return { label: year.toString()!, value: year! };
 				})
 				.toSorted((a, b) => a.value - b.value),
 		};
 		const dail32 = {
 			category: '32nd Dáil',
 			groups: years
-				.filter((year) => year.year! < 20202)
-				.map((group) => {
+				.filter((year) => year! < 2020)
+				.map((year) => {
 					{
-						return { label: group.year?.toString()!, value: group.year! };
+						return { label: year?.toString()!, value: year! };
 					}
 				})
 				.toSorted((a, b) => a.value - b.value),
 		};
-		dail33.groups.length > 0 && groupingsObj.push(dail33);
 		dail32.groups.length > 0 && groupingsObj.push(dail32);
+		dail33.groups.length > 0 && groupingsObj.push(dail33);
+
 		return groupingsObj;
 	};
 
@@ -84,6 +87,7 @@ export default function AttendanceSection({ bio, attendance }: SectionProps) {
 		}
 	}, []);
 
+	console.info(attendance);
 	useEffect(() => {
 		if (breakpoint === 'xs' || breakpoint === 'sm') {
 			setSidebarDirection('row-reverse');
