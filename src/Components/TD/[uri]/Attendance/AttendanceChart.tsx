@@ -56,7 +56,7 @@ export default function AttendanceChart({
 			} else if (data && year !== '0') {
 				const yearData = getYearSeriesData(year, data);
 				if (yearData[0] && yearData[0]?.data?.length > 0)
-					setSeriesData(yearData);
+					setSeriesData(yearData!);
 				else setSeriesData([]);
 				setLabels(getMonthLabels(data));
 			}
@@ -104,33 +104,42 @@ export default function AttendanceChart({
 			if (value !== undefined && value !== null) relevantMonths.push(index + 1);
 		});
 
-		return keys.map((key) => {
-			const groupData = data[key.uri as GroupType].find(
-				(dat) => dat.year === parseInt(year)
-			);
-			if (!groupData) return { label: key.name, data: [] }; // Return empty data array if no data for selected year
+		return keys
+			.map((key) => {
+				const groupData =
+					data[key.uri as GroupType] &&
+					data[key.uri as GroupType].find((dat) => dat.year === parseInt(year));
+				if (!groupData) return undefined; // Return empty data array if no data for selected year
 
-			const groupMonthData = groupData.present_percentage?.months || [];
-			const relevantData: number[] = relevantMonths.map((month) => {
-				return groupMonthData[month - 1] !== undefined &&
-					groupMonthData[month - 1] !== null
-					? Number(groupMonthData[month - 1]?.toFixed(1))
-					: 0;
-			});
+				const groupMonthData = groupData.present_percentage?.months || [];
+				const relevantData: number[] = relevantMonths.map((month) => {
+					return groupMonthData[month - 1] !== undefined &&
+						groupMonthData[month - 1] !== null
+						? Number(groupMonthData[month - 1]?.toFixed(1))
+						: 0;
+				});
 
-			return {
-				label: key.name,
-				data: relevantData,
-				color: key.color ?? undefined,
-			};
-		});
+				if (relevantData.length < relevantMonths.length) return undefined;
+				return {
+					label: key.name,
+					data: relevantData,
+					color: key.color ?? undefined,
+				};
+			})
+			.filter(Boolean);
 	}
 
 	// If Overall, resets data to aggregated years
 	function getOverallSeriesData(data: Record<GroupType, AttendanceRecord[]>) {
-		const years = getYearLabels(data);
-		return Object.values(data).map((value: AttendanceRecord[]) => {
-			const length = data[chartType].length;
+		let seriesData = data;
+		const years = getYearLabels(seriesData);
+		const memLength = seriesData.member.length;
+		if (seriesData.constituency! && memLength > seriesData.constituency.length)
+			delete seriesData.constituency;
+		if (seriesData.party! && memLength > seriesData.party.length)
+			delete seriesData.party;
+		return Object.values(seriesData).map((value: AttendanceRecord[]) => {
+			const length = seriesData[chartType].length;
 			const key =
 				chartType === 'member'
 					? keys.find((key) => key.uri === value[0].group_type)

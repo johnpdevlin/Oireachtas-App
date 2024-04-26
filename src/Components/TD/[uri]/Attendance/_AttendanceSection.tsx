@@ -87,7 +87,6 @@ export default function AttendanceSection({ bio, attendance }: SectionProps) {
 		}
 	}, []);
 
-	console.info(attendance);
 	useEffect(() => {
 		if (breakpoint === 'xs' || breakpoint === 'sm') {
 			setSidebarDirection('row-reverse');
@@ -154,36 +153,40 @@ export default function AttendanceSection({ bio, attendance }: SectionProps) {
 				</Grid>
 				<Grid item>
 					<Stack direction='column' gap={5} alignItems='center'>
-						<Box>
-							<Stack direction='column'>
-								<Typography variant='h4' textAlign='center'>
-									House Attendance
-								</Typography>
-								<AttendanceChart
-									breakpoint={breakpoint}
-									sidebarWidth={sidebarWidth}
-									data={attendance.house}
-									chartType={'member'}
-									keys={membershipKeys}
-									year={year}
-								/>
-							</Stack>
-						</Box>
-						<Box>
-							<Stack direction='column'>
-								<Typography variant='h4' textAlign='center'>
-									Committee Attendance
-								</Typography>
-								<AttendanceChart
-									breakpoint={breakpoint ?? 'xs'}
-									sidebarWidth={sidebarWidth}
-									data={attendance.committee}
-									chartType={'member'}
-									keys={membershipKeys}
-									year={year}
-								/>
-							</Stack>
-						</Box>
+						{attendance.house.member.length > 0 && (
+							<Box>
+								<Stack direction='column'>
+									<Typography variant='h4' textAlign='center'>
+										House Attendance
+									</Typography>
+									<AttendanceChart
+										breakpoint={breakpoint}
+										sidebarWidth={sidebarWidth}
+										data={attendance.house}
+										chartType={'member'}
+										keys={membershipKeys}
+										year={year}
+									/>
+								</Stack>
+							</Box>
+						)}
+						{attendance.committee.member.length > 0 && (
+							<Box>
+								<Stack direction='column'>
+									<Typography variant='h4' textAlign='center'>
+										Committee Attendance
+									</Typography>
+									<AttendanceChart
+										breakpoint={breakpoint ?? 'xs'}
+										sidebarWidth={sidebarWidth}
+										data={attendance.committee}
+										chartType={'member'}
+										keys={membershipKeys}
+										year={year}
+									/>
+								</Stack>
+							</Box>
+						)}
 					</Stack>
 				</Grid>
 				<Box
