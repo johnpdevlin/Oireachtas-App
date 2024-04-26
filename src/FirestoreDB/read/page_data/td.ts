@@ -43,8 +43,8 @@ const getAttendanceData = async (
 		group_type: GroupType;
 		id: string;
 	}[];
-	const houseAttendance = await getDocsBatchFromDB('house-attendance', params);
-	const committeeAttendance = await fetchCommitteeAttendance(params);
+	const houseAttendance = await fetchAttendanceRecords('house', params);
+	const committeeAttendance = await fetchAttendanceRecords('committee', params);
 
 	return {
 		house: houseAttendance,
@@ -52,18 +52,31 @@ const getAttendanceData = async (
 	} as AttendanceData;
 };
 
-async function fetchCommitteeAttendance(
+async function fetchAttendanceRecords(
+	type: 'committee' | 'house',
 	params: { group_type: GroupType; id: string }[]
-): Promise<Record<GroupType, AttendanceRecord[]>> {
-	const committeeAttendance = (await getDocsBatchFromDB(
-		'committee-attendance',
+) {
+	const records = (await getDocsBatchFromDB(
+		`${type}-attendance`,
 		params
 	)) as Record<GroupType, AttendanceRecord[]>;
 
-	// Filter out committee records related to members
-	committeeAttendance.member = committeeAttendance.member.filter((com) =>
-		com.record_uri.startsWith('member')
+	records.member = records.member.filter(
+		(rec) => rec.present_percentage?.overall!
 	);
 
-	return committeeAttendance;
+	const years = records.member.map((rec) => rec.year);
+	// Filter out committee records related to members
+	if (type === 'committee')
+		records.member = records.member.filter((com) =>
+			com.record_uri.startsWith('member')
+		);
+
+	for (const key in records) {
+		// Filter out unneccessary years for non member records
+		if (key !== 'member')
+			records[key] = records[key].filter((rec) => years.includes(rec.year));
+	}
+
+	return records;
 }
