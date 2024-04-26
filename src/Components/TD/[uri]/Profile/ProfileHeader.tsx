@@ -14,12 +14,27 @@ export default function ProfileHeader(props: {
 	const formatPositions = (
 		positions: MemberPageMembership[]
 	): string | undefined => {
-		return positions
-			?.filter((o) => !o.dateRange.end)
+		let formatted = positions
+			?.filter((o) => !o.dateRange.end && o.type !== 'junior')
 			.map((o, key) => {
 				return capitaliseFirstLetters(o.name);
 			})
 			.join(', ');
+		if (formatted.length === 0)
+			formatted = positions
+				?.filter(
+					(o) =>
+						o.type === 'party leader' ||
+						o.type === 'taoiseach' ||
+						o.type === 'tanaiste' ||
+						o.type === 'senior minister' ||
+						o.type === 'european commissioner'
+				)
+				.map((o, key) => {
+					return capitaliseFirstLetters(o.name);
+				})
+				.join(', ');
+		return formatted;
 	};
 
 	const formattedPositions = () => {
