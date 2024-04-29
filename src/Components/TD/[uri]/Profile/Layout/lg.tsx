@@ -20,7 +20,7 @@ export default function LG_ProfileLayout({
 			<>
 				<Grid container spacing={0}>
 					<Grid item lg={1.5}>
-						<MemberMenu />
+						{/* <MemberMenu /> */}
 					</Grid>
 					<Grid item md={0} lg={10.5}>
 						<Grid container>

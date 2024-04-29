@@ -23,8 +23,8 @@ export default function TeachtaDála(props: { bio: JSON; attendance: JSON }) {
 						<meta
 							name='description'
 							content={`${bio.fullName} is a ${
-								bio.parties[0].dateRange.end! && 'former'
-							} ${bio.parties[0].name} TD, representing ${bio!.constituencies!
+								bio.parties[0].dateRange.end! ? ' former ' : ''
+							}${bio.parties[0].name} TD, representing ${bio!.constituencies!
 								.dail![0]!
 								.name!}. This page contains biographical details, and records of attendance, votes and questions asked.`}
 						/>
