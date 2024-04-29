@@ -22,6 +22,10 @@ function SocialIcon(props: {
 }) {
 	const { page, color, includeText } = props;
 	const websiteIcons = {
+		default: {
+			icon: <LinkOutlinedIcon sx={{ color: color }} />,
+			title: page.website,
+		},
 		facebook: {
 			icon: <FacebookOutlinedIcon sx={{ color: color }} />,
 			title: 'Facebook',
