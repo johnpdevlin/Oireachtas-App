@@ -11,9 +11,9 @@ import { useViewport } from '@/hooks/viewportProvider';
 
 const pages = [
 	{ name: 'TDs', path: '/td' },
-	{ name: 'Constituencies', path: '/constituency' },
-	{ name: 'Parties', path: '/party' },
-	{ name: 'About', path: '/about' },
+	// { name: 'Constituencies', path: '/constituency' },
+	// { name: 'Parties', path: '/party' },
+	// { name: 'About', path: '/about' },
 ];
 
 function HeaderNavBar(): JSX.Element {
@@ -73,7 +73,7 @@ function HeaderNavBar(): JSX.Element {
 								md={2.5}
 								lg={3}
 								sx={{ mt: marginTopValue, mb: 1 }}>
-								<SearchBar />
+								{/* <SearchBar /> */}
 							</Grid>
 							{/* END SEARCHBAR */}
 						</Grid>

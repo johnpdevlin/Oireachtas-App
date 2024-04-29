@@ -11,8 +11,8 @@ export default function ProfileCard(props: {
 }) {
 	return (
 		<>
-			<Stack direction='column' sx={{ ml: 1.5, mr: 2 }}>
-				<Stack direction='column' sx={{ ml: 0.9, mt: 1, mb: 1 }}>
+			<Stack direction='column' sx={{}}>
+				<Stack direction='column' sx={{ ml: 2, mt: 1.1, mb: 4 }}>
 					<ProfileHeader
 						name={props.member.fullName}
 						offices={props.member.offices}

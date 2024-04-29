@@ -60,7 +60,11 @@ export default function ProfileHeader(props: {
 				{(offices || partyPositions || otherPositions) && (
 					<Typography
 						variant='h6'
-						sx={{ whiteSpace: 'pre-line', textAlign: `${textAlign}` }}
+						sx={{
+							ml: 0.7,
+							whiteSpace: 'pre-line',
+							textAlign: `${textAlign}`,
+						}}
 						title={'Member current offices and party role(s)'}>
 						{formattedPositions()}
 					</Typography>

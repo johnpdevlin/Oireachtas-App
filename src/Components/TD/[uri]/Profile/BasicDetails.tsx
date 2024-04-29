@@ -35,6 +35,7 @@ import {
 	MemberPageMembership,
 } from '@/models/pages/member/member';
 import { getCurrentAndPastMemberships } from '@/functions/_utils/memberships';
+import { ViewportProvider, useViewport } from '@/hooks/viewportProvider';
 
 function BasicDetails(props: { member: MemberPageBioData; size: Breakpoint }) {
 	const {
@@ -103,16 +104,13 @@ function BasicDetails(props: { member: MemberPageBioData; size: Breakpoint }) {
 		return processedItems;
 	};
 
-	const formerOffices =
-		offices?.filter((off) => off.dateRange.end!) ??
-		([] as MemberPageMembership[]);
-	const formerPartyPositions =
-		partyPositions?.filter((pos) => pos.dateRange.end!) ??
-		([] as MemberPageMembership[]);
-	const formerOtherPositions =
-		otherPositions?.filter((pos) => pos.dateRange.end!) ??
-		([] as MemberPageMembership[]);
-
+	const formerOffices = offices?.filter((off) => off.dateRange.end!);
+	const formerPartyPositions = partyPositions?.filter(
+		(pos) => pos.dateRange.end!
+	);
+	const formerOtherPositions = otherPositions?.filter(
+		(pos) => pos.dateRange.end!
+	);
 	const firstElected = () => {
 		const dail =
 			constituencies.dail &&
@@ -146,6 +144,8 @@ function BasicDetails(props: { member: MemberPageBioData; size: Breakpoint }) {
 
 		return overallPeriod;
 	};
+
+	const { breakpoint } = useViewport();
 
 	return (
 		<>
@@ -233,7 +233,7 @@ function BasicDetails(props: { member: MemberPageBioData; size: Breakpoint }) {
 						}
 					/>
 
-					{props.size !== 'lg' && committees?.current && (
+					{breakpoint !== 'lg' && committees?.current && (
 						<RowComponent
 							title='Committees'
 							icon={<Groups fontSize='small' />}
@@ -259,10 +259,12 @@ function BasicDetails(props: { member: MemberPageBioData; size: Breakpoint }) {
 							}
 						/>
 					)}
-					{props.size !== 'lg' &&
-						(formerOffices || formerPartyPositions || formerOtherPositions) && (
+					{breakpoint !== 'lg' &&
+						(formerOffices! ||
+							formerPartyPositions! ||
+							formerOtherPositions!) && (
 							<RowComponent
-								title='Former Positions'
+								title='Positions'
 								icon={<Work fontSize='inherit' />}
 								data={
 									<>

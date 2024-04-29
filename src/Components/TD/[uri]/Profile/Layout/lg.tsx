@@ -2,7 +2,7 @@
 
 import MemberMenu from '@/Components/TD/[uri]/MemberMenu';
 import CommitteesCard from '@/Components/TD/[uri]/Profile/CommitteesCard';
-import FormerPositions from '@/Components/TD/[uri]/Profile/FormerPositions';
+import Positions from '@/Components/TD/[uri]/Profile/Positions';
 import ProfileCard from '@/Components/TD/[uri]/Profile/ProfileCard';
 import ContactCard from '@/Components/TD/[uri]/Profile/ContactCard';
 import { MemberPageBioData } from '@/models/pages/member/member';
@@ -43,7 +43,7 @@ export default function LG_ProfileLayout({
 									{bio.committees! && (
 										<CommitteesCard committees={bio.committees} />
 									)}
-									{bio.offices! && <FormerPositions offices={bio.offices!} />}
+									{bio.offices! && <Positions offices={bio.offices!} />}
 								</Stack>
 							</Grid>
 						</Grid>

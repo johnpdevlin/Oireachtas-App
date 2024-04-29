@@ -8,6 +8,8 @@ import {
 	CardActions,
 	Divider,
 	Stack,
+	Box,
+	Grid,
 } from '@mui/material';
 
 import ProfileImage from '../../_utils/ProfileImg';
@@ -41,13 +43,15 @@ export default function ContactCard(props: {
 					<Email email={props.email} />
 				</Stack>
 			</CardContent>
-
-			<CardActions sx={{ justifyContent: 'center' }}>
-				<Stack direction='row' sx={{ m: 2 }} spacing={2} textAlign='center'>
-					{props.webpages.map((page, _) => (
-						<SocialIcon key={_} page={page} color={'DarkSlateBlue'} />
+			<CardActions
+				sx={{ justifyContent: 'space-between', overflowX: 'auto', m: 0.75 }}>
+				<Grid container spacing={2} justifyContent='center'>
+					{props.webpages.map((page, index) => (
+						<Grid item key={index} sx={{ minWidth: '45px' }}>
+							<SocialIcon page={page} color={'DarkSlateBlue'} />
+						</Grid>
 					))}
-				</Stack>
+				</Grid>
 			</CardActions>
 		</Card>
 	);
