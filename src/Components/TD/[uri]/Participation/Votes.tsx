@@ -6,10 +6,10 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import fetchVotes from '@/functions/APIs/Oireachtas/vote/_index';
 import { RawVote } from '@/models/oireachtas_api/vote';
-import { dateToYMDstring } from '../../../../functions/_utils/dates';
 import { Typography } from '@mui/material';
+import fetchVotes from '@/functions/APIs/Oireachtas/vote/_index';
+import { dateToYMDstring } from '@/functions/_utils/dates';
 
 const Item = styled(Paper)(({ theme }) => ({
 	backgroundColor: theme.palette.mode === 'dark' ? '#1A3027' : '#F0F4F8',

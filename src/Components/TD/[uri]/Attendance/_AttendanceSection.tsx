@@ -3,12 +3,12 @@ import { Box, Grid, Stack, Typography } from '@mui/material';
 import AttendanceChart from '@/Components/TD/[uri]/Attendance/AttendanceChart';
 import { MemberPageBioData } from '@/models/pages/member/member';
 import { useViewport } from '@/hooks/viewportProvider';
-import { getPartyColor } from '@/functions/_utils/parties';
 import { PartyCode } from '@/models/_utils';
 import ColoredBox from '@/Components/_utils/ColoredBox';
 import GroupedSelect from '@/Components/_utils/Select/GroupedSelect';
 import { useEffect, useState } from 'react';
 import { AttendanceData } from '@/models/pages/attendance';
+import { getPartyColor } from '@/functions/_utils/parties';
 
 type SectionProps = {
 	bio: MemberPageBioData;

@@ -2,7 +2,7 @@
 
 import { PartyCode } from '@/models/_utils';
 
-export const getPartyColor = (partyCode: PartyCode): string => {
+export function getPartyColor(partyCode: PartyCode): string {
 	switch (partyCode) {
 		case 'Social_Democrats':
 			return '#ab47bc';
@@ -35,4 +35,4 @@ export const getPartyColor = (partyCode: PartyCode): string => {
 		default:
 			return '#4fc3f7';
 	}
-};
+}

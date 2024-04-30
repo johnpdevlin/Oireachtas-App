@@ -1,8 +1,8 @@
 /** @format */
 
 import { Alert } from '@mui/material';
-import Footer from './Footer/Footer';
-import Header from './Header';
+import Footer from '@/Components/Footer/Footer';
+import Header from '@/Components/Header';
 
 export default function Layout(props: { children: JSX.Element }) {
 	return (
