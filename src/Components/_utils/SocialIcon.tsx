@@ -8,7 +8,7 @@ import { formatURL } from '../../functions/_utils/urls';
 
 // Import icons
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
-import XIcon from '@mui/icons-material/x';
+import XIcon from '@mui/icons-material/X';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined';
