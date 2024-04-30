@@ -4,6 +4,7 @@ import { BinaryChamber } from '@/models/_utils';
 import { boyNameExceptions, girlNameExceptions } from './exceptions';
 import fetchNames from './fetch_names';
 import { handleUnisexName } from './handle_unisex';
+import { Gender } from '@/models/member/_all_bio_data';
 
 export default async function checkGender(
 	firstName: string,
@@ -11,7 +12,7 @@ export default async function checkGender(
 	girlNames?: string[],
 	chamber?: BinaryChamber,
 	house_no?: number
-): Promise<'unisex' | 'female' | 'male' | 'unknown'> {
+): Promise<Gender | undefined> {
 	if (!firstName) {
 		throw new Error('Name not provided');
 	}
@@ -31,7 +32,7 @@ export default async function checkGender(
 	)
 		if (chamber! && house_no!)
 			return handleUnisexName(firstName, chamber!, house_no);
-		else return 'unknown';
+		else return undefined;
 	else if (
 		boyNameExceptions.some((ex) => ex.toLowerCase() === firstName) ||
 		boyNames.find((bn) => bn === firstName)
@@ -42,5 +43,5 @@ export default async function checkGender(
 		girlNames.find((gn) => gn === firstName)
 	)
 		return 'female';
-	else return 'unknown';
+	else return undefined;
 }

@@ -29,15 +29,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 					updated: new Date().toISOString(),
 				});
 		} else if (req.method === 'GET') {
-			const doc = await db
-				.collection(collection as string)
-				.doc(id as string)
-				.get();
-			if (!doc.exists) {
-				res.statusMessage = 'Not found';
-				res.status(404).end();
-			} else {
-				res.status(200).json(doc.data());
+			if (id!) {
+				const doc = await db
+					.collection(collection as string)
+					.doc(id as string)
+					.get();
+				if (!doc.exists) {
+					res.statusMessage = 'Not found';
+					res.status(404).end();
+				} else {
+					res.status(200).json(doc.data());
+				}
 			}
 		} else if (req.method === 'DELETE') {
 			await db

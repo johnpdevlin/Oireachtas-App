@@ -31,7 +31,7 @@ export default function parseAndFormatOffices(
 	const groupedOffices = groupObjectsByProperty(formattedOffices, 'name');
 
 	for (const offs of groupedOffices) {
-		const sorted = offs.toSorted(
+		const sorted = offs.sort(
 			(a, b) =>
 				new Date(a.dateRange.start).getTime() -
 				new Date(b.dateRange.start).getTime()

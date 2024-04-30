@@ -1,11 +1,12 @@
 /** @format */
 
-import { BinaryChamber, Gender } from '../../../models/_utils';
+import { Gender } from '@/models/member/_all_bio_data';
+import { BinaryChamber } from '../../../models/_utils';
 export function handleUnisexName(
 	name: string,
 	chamber: BinaryChamber,
 	house_no: number
-): Gender | 'unknown' {
+): Gender | undefined {
 	const data = [
 		{
 			chamber: 'dail',
@@ -25,5 +26,5 @@ export function handleUnisexName(
 		? 'male'
 		: houseData?.girlNames.some((gn) => gn.toLowerCase() === name.toLowerCase())
 		? 'female'
-		: 'unknown';
+		: undefined;
 }

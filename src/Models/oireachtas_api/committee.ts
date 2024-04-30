@@ -30,17 +30,17 @@ export type CommitteeStatus = Exclude<CommitteeMainStatus, 'Live'> &
 	'Live - Primary';
 export type ExpiryType = 'Sessional' | 'Standing' | 'Special';
 
-// export type RawCommitteeMember = {
-// 	uri: string;
-// 	fullName: string;
-// 	firstName: string;
-// 	lastName: string;
-// 	role:
-// 		| { dateRange: DateRangeStr; title: string }[]
-// 		| {}
-// 		| { dateRange: DateRangeStr; title: string };
-// 	memberDateRange: DateRangeStr;
-// };
+export type RawCommitteeMember = {
+	uri: string;
+	fullName: string;
+	firstName: string;
+	lastName: string;
+	role:
+		| { dateRange: DateRangeStr; title: string }[]
+		| {}
+		| { dateRange: DateRangeStr; title: string };
+	memberDateRange: DateRangeStr;
+};
 
 export type RawMemberCommittee = {
 	committeeType: RawCommitteeType[];
@@ -62,18 +62,18 @@ export type RawMemberCommittee = {
 	status: CommitteeStatus;
 };
 
-// export type RawCommittee = {
-// 	uri: string; // unique
-// 	committeeDateRange: DateRangeStr;
-// 	committeeType: RawCommitteeType[];
-// 	expiryType: ExpiryType;
-// 	mainStatus: CommitteeMainStatus;
-// 	serviceUnit: ServiceUnitType;
-// 	committeeCode: string; // Committees which occur across multiple sessions may share
-// 	committeeID: number; // Unique
-// 	committeeName: CommitteeName[];
-// 	altCommitteeURIs: string[];
-// 	houseNo: number;
-// 	status: CommitteeStatus;
-// 	members: RawCommitteeMember[];
-// };
+export type RawCommittee = {
+	uri: string; // unique
+	committeeDateRange: DateRangeStr;
+	committeeType: RawCommitteeType[];
+	expiryType: ExpiryType;
+	mainStatus: CommitteeMainStatus;
+	serviceUnit: ServiceUnitType;
+	committeeCode: string; // Committees which occur across multiple sessions may share
+	committeeID: number; // Unique
+	committeeName: CommitteeName[];
+	altCommitteeURIs: string[];
+	houseNo: number;
+	status: CommitteeStatus;
+	members: RawCommitteeMember[];
+};

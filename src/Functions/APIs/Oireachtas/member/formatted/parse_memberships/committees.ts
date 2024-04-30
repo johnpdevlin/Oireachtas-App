@@ -32,6 +32,7 @@ function parseAndFormatCommittee(
 		formerNames,
 		expiryType: committee.expiryType,
 		houseNo: committee.houseNo,
+		houseCode: committee.houseCode,
 		committeeCode: committee.committeeCode,
 		committeeType: committee.committeeType,
 		committeeID: committee.committeeID,

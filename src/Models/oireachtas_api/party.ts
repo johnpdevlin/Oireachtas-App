@@ -16,7 +16,11 @@ export type PartyAPI = {
 };
 
 export type PartyResult = {
-	party: PartyAPI;
+	party: {
+		showAs: string;
+		partyCode: string;
+		uri: string;
+	};
 };
 
 export type House = {

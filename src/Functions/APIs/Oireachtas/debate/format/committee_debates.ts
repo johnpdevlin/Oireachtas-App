@@ -5,7 +5,6 @@ import {
 	getStringAfterFirstTargetPoint,
 } from '@/functions/_utils/strings';
 import { DebateRecord } from '@/models/oireachtas_api/debate';
-import { CommitteeType } from '@/models/_utils';
 import { CommitteeDebateRecord } from '@/models/oireachtas_api/debate';
 
 export default function formatCommitteeDebates(
@@ -98,7 +97,7 @@ function extractRootCommitteeDetails(str: string): string {
 	return rootCommittee;
 }
 
-function extractCommitteeType(uri: string): CommitteeType {
+function extractCommitteeType(uri: string): string {
 	if (
 		uri.startsWith('joint') ||
 		uri.startsWith('comh') ||

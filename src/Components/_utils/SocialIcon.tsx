@@ -3,6 +3,8 @@
 import { Stack, Tooltip, Typography } from '@mui/material';
 import { capitaliseFirstLetters } from '../../functions/_utils/strings';
 import { WebsitePair } from '@/models/_utils';
+import Link from 'next/link';
+import { formatURL } from '../../functions/_utils/urls';
 
 // Import icons
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
@@ -12,8 +14,6 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
-import Link from 'next/link';
-import { formatURL } from '../../functions/_utils/urls';
 
 function SocialIcon(props: {
 	page: WebsitePair;
@@ -65,7 +65,10 @@ function SocialIcon(props: {
 		},
 	};
 
-	const websiteIcon = websiteIcons[page.website] || websiteIcons.default;
+	const websiteIcon = page.website
+		? websiteIcons[page.website as keyof typeof websiteIcons] ||
+		  websiteIcons.default
+		: websiteIcons.default;
 
 	return (
 		<Tooltip title={page.website}>
@@ -74,7 +77,7 @@ function SocialIcon(props: {
 					{websiteIcon.icon}
 					{includeText && (
 						<Typography variant='subtitle1' color={color}>
-							{capitaliseFirstLetters(websiteIcon.title)}
+							{capitaliseFirstLetters(websiteIcon.title!)}
 						</Typography>
 					)}
 				</Stack>

@@ -3,9 +3,8 @@ import {
 	ConstituencyOrPanel,
 	ConstituencyRequest,
 } from '@/models/oireachtas_api/constituency';
-
-import axios from 'axios';
 import { ConstituencyAPI } from '@/models/oireachtas_api/constituency';
+import axios from 'axios';
 
 export default async function fetchConstituencies(
 	props: ConstituencyRequest // Props object with request parameters
@@ -17,10 +16,16 @@ export default async function fetchConstituencies(
 
 	try {
 		const response = await axios.get(url);
-		return response.data.results.house.constituenciesOrPanels.map((con) => {
-			const c = con.constituencyOrPanel;
-			return { type: c.representType, name: c.showAs, uri: c.representCode };
-		});
+		return response.data.results.house.constituenciesOrPanels.map(
+			(con: { constituencyOrPanel: ConstituencyOrPanel }) => {
+				const c = con.constituencyOrPanel;
+				return {
+					type: c.representType,
+					name: c.showAs,
+					uri: c.representCode,
+				} as ConstituencyAPI;
+			}
+		);
 	} catch (error) {
 		console.error(`Error fetching data from URL: ${url}`, error);
 	}

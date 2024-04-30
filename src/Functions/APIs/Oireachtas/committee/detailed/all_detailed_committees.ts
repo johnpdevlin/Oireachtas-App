@@ -4,9 +4,10 @@ import {
 	CommitteeName,
 	RawCommittee,
 	RawCommitteeMember,
+	RawMemberCommittee,
 } from '@/models/oireachtas_api/committee';
 import fetchMembers from '../../member/raw/_member_details';
-import { RawMemberCommittee } from '@/models/oireachtas_api/member';
+
 import { excludeProperties } from '@/functions/_utils/objects';
 import similarity from 'string-similarity';
 
@@ -28,9 +29,7 @@ async function fetchAllDetailedCommittees(): Promise<{
 						const key = `${uri}-${committee.uri}-${committee.memberDateRange.start}-${committee.committeeDateRange.start}`;
 						memberCommittees[key] = {
 							...committee,
-							fullName: member.fullName,
-							firstName: member.firstName,
-							lastName: member.lastName,
+
 							altCommitteeURIs: getAlternativeURIs(
 								committee.committeeName,
 								committee.uri

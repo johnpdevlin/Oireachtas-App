@@ -42,6 +42,7 @@ export type WikiPositionType =
 	| 'other';
 
 export type WikiPosition = {
+	name: string;
 	title: WikiURIpair;
 	type: WikiPositionType;
 	dateRange: DateRangeObj & { isIncomplete: boolean };

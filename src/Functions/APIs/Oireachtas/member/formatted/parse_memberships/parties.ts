@@ -49,5 +49,5 @@ export default function parseAndFormatParties(
 		processedParties.push(currentParty); // Push the last currentParty
 	}
 
-	return processedParties.toReversed();
+	return processedParties.reverse();
 }

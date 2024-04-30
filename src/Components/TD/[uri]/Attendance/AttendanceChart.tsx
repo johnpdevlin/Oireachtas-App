@@ -14,6 +14,12 @@ type AttendanceChartProps = {
 	keys: (URIpair & { color?: string })[];
 	year: string;
 };
+
+type SeriesDataType = {
+	label: string;
+	data: number[];
+	color?: string;
+};
 export default function AttendanceChart({
 	breakpoint,
 	sidebarWidth,
@@ -27,9 +33,7 @@ export default function AttendanceChart({
 
 	// Labels for x axis (i.e. years / months)
 	const [labels, setLabels] = useState<number[]>([]);
-	const [seriesData, setSeriesData] = useState<
-		{ label: string; data: number[]; color?: string }[]
-	>([]);
+	const [seriesData, setSeriesData] = useState<SeriesDataType[]>([]);
 
 	useEffect(() => {
 		let relativeWidth = 0;
@@ -54,10 +58,12 @@ export default function AttendanceChart({
 				setLabels(getYearLabels(data));
 				setSeriesData(getOverallSeriesData(data));
 			} else if (data && year !== '0') {
-				const yearData = getYearSeriesData(year, data);
-				if (yearData[0] && yearData[0]?.data?.length > 0)
-					setSeriesData(yearData!);
-				else setSeriesData([]);
+				const yearData = getYearSeriesData(year, data).filter(
+					Boolean
+				) as SeriesDataType[];
+				if (yearData[0]! && yearData[0]?.data.length >= 1) {
+					setSeriesData(yearData);
+				} else setSeriesData([]);
 				setLabels(getMonthLabels(data));
 			}
 		}
@@ -100,7 +106,7 @@ export default function AttendanceChart({
 
 		const monthData = memberData.present_percentage?.months || [];
 		const relevantMonths: number[] = [];
-		monthData.forEach((value: number, index: number) => {
+		monthData.forEach((value: number | undefined, index: number) => {
 			if (value !== undefined && value !== null) relevantMonths.push(index + 1);
 		});
 
@@ -131,7 +137,8 @@ export default function AttendanceChart({
 
 	// If Overall, resets data to aggregated years
 	function getOverallSeriesData(data: Record<GroupType, AttendanceRecord[]>) {
-		let seriesData = data;
+		let seriesData = data as Record<string, AttendanceRecord[]>;
+
 		const years = getYearLabels(seriesData);
 		const memLength = seriesData.member.length;
 		if (seriesData.constituency! && memLength > seriesData.constituency.length)
@@ -152,7 +159,7 @@ export default function AttendanceChart({
 						(val) =>
 							val.present_percentage?.overall! && years.includes(val.year!)
 					)
-					.toSorted((a, b) => a.year! - b.year!)
+					.sort((a, b) => a.year! - b.year!)
 					.map((val) => Number(val.present_percentage?.overall?.toFixed(1))),
 				color: key?.color,
 			};

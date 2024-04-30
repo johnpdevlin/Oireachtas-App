@@ -10,8 +10,16 @@ export function sortByDateRange<T extends { dateRange: DateRange }>(
 	const endDateB = b.dateRange.end;
 
 	// Convert end dates to Date objects if they are strings
-	const dateA = endDateA instanceof Date ? endDateA : new Date(endDateA);
-	const dateB = endDateB instanceof Date ? endDateB : new Date(endDateB);
+	const dateA = endDateA
+		? endDateA instanceof Date
+			? endDateA
+			: new Date(endDateA)
+		: undefined;
+	const dateB = endDateB
+		? endDateB instanceof Date
+			? endDateB
+			: new Date(endDateB)
+		: undefined;
 
 	// Compare end dates
 	if (!dateA && dateB) {

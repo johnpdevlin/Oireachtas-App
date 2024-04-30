@@ -73,7 +73,6 @@ function BasicDetails(props: { member: MemberPageBioData; size: Breakpoint }) {
 
 	const formerParties =
 		parties.length > 1 && formatFormerMemberships(parties.slice(1));
-
 	const formattedConstituencies = () => {
 		// Merge all arrays into one, handling undefined arrays
 		const allItems = [
@@ -82,25 +81,28 @@ function BasicDetails(props: { member: MemberPageBioData; size: Breakpoint }) {
 			...(constituencies.other || []),
 		];
 		// Apply getCurrentAndPastItems function to all items
-		let processedItems = getCurrentAndPastMemberships(allItems);
+		let processedItems: {
+			current: MemberPageMembership[];
+			past: MemberPageMembership[];
+		} = getCurrentAndPastMemberships(allItems);
 
 		// If there are no current items, return the most recent item from dail if it's defined
 		if (processedItems.current.length === 0) {
 			// Get the first item from the defined array
 			if (constituencies.dail && constituencies.dail.length > 0) {
-				processedItems.current = constituencies.dail[0];
+				processedItems.current = [constituencies.dail[0]]; // Ensure processedItems.current is an array
 				processedItems.past =
 					processedItems.past.filter(
 						(item) => item.uri !== constituencies!.dail![0].uri
-					) ?? undefined;
+					) ?? [];
 			} else if (constituencies.seanad && constituencies.seanad.length > 0) {
-				processedItems.current = constituencies.seanad[0];
+				processedItems.current = [constituencies.seanad[0]]; // Ensure processedItems.current is an array
 				processedItems.past = processedItems.past.filter(
 					(item) => item.uri !== constituencies!.seanad![0].uri
 				);
 			}
 		}
-		if (processedItems.past.length === 0) processedItems.past = undefined;
+		if (processedItems.past.length === 0) processedItems.past = [];
 		return processedItems;
 	};
 

@@ -4,7 +4,12 @@ import { DateRange } from '@/models/dates';
 
 export function getCurrentAndPastMemberships<
 	T extends { dateRange: DateRange }
->(items: T[]): { current: T[]; past: T[] } {
+>(
+	items: T[]
+): {
+	current: T[];
+	past: T[];
+} {
 	// Filter the items to separate current and past items
 	const currentItems = items.filter((item) => !item.dateRange.end);
 	const pastItems = items.filter((item) => item.dateRange.end);

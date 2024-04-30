@@ -1,13 +1,12 @@
 /** @format */
 
-import { initializeAttendanceSummary } from '@/functions/attendance/_utils/init_attendance_summary';
+import { initializeGroupAttendanceSummary } from '@/functions/attendance/_utils/init_attendance_summary';
 import { GroupType, URIpair } from '@/models/_utils';
 import {
 	CommitteeAttendance,
 	GroupAttendanceRecord,
 } from '@/models/attendance';
 import { addPresentPercentage } from '../add_percentage_calculations';
-import { dateToYMDstring } from '@/functions/_utils/dates';
 
 function aggregateGroupAttendance(
 	group_type: GroupType,
@@ -15,7 +14,7 @@ function aggregateGroupAttendance(
 ): GroupAttendanceRecord {
 	const year = records[0].date.getFullYear();
 	const uri = `${records[0].uri ?? group_type}`;
-	const summary = initializeAttendanceSummary(
+	const summary = initializeGroupAttendanceSummary(
 		uri,
 		year,
 		group_type
@@ -26,26 +25,15 @@ function aggregateGroupAttendance(
 
 		const updateSummary = (
 			member: URIpair,
-			status: 'present' | 'absent' | 'alsoPresent'
+			status: 'present' | 'absent' | 'also_present'
 		) => {
-			// Normalize the status to match the property names in MemberCommitteeAttendance
-			const normalizedStatus =
-				status === 'alsoPresent' ? 'also_present' : status;
-
-			const month =
-				record.date instanceof Date
-					? record.date.getMonth()
-					: new Date(record.date).getMonth();
-
-			const date =
-				record.date instanceof Date
-					? dateToYMDstring(record.date)
-					: record.date;
+			const month = record.date.getMonth();
+			const date = new Date(record.date); // Convert date to string here
 
 			// Use normalizedStatus to access the correct property
-			summary[normalizedStatus][month].push({
+			summary[status][month].push({
 				uri: member.uri,
-				date: date,
+				date: date, // Assign the converted date string here
 			});
 		};
 
@@ -53,7 +41,7 @@ function aggregateGroupAttendance(
 		record.present.forEach((member) => updateSummary(member, 'present'));
 		record.absent?.forEach((member) => updateSummary(member, 'absent'));
 		record.also_present?.forEach((member) =>
-			updateSummary(member, 'alsoPresent')
+			updateSummary(member, 'also_present')
 		);
 	});
 

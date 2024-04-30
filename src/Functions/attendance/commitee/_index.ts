@@ -7,7 +7,6 @@ import { aggregateCommitteeAttendanceRecords } from './group_records/committees'
 import { dateToYMDstring, getDateTwoWeeksAgo } from '@/functions/_utils/dates';
 import { aggregateAllMembersAttendanceRecords } from '../_utils/aggregate_records/_all_members';
 import { aggregateMembershipAttendanceRecords } from '../_utils/aggregate_records/_constits+parties';
-import { fetchAllDetailedCommittees } from '@/functions/APIs/Oireachtas/committee/detailed/_all_detailed_committees';
 
 async function processCommitteeAttendanceBetweenDates(
 	house_no: number,

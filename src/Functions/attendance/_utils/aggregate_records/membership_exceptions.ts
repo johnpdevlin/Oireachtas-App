@@ -38,16 +38,24 @@ function handleMembershipExceptions(
 }
 
 function getRelevantMemberships(
-	memberships: MemberConstituency[] | RawMemberParty[],
+	memberships: (MemberConstituency | RawMemberParty)[],
 	year: number
 ) {
-	return memberships.filter(({ dateRange }) => {
-		const startYear = new Date(dateRange.start).getFullYear();
-		const endYear = dateRange.end!
-			? new Date(dateRange.end).getFullYear()
-			: new Date().getFullYear();
-		return year >= startYear && year <= endYear;
-	});
+	return memberships
+		.filter((membership) => {
+			if ('dateRange' in membership) {
+				const startYear = new Date(membership.dateRange.start).getFullYear();
+				const endYear = membership.dateRange.end
+					? new Date(membership.dateRange.end).getFullYear()
+					: undefined;
+
+				// Add your filtering logic based on the start and end year
+				return startYear <= year && (!endYear || endYear >= year);
+			}
+			// Handle other type of membership if necessary
+			return false; // or any other logic
+		})
+		.filter(Boolean);
 }
 
 function parseRecordsByMembership(

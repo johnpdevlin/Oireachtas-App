@@ -40,8 +40,8 @@ export default function AttendanceSection({ bio, attendance }: SectionProps) {
 		const years: number[] = [];
 		[...attendance.house.member, ...attendance.committee.member].forEach(
 			(member) => {
-				if (!years.includes(member.year!)) {
-					years.push(member.year);
+				if (member.year && !years.includes(member.year!)) {
+					years.push(member.year!);
 				}
 			}
 		);
@@ -50,21 +50,21 @@ export default function AttendanceSection({ bio, attendance }: SectionProps) {
 			category: '33rd Dáil',
 			groups: years
 				.filter((year) => year! >= 2020 && year! < 2025)
+				.sort((a, b) => a - b)
 				.map((year) => {
 					return { label: year.toString()!, value: year! };
-				})
-				.toSorted((a, b) => a.value - b.value),
+				}),
 		};
 		const dail32 = {
 			category: '32nd Dáil',
 			groups: years
 				.filter((year) => year! < 2020)
+				.sort((a, b) => a - b)
 				.map((year) => {
 					{
 						return { label: year?.toString()!, value: year! };
 					}
-				})
-				.toSorted((a, b) => a.value - b.value),
+				}),
 		};
 		dail32.groups.length > 0 && groupingsObj.push(dail32);
 		dail33.groups.length > 0 && groupingsObj.push(dail33);
@@ -76,8 +76,12 @@ export default function AttendanceSection({ bio, attendance }: SectionProps) {
 	const { breakpoint } = useViewport();
 
 	const [sidebarWidth, setSidebarWidth] = useState(0);
-	const [sidebarDirection, setSidebarDirection] = useState('column');
-	const [legendDirection, setLegendDirection] = useState('column');
+	const [sidebarDirection, setSidebarDirection] = useState<
+		'column' | 'row' | 'row-reverse'
+	>('column');
+	const [legendDirection, setLegendDirection] = useState<
+		'column' | 'row' | 'row-reverse'
+	>('column');
 
 	useEffect(() => {
 		const element = document.getElementById('chart-sidebar');
@@ -160,7 +164,7 @@ export default function AttendanceSection({ bio, attendance }: SectionProps) {
 										House Attendance
 									</Typography>
 									<AttendanceChart
-										breakpoint={breakpoint}
+										breakpoint={breakpoint!}
 										sidebarWidth={sidebarWidth}
 										data={attendance.house}
 										chartType={'member'}

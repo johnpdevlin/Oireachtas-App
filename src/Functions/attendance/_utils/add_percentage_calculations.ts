@@ -29,7 +29,7 @@ function addPresentPercentage(
 	};
 	return {
 		...record,
-		presentPercentage: {
+		present_percentage: {
 			overall: overallPercentage,
 			months: monthsPercentage(),
 		},

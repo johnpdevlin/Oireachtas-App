@@ -75,7 +75,9 @@ async function fetchAttendanceRecords(
 	for (const key in records) {
 		// Filter out unneccessary years for non member records
 		if (key !== 'member')
-			records[key] = records[key].filter((rec) => years.includes(rec.year));
+			records[key as GroupType] = records[key as GroupType].filter((rec) =>
+				years.includes(rec.year)
+			);
 	}
 
 	return records;

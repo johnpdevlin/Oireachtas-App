@@ -3,6 +3,18 @@
 import { GroupType } from '@/models/_utils';
 import { AttendanceRecord, GroupAttendanceRecord } from '@/models/attendance';
 
+export function initializeGroupAttendanceSummary(
+	uri: string,
+	year: number,
+	group_type: GroupType
+): GroupAttendanceRecord {
+	return initializeAttendanceSummary(
+		uri,
+		year,
+		group_type
+	) as GroupAttendanceRecord;
+}
+
 export function initializeAttendanceSummary(
 	uri: string,
 	year: number,
