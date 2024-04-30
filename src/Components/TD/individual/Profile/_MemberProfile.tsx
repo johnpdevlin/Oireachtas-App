@@ -2,8 +2,8 @@
 
 import { Box } from '@mui/material';
 import { MemberPageBioData } from '@/models/pages/member/member';
-import XS_ProfileLayout from './Layout/xs';
-import LG_ProfileLayout from './Layout/lg';
+import XS_ProfileLayout from '@/Components/TD/individual/Profile/Layout/xs';
+import LG_ProfileLayout from '@/Components/TD/individual/Profile/Layout/lg';
 
 type BioProps = {
 	bio: MemberPageBioData;

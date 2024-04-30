@@ -1,5 +1,4 @@
 /** @format */
-
 import {
 	Typography,
 	Card,
@@ -11,8 +10,7 @@ import {
 	Box,
 	Grid,
 } from '@mui/material';
-
-import ProfileImage from '../../_utils/ProfileImg';
+import ProfileImage from '@/Components/TD/_utils/ProfileImg';
 import Address from '@/Components/_utils/Contact/Address';
 import PhoneNumber from '@/Components/_utils/Contact/PhoneNumber';
 import Email from '@/Components/_utils/Contact/Email';

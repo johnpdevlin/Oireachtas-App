@@ -1,10 +1,10 @@
 /** @format */
 
-import MemberMenu from '@/Components/TD/[uri]/MemberMenu';
-import CommitteesCard from '@/Components/TD/[uri]/Profile/CommitteesCard';
-import Positions from '@/Components/TD/[uri]/Profile/Positions';
-import ProfileCard from '@/Components/TD/[uri]/Profile/ProfileCard';
-import ContactCard from '@/Components/TD/[uri]/Profile/ContactCard';
+import MemberMenu from '@/Components/TD/individual/MemberMenu';
+import CommitteesCard from '@/Components/TD/individual/Profile/CommitteesCard';
+import Positions from '@/Components/TD/individual/Profile/Positions';
+import ProfileCard from '@/Components/TD/individual/Profile/ProfileCard';
+import ContactCard from '@/Components/TD/individual/Profile/ContactCard';
 import { MemberPageBioData } from '@/models/pages/member/member';
 import { Grid, Stack } from '@mui/material';
 

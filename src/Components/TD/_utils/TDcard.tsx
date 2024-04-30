@@ -3,7 +3,7 @@
 import { MemberAPIdetails } from '@/models/oireachtas_api/Formatted/Member/member';
 import { Box, Paper, Typography } from '@mui/material';
 import Link from 'next/link';
-import ProfileImage from './ProfileImg';
+import ProfileImage from '@/Components/TD/_utils/ProfileImg';
 import { useEffect, useState } from 'react';
 import { useViewport } from '@/hooks/viewportProvider';
 

@@ -1,6 +1,6 @@
 /** @format */
 import { Box, Grid, Stack, Typography } from '@mui/material';
-import AttendanceChart from '@/Components/TD/[uri]/Attendance/AttendanceChart';
+import AttendanceChart from '@/Components/TD/individual/Attendance/AttendanceChart';
 import { MemberPageBioData } from '@/models/pages/member/member';
 import { useViewport } from '@/hooks/viewportProvider';
 import { PartyCode } from '@/models/_utils';

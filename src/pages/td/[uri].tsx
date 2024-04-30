@@ -4,9 +4,9 @@ import Layout from '@/Components/_layout';
 import { AttendanceData } from '@/models/pages/attendance';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { MemberPageBioData } from '@/models/pages/member/member';
+import TDlayout from '@/Components/Layouts/TD/td_layout';
 import details from '@/Data/website';
 import Head from 'next/head';
-import TDlayout from '@/Components/Layouts/TD/td_layout';
 
 export default function TeachtaDála(props: { bio: JSON; attendance: JSON }) {
 	const bio = JSON.parse(props.bio.toString()) as MemberPageBioData;
@@ -26,7 +26,7 @@ export default function TeachtaDála(props: { bio: JSON; attendance: JSON }) {
 								bio.parties[0].dateRange.end! ? ' former ' : ''
 							}${bio.parties[0].name} TD, representing ${bio!.constituencies!
 								.dail![0]!
-								.name!}. This page contains biographical details, and records of attendance, votes and questions asked.`}
+								.name!}. This page displays biographical details, and records of attendance, votes and questions asked. `}
 						/>
 					</Head>
 					<TDlayout bio={bio} attendance={attendance} />

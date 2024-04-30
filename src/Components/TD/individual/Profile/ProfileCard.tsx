@@ -1,8 +1,8 @@
 /** @format */
 
 import { Breakpoint, Stack } from '@mui/material';
-import BasicDetails from './BasicDetails';
-import ProfileHeader from './ProfileHeader';
+import BasicDetails from '@/Components/TD/individual/Profile/BasicDetails';
+import ProfileHeader from '@/Components/TD/individual/Profile/ProfileHeader';
 import { MemberPageBioData } from '@/models/pages/member/member';
 
 export default function ProfileCard(props: {

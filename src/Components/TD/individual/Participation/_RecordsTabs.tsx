@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { Box, Tab, Grid } from '@mui/material';
 import HowToVoteSharpIcon from '@mui/icons-material/HowToVoteSharp';
 import ContactSupportSharpIcon from '@mui/icons-material/ContactSupportSharp';
-import Calendar from './Calendar';
+import Calendar from '@/Components/TD/individual/Participation/Calendar';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import VotesComp from './Votes';
-import QuestionsComp from './Questions';
+import VotesComp from '@/Components/TD/individual/Participation/Votes';
+import QuestionsComp from '@/Components/TD/individual/Participation/Questions';
 
 export default function RecordsTabs(props: {
 	minDate: Date;

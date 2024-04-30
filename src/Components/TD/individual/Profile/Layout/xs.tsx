@@ -1,7 +1,7 @@
 /** @format */
 
-import BasicDetails from '@/Components/TD/[uri]/Profile/BasicDetails';
-import ProfileHeader from '@/Components/TD/[uri]/Profile/ProfileHeader';
+import BasicDetails from '@/Components/TD/individual/Profile/BasicDetails';
+import ProfileHeader from '@/Components/TD/individual/Profile/ProfileHeader';
 import ProfileImage from '@/Components/TD/_utils/ProfileImg';
 import { MemberPageBioData } from '@/models/pages/member/member';
 import { Box } from '@mui/material';

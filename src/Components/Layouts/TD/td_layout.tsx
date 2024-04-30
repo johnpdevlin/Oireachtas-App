@@ -2,11 +2,10 @@
 
 import { Grid, Stack } from '@mui/material';
 import { MemberPageBioData } from '@/models/pages/member/member';
-
 import { AttendanceData } from '@/models/pages/attendance';
-import AttendanceSection from '../../TD/[uri]/Attendance/_AttendanceSection';
-import RecordsTabs from '../../TD/[uri]/Participation/_RecordsTabs';
-import MemberProfile from '../../TD/[uri]/Profile/_MemberProfile';
+import AttendanceSection from '@/Components/TD/individual/Attendance/_AttendanceSection';
+import RecordsTabs from '@/Components/TD/individual/Participation/_RecordsTabs';
+import MemberProfile from '@/Components/TD/individual/Profile/_MemberProfile';
 
 type LayoutProps = {
 	bio: MemberPageBioData;

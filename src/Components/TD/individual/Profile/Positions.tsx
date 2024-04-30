@@ -10,7 +10,7 @@ import { DateRangeStr } from '@/models/dates';
 import { MemberPageMembership } from '@/models/pages/member/member';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import HoverableFootnote from '@/Components/_utils/HoverableFootnote';
-import { sortByDateRange } from '../../../../functions/_utils/date_range';
+import { sortByDateRange } from '@/functions/_utils/date_range';
 
 export default function Positions(props: {
 	offices?: MemberPageMembership[];
