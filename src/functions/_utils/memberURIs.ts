@@ -33,7 +33,7 @@ export async function getMemberUrisAndNames(
 // Uses similarity to match standard URI pairs to input string names, improved version
 export function assignMemberURIsAndNames<
 	T extends {
-		name: string;
+		name?: string;
 		uri: string;
 	}
 >(names: string[], members: T[]): { matches: T[]; unMatched: string[] } {
@@ -50,7 +50,8 @@ export function assignMemberURIsAndNames<
 		if (bestMatch.rating > 0.3) {
 			// Find the member with the exact name match from the original list
 			const matchedMember = members.find(
-				(member) => member.name?.toLowerCase() === bestMatch.target
+				(member) =>
+					member.name?.toLowerCase() === bestMatch.target?.toLowerCase()
 			);
 
 			if (matchedMember) {
