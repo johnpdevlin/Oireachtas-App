@@ -31,6 +31,28 @@ export function addOrdinalSuffix(num: number): string {
 	return num + suffix;
 }
 
+export function capitalizeAndAddFullStop(str: string): string {
+	// Capitalize the first letter
+	let capitalizedStr = str.charAt(0).toUpperCase() + str.slice(1);
+
+	// replace trailing comma
+	capitalizedStr = capitalizedStr.trim().endsWith(',')
+		? capitalizedStr.replace(',', '.')
+		: capitalizedStr;
+
+	// replace trailing semi-colon
+	capitalizedStr = capitalizedStr.trim().endsWith(';')
+		? capitalizedStr.replace(';', '.')
+		: capitalizedStr;
+
+	// Add a full stop if one doesn't exist
+	const finalStr = capitalizedStr.trim().endsWith('.')
+		? capitalizedStr
+		: capitalizedStr + '.';
+
+	return finalStr.trim();
+}
+
 export function getTextAfterLastComma(str: string): string {
 	// Split the string into an array of substrings based on the comma delimiter
 	const parts: string[] = str.split(',');
@@ -261,8 +283,12 @@ export function getStringBeforeFirstTargetPoint(
 	target: string
 ): string {
 	const index = str.indexOf(target);
-
-	return str.slice(0, index);
+	if (index !== -1) {
+		return str.slice(0, index);
+	} else {
+		// Handle case where target string is not found
+		return str;
+	}
 }
 
 // Splits into lines and removes empty lines
